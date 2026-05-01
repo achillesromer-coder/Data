@@ -1,0 +1,1669 @@
+<div id="w2-root"></div>
+<script>
+(function () {
+  var mount = document.getElementById("w2-root");
+  if (!mount) return;
+
+  var NS = "w2sq";
+  var C = {
+    bg: "#0a0e1a",
+    bg2: "#1a1f2e",
+    bg3: "#252b3d",
+    panel: "#11182a",
+    line: "#3a4059",
+    purple: "#7b2cbf",
+    pink: "#ff6b9d",
+    cyan: "#00d4ff",
+    blue: "#00aaff",
+    green: "#00ff88",
+    amber: "#ffaa00",
+    red: "#ff5b5b",
+    text: "#e8eaf0",
+    muted: "#8b92a8"
+  };
+
+  var ROUTE_NODES = {
+    "LEO Depot": { x: 0.18, y: 0.78, kind: "earth" },
+    "GEO Luke II": { x: 0.36, y: 0.56, kind: "geo" },
+    "Cislunar Node": { x: 0.54, y: 0.34, kind: "lunar" },
+    "NEA Inbound": { x: 0.70, y: 0.66, kind: "nea" },
+    "Mars Relay": { x: 0.82, y: 0.22, kind: "mars" }
+  };
+
+  var STATE = {
+    tab: "field",
+    mode: "Capture",
+    routeMode: "Inbound to GEO",
+    payloadClass: "Ore Packet",
+    catchRadius: 50,
+    approachVel: 0.5,
+    holdingForce: 120,
+    coilCurrent: 850,
+    emFreq: 60,
+    massKg: 1800,
+    alignmentErr: 6,
+    holdMargin: 18,
+    launchAssist: 22,
+    logs: [
+      { t: "2026-04-08T02:12:00Z", type: "field", msg: "Luke II catch field initialized for operator preview" },
+      { t: "2026-04-08T02:16:00Z", type: "hold", msg: "Hold envelope refreshed from current capture assumptions" },
+      { t: "2026-04-08T02:20:00Z", type: "route", msg: "Route state synchronized with inbound GEO chain" }
+    ],
+    selectedSweep: null
+  };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmt(n, d) {
+    return Number(n).toFixed(d == null ? 2 : d);
+  }
+
+  function pushLog(type, msg) {
+    STATE.logs.unshift({ t: new Date().toISOString(), type: type, msg: msg });
+    if (STATE.logs.length > 24) STATE.logs.length = 24;
+  }
+
+  function model() {
+    var mu0 = 4 * Math.PI * 1e-7;
+    var cr = STATE.catchRadius;
+    var av = STATE.approachVel;
+    var hf = STATE.holdingForce;
+    var cc = STATE.coilCurrent;
+    var ef = STATE.emFreq;
+    var mass = STATE.massKg;
+    var align = STATE.alignmentErr;
+    var hm = STATE.holdMargin;
+    var la = STATE.launchAssist;
+
+    var Bcoil = (mu0 * cc * 100) / Math.max(2 * cr, 1);
+    var v = av;
+    var momentum = mass * v;
+    var captureDemand = Math.max(1, momentum / Math.max(cr, 1));
+    var effectiveHold = hf * (1 + hm / 100) * Math.max(0.45, 1 - align / 30);
+    var captureScore = Math.max(0, Math.min(100,
+      84
+      + (effectiveHold / Math.max(captureDemand,1)) * 8
+      - v * 18
+      - align * 1.2
+      + Math.log(Math.max(cc,1)) * 6
+    ));
+    var holdStability = Math.max(0, Math.min(100,
+      78 + (effectiveHold / Math.max(mass * 0.06, 1)) * 5 - align * 1.4 - v * 10
+    ));
+    var powerDraw = (cc * ef * 0.0022) + (hf * 0.03) + (la * 0.8);
+    var thermalLoad = powerDraw * 0.72 + ef * 0.35 + cc * 0.01;
+    var launchVector = Math.max(0, Math.min(100,
+      40 + la * 1.8 + ef * 0.08 - align * 0.8
+    ));
+    var safetyEnvelope = Math.max(0, Math.min(100,
+      92 - thermalLoad * 0.35 - v * 14 - align * 1.1 + hm * 0.9
+    ));
+    var routeReadiness = Math.max(0, Math.min(100,
+      captureScore * 0.32 + holdStability * 0.28 + safetyEnvelope * 0.22 + launchVector * 0.18
+    ));
+    var phaseLock = Math.max(0, Math.min(100,
+      88 - Math.abs((ef % 120) - 60) * 0.5 - align * 1.3
+    ));
+    var stateName = captureScore > 78 && holdStability > 72
+      ? (STATE.mode === "Launch" ? "Launch-Ready" : STATE.mode === "Hold" ? "Stable Hold" : "Capture Nominal")
+      : captureScore > 58
+      ? "Conditional"
+      : "Unsafe";
+
+    return {
+      Bcoil: Bcoil,
+      momentum: momentum,
+      captureDemand: captureDemand,
+      effectiveHold: effectiveHold,
+      captureScore: captureScore,
+      holdStability: holdStability,
+      powerDraw: powerDraw,
+      thermalLoad: thermalLoad,
+      launchVector: launchVector,
+      safetyEnvelope: safetyEnvelope,
+      routeReadiness: routeReadiness,
+      phaseLock: phaseLock,
+      stateName: stateName
+    };
+  }
+
+  function activeRoute() {
+    var map = {
+      "Inbound to GEO": ["NEA Inbound", "GEO Luke II"],
+      "Inbound to LEO": ["NEA Inbound", "GEO Luke II", "LEO Depot"],
+      "Hold at GEO": ["GEO Luke II"],
+      "Outbound Lunar": ["GEO Luke II", "Cislunar Node"],
+      "Outbound Mars": ["GEO Luke II", "Cislunar Node", "Mars Relay"]
+    };
+    return map[STATE.routeMode] || ["NEA Inbound", "GEO Luke II"];
+  }
+
+  var style = document.createElement("style");
+  style.textContent = `
+    #w2-root{width:100%}
+    .${NS}-wrap{
+      width:100%;
+      min-height:980px;
+      display:flex;
+      flex-direction:column;
+      background:${C.bg};
+      color:${C.text};
+      border:1px solid ${C.line};
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.3);
+      font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+    }
+    .${NS}-hdr{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;background:${C.bg2};border-bottom:1px solid ${C.line};
+    }
+    .${NS}-logo{
+      width:30px;height:30px;border-radius:50%;
+      display:grid;place-items:center;font-weight:900;
+      color:#081019;background:linear-gradient(135deg,${C.purple},${C.pink});
+    }
+    .${NS}-titlewrap{flex:1;min-width:240px}
+    .${NS}-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${C.purple}}
+    .${NS}-sub{font-size:11px;color:${C.muted};margin-top:2px}
+    .${NS}-fuse{display:flex;gap:6px;flex-wrap:wrap}
+    .${NS}-fuse a,.${NS}-btn{
+      padding:6px 10px;border-radius:8px;text-decoration:none;
+      background:${C.bg3};border:1px solid ${C.line};color:${C.text};
+      font-size:11px;font-weight:700;cursor:pointer;
+    }
+    .${NS}-fuse a.on{color:${C.purple};border-color:${C.purple};background:rgba(123,44,191,.12)}
+    .${NS}-fuse a.ds{color:${C.cyan};border-color:${C.cyan};background:rgba(0,212,255,.08)}
+    .${NS}-meta{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:8px 16px;background:${C.bg3};border-bottom:1px solid ${C.line};
+      font-size:11px;color:${C.muted};
+    }
+    .${NS}-pill{
+      padding:3px 8px;border-radius:999px;border:1px solid ${C.green};
+      color:${C.green};font-size:10px;font-weight:800;background:rgba(0,255,136,.08)
+    }
+    .${NS}-body{display:grid;grid-template-columns:290px 1fr;flex:1;min-height:0}
+    .${NS}-side{background:${C.bg2};border-right:1px solid ${C.line};padding:12px;overflow:auto}
+    .${NS}-main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .${NS}-panel{background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px;margin-bottom:12px}
+    .${NS}-ph{font-size:11px;font-weight:800;color:${C.purple};text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .${NS}-field{margin-bottom:10px}
+    .${NS}-label{display:block;font-size:11px;color:${C.muted};margin-bottom:6px}
+    .${NS}-input,.${NS}-select,.${NS}-range{width:100%;box-sizing:border-box}
+    .${NS}-input,.${NS}-select{
+      padding:9px 10px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.text};font-size:12px;
+    }
+    .${NS}-range{accent-color:${C.purple}}
+    .${NS}-rv{font-size:11px;color:${C.purple};font-weight:700;margin-top:4px}
+    .${NS}-small{font-size:11px;color:${C.muted};line-height:1.45}
+    .${NS}-btnrow{display:flex;gap:8px;flex-wrap:wrap}
+    .${NS}-tabs{display:flex;gap:2px;flex-wrap:wrap;padding:10px;border-bottom:1px solid ${C.line};background:${C.bg2}}
+    .${NS}-tab{
+      padding:8px 12px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.muted};font-size:11px;font-weight:800;cursor:pointer;
+    }
+    .${NS}-tab.on{background:${C.cyan};border-color:${C.cyan};color:#081019}
+    .${NS}-viewport{
+      flex:1;overflow:auto;padding:12px;
+      background:radial-gradient(circle at top, #1b1730 0%, ${C.bg} 54%, #09111d 100%);
+    }
+    .${NS}-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .${NS}-card{
+      background:linear-gradient(180deg,#11182a 0%, #0f1524 100%);
+      border:1px solid ${C.line};border-radius:12px;padding:12px;min-width:0;
+    }
+    .${NS}-ct{font-size:11px;font-weight:800;color:${C.pink};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .${NS}-kpi{font-size:28px;font-weight:900;color:${C.green};line-height:1.1}
+    .${NS}-subk{font-size:11px;color:${C.muted};margin-top:6px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .${NS}-canvaswrap{
+      position:relative;height:330px;border:1px solid ${C.line};border-radius:12px;overflow:hidden;background:#0b101b;
+    }
+    .${NS}-canvaswrap canvas{width:100%;height:100%;display:block}
+    .${NS}-overlay{
+      position:absolute;top:10px;left:10px;padding:8px 10px;border-radius:10px;
+      background:rgba(10,14,26,.9);border:1px solid ${C.line};font-size:11px;color:${C.muted};line-height:1.5;
+    }
+    .${NS}-table{width:100%;border-collapse:collapse;font-size:11px}
+    .${NS}-table th{text-align:left;padding:8px 6px;color:${C.muted};border-bottom:1px solid ${C.line};font-weight:700}
+    .${NS}-table td{padding:8px 6px;border-bottom:1px solid rgba(58,64,89,.34);vertical-align:top}
+    .${NS}-table tr:hover td{background:rgba(255,255,255,.02)}
+    .${NS}-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(58,64,89,.34)}
+    .${NS}-row:last-child{border-bottom:none}
+    .${NS}-key{font-size:11px;color:${C.muted}}
+    .${NS}-val{font-size:11px;color:${C.text};font-weight:700;text-align:right}
+    .${NS}-bar{height:8px;border-radius:999px;overflow:hidden;background:#09111d;border:1px solid #1f2a42}
+    .${NS}-bar > span{display:block;height:100%;background:linear-gradient(90deg,${C.purple},${C.green})}
+    .${NS}-chip{
+      display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+      border:1px solid ${C.line};background:${C.bg3};font-size:10px;margin:0 6px 6px 0
+    }
+    @media (max-width:1100px){
+      .${NS}-body{grid-template-columns:1fr}
+      .${NS}-side{border-right:none;border-bottom:1px solid ${C.line}}
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+    }
+  `;
+  mount.appendChild(style);
+
+  function render() {
+    mount.querySelectorAll(":scope > ." + NS + "-wrap").forEach(function(n){ n.remove(); });
+    var m = model();
+
+    var wrap = document.createElement("div");
+    wrap.className = NS + "-wrap";
+    wrap.innerHTML =
+      '<div class="'+NS+'-hdr">'
+      + '<div class="'+NS+'-logo">⚡</div>'
+      + '<div class="'+NS+'-titlewrap">'
+      +   '<div class="'+NS+'-title">Workspace: W2 · Luke II Catch / Hold</div>'
+      +   '<div class="'+NS+'-sub">Electromagnetic catch, station-keep, hold envelope, outbound release, route-state preview</div>'
+      + '</div>'
+      + '<div class="'+NS+'-fuse">'
+      +   '<a href="#">W1</a><a href="#" class="on">W2</a><a href="#">W3</a><a href="#">W4</a><a href="#">W5</a><a href="#">W6</a><a href="#" class="ds">DATA</a>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-meta">'
+      +   '<span class="'+NS+'-pill">● OPERATIONAL</span>'
+      +   '<span>/w2/data</span>'
+      +   '<span>v2.0.0</span>'
+      +   '<span>Units: SI + capture proxy</span>'
+      +   '<span>Römer Industries / EMASSC</span>'
+      +   '<span id="'+NS+'-utc" style="margin-left:auto"></span>'
+      + '</div>'
+
+      + '<div class="'+NS+'-body">'
+      +   '<div class="'+NS+'-side">'+sideHTML(m)+'</div>'
+      +   '<div class="'+NS+'-main">'
+      +     tabsHTML()
+      +     '<div class="'+NS+'-viewport" id="'+NS+'-viewport"></div>'
+      +   '</div>'
+      + '</div>';
+
+    mount.appendChild(wrap);
+    bind();
+    renderTab();
+    tickUTC();
+  }
+
+  function sideHTML(m) {
+    return ''
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Mode Controls</div>'
+      +   fieldSelect("Mode", NS+"-mode", ["Rendezvous","Capture","Hold","Launch"], STATE.mode)
+      +   fieldSelect("Route State", NS+"-route", ["Inbound to GEO","Inbound to LEO","Hold at GEO","Outbound Lunar","Outbound Mars"], STATE.routeMode)
+      +   fieldSelect("Payload Class", NS+"-pc", ["Ore Packet","Refined Ingot","Container Pod","Probe Bus"], STATE.payloadClass)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Core Variables</div>'
+      +   fieldRange("Catch Radius (m)", NS+"-cr", 5, 200, 1, STATE.catchRadius, STATE.catchRadius)
+      +   fieldRange("Approach Velocity (m/s)", NS+"-av", 0.1, 10.0, 0.1, STATE.approachVel, fmt(STATE.approachVel,1))
+      +   fieldRange("Holding Force (N)", NS+"-hf", 10, 500, 1, STATE.holdingForce, STATE.holdingForce)
+      +   fieldRange("Coil Current (A)", NS+"-cc", 100, 2000, 1, STATE.coilCurrent, STATE.coilCurrent)
+      +   fieldRange("EM Frequency (Hz)", NS+"-ef", 10, 500, 1, STATE.emFreq, STATE.emFreq)
+      +   fieldRange("Payload Mass (kg)", NS+"-mass", 100, 10000, 50, STATE.massKg, STATE.massKg)
+      +   fieldRange("Alignment Error (deg)", NS+"-ae", 0, 30, 1, STATE.alignmentErr, STATE.alignmentErr)
+      +   fieldRange("Hold Margin (%)", NS+"-hm", 0, 60, 1, STATE.holdMargin, STATE.holdMargin + "%")
+      +   fieldRange("Launch Assist (%)", NS+"-la", 0, 100, 1, STATE.launchAssist, STATE.launchAssist + "%")
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Quick Actions</div>'
+      +   '<div class="'+NS+'-btnrow">'
+      +     btn("Variable Compound", "vca")
+      +     btn("Pattern Simplify", "ps")
+      +     btn("Large Optimise", "lso")
+      +     btn("Widen Search", "ws")
+      +   '</div>'
+      +   '<div class="'+NS+'-btnrow" style="margin-top:8px;">'
+      +     btn("Run & Log", "run")
+      +     btn("Export JSON", "export")
+      +   '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Instant Readout</div>'
+      +   statRow("B-coil", m.Bcoil.toExponential(2)+" T", C.cyan)
+      +   statRow("Capture score", fmt(m.captureScore,1)+"/100", m.captureScore > 78 ? C.green : m.captureScore > 58 ? C.amber : C.red)
+      +   statRow("Hold stability", fmt(m.holdStability,1)+"/100", m.holdStability > 75 ? C.green : m.holdStability > 55 ? C.amber : C.red)
+      +   statRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? C.green : m.safetyEnvelope > 55 ? C.amber : C.red)
+      +   statRow("State", esc(m.stateName), m.stateName === "Unsafe" ? C.red : m.stateName === "Conditional" ? C.amber : C.green)
+      + '</div>';
+  }
+
+  function fieldSelect(label, id, values, current) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<select class="'+NS+'-select" id="'+id+'">'
+      + values.map(function (v) {
+          return '<option value="'+esc(v)+'"'+(v === current ? ' selected' : '')+'>'+esc(v)+'</option>';
+        }).join("")
+      + '</select></div>';
+  }
+
+  function fieldRange(label, id, min, max, step, value, displayValue) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<input class="'+NS+'-range" type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">'
+      + '<div class="'+NS+'-rv">'+esc(displayValue)+'</div>'
+      + '</div>';
+  }
+
+  function btn(label, action) {
+    return '<button class="'+NS+'-btn" data-action="'+action+'">'+label+'</button>';
+  }
+
+  function statRow(k, v, color) {
+    return '<div class="'+NS+'-row"><div class="'+NS+'-key">'+k+'</div><div class="'+NS+'-val" style="color:'+color+'">'+v+'</div></div>';
+  }
+
+  function tabsHTML() {
+    var tabs = [
+      ["field","EM Field Sim"],
+      ["force","Force Analysis"],
+      ["envelope","Hold Envelope"],
+      ["route","Route State"],
+      ["exports","Exports & Sweep"],
+      ["connections","Connections"]
+    ];
+    return '<div class="'+NS+'-tabs">'
+      + tabs.map(function (t) {
+          return '<button class="'+NS+'-tab'+(STATE.tab === t[0] ? ' on' : '')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+        }).join("")
+      + '</div>';
+  }
+
+  function renderTab() {
+    var vp = mount.querySelector("#"+NS+"-viewport");
+    if (!vp) return;
+    if (STATE.tab === "field") vp.innerHTML = renderField();
+    if (STATE.tab === "force") vp.innerHTML = renderForce();
+    if (STATE.tab === "envelope") vp.innerHTML = renderEnvelope();
+    if (STATE.tab === "route") vp.innerHTML = renderRoute();
+    if (STATE.tab === "exports") vp.innerHTML = renderExports();
+    if (STATE.tab === "connections") vp.innerHTML = renderConnections();
+
+    if (STATE.tab === "field") drawFieldCanvas();
+    if (STATE.tab === "force") drawForceCanvas();
+    if (STATE.tab === "envelope") drawEnvelopeCanvas();
+    if (STATE.tab === "route") drawRouteCanvas();
+  }
+
+  function renderField() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Catch Radius", '<div class="'+NS+'-kpi">'+STATE.catchRadius+'</div><div class="'+NS+'-subk">m operator capture radius</div>', "span-3")
+      + card("Approach Velocity", '<div class="'+NS+'-kpi">'+fmt(STATE.approachVel,1)+'</div><div class="'+NS+'-subk">m/s inbound relative speed</div>', "span-3")
+      + card("Holding Force", '<div class="'+NS+'-kpi">'+STATE.holdingForce+'</div><div class="'+NS+'-subk">N nominal hold force</div>', "span-3")
+      + card("Coil Current", '<div class="'+NS+'-kpi">'+STATE.coilCurrent+'</div><div class="'+NS+'-subk">A active current load</div>', "span-3")
+      + card("EM Field Simulation", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-field-canvas"></canvas><div class="'+NS+'-overlay">Catch rings, coil core, approach vector, and field spokes. Green = inbound packet.</div></div>', "span-8")
+      + card("Capture State",
+          statRow("Mode", esc(STATE.mode), C.purple)
+        + statRow("Payload class", esc(STATE.payloadClass), C.cyan)
+        + statRow("Capture score", fmt(m.captureScore,1)+"/100", m.captureScore > 78 ? C.green : m.captureScore > 58 ? C.amber : C.red)
+        + statRow("Phase lock", fmt(m.phaseLock,1)+"/100", m.phaseLock > 75 ? C.green : m.phaseLock > 55 ? C.amber : C.red)
+        + statRow("Power draw", fmt(m.powerDraw,1)+" kW", C.blue)
+        + statRow("Thermal load", fmt(m.thermalLoad,1), C.red),
+        "span-4")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderForce() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Force Analysis", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-force-canvas"></canvas><div class="'+NS+'-overlay">Capture demand vs effective hold.<br>Purple = magnetic hold envelope.</div></div>', "span-8")
+      + card("Force Readout",
+          statRow("Momentum", fmt(m.momentum,1)+" kg·m/s", C.cyan)
+        + statRow("Capture demand", fmt(m.captureDemand,1), C.amber)
+        + statRow("Effective hold", fmt(m.effectiveHold,1)+" N", C.green)
+        + statRow("Launch vector", fmt(m.launchVector,1)+"/100", C.blue),
+        "span-4")
+      + card("Force Table", forceTableHTML(m), "span-12")
+      + '</div>';
+  }
+
+  function renderEnvelope() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Hold Envelope", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-envelope-canvas"></canvas><div class="'+NS+'-overlay">Safe operating region for approach velocity and alignment error under current hold assumptions.</div></div>', "span-8")
+      + card("Envelope State",
+          statRow("Hold stability", fmt(m.holdStability,1)+"/100", m.holdStability > 75 ? C.green : m.holdStability > 55 ? C.amber : C.red)
+        + statRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? C.green : m.safetyEnvelope > 55 ? C.amber : C.red)
+        + statRow("Route readiness", fmt(m.routeReadiness,1)+"/100", m.routeReadiness > 75 ? C.green : m.routeReadiness > 55 ? C.amber : C.red)
+        + statRow("State", esc(m.stateName), m.stateName === "Unsafe" ? C.red : m.stateName === "Conditional" ? C.amber : C.green),
+        "span-4")
+      + card("Envelope Readout", envelopeTableHTML(m), "span-12")
+      + '</div>';
+  }
+
+  function renderRoute() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Route State", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-route-canvas"></canvas><div class="'+NS+'-overlay">Luke II route-state window: inbound, hold, or outbound transfer context.</div></div>', "span-8")
+      + card("Route Readout",
+          statRow("Route mode", esc(STATE.routeMode), C.purple)
+        + statRow("Route readiness", fmt(m.routeReadiness,1)+"/100", m.routeReadiness > 75 ? C.green : m.routeReadiness > 55 ? C.amber : C.red)
+        + statRow("Launch assist", STATE.launchAssist+"%", C.blue)
+        + statRow("Alignment error", STATE.alignmentErr+"°", C.amber),
+        "span-4")
+      + card("Transfer Steps", routeTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderExports() {
+    return '<div class="'+NS+'-grid">'
+      + card("Sweep Actions",
+          '<div style="margin-bottom:8px;">'
+        + '<span class="'+NS+'-chip">Variable Compound Analysis</span>'
+        + '<span class="'+NS+'-chip">Pattern Simplification</span>'
+        + '<span class="'+NS+'-chip">Large-Scale Optimisation</span>'
+        + '<span class="'+NS+'-chip">Widen Search</span>'
+        + '</div>'
+        + '<div class="'+NS+'-small">Front-end triggers are exposed here; heavy-lift trajectory coupling, stability solve, and export validation should live in dataspace.</div>',
+        "span-4")
+      + card("Exports",
+          '<table class="'+NS+'-table"><thead><tr><th>Item</th><th>Source</th><th>Date</th><th>Type</th><th>Action</th></tr></thead><tbody>'
+          + '<tr><td>catch_state_payload.json</td><td>W2 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>publish</td><td>Ready</td></tr>'
+          + '<tr><td>hold_envelope_payload.json</td><td>W2 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>handoff</td><td>Ready</td></tr>'
+          + '<tr><td>launch_vector_payload.json</td><td>W2 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>route</td><td>Ready</td></tr>'
+          + '</tbody></table>',
+        "span-8")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderConnections() {
+    return '<div class="'+NS+'-grid">'
+      + card("Consumes From",
+          '<div class="'+NS+'-small">W1 deposit — target object and mass assumptions<br>W3 RFS / EMFF — field configuration envelope<br>W5 mission planning — trajectory and route-state timing</div>',
+        "span-6")
+      + card("Feeds Into",
+          '<div class="'+NS+'-small">W4 supply chain — dispatch and hold timing<br>W6 asset library — state and target handoff<br>Operational capture envelopes for Luke chain</div>',
+        "span-6")
+      + card("Operational Intent",
+          '<div class="'+NS+'-small">W2 should act as the operator-facing capture workspace: approach, catch, stable hold, controlled drop, and outbound launch context. The front-end previews state and physics relationships while dataspace handles deeper solving, validation, and persistent export.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function card(title, body, span) {
+    return '<div class="'+NS+'-card '+(span || "span-3")+'"><div class="'+NS+'-ct">'+title+'</div>'+body+'</div>';
+  }
+
+  function logTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>UTC</th><th>Type</th><th>Message</th></tr></thead><tbody>'
+      + STATE.logs.map(function (l) {
+          return '<tr><td>'+esc(l.t.replace("T"," ").replace("Z"," UTC"))+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.msg)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function forceTableHTML(m) {
+    return '<table class="'+NS+'-table"><thead><tr><th>Metric</th><th>Value</th><th>Status</th></tr></thead><tbody>'
+      + tableRow("B-coil", m.Bcoil.toExponential(2)+" T", "nominal")
+      + tableRow("Capture demand", fmt(m.captureDemand,1), m.captureDemand < m.effectiveHold ? "covered" : "high")
+      + tableRow("Effective hold", fmt(m.effectiveHold,1)+" N", "available")
+      + tableRow("Momentum", fmt(m.momentum,1)+" kg·m/s", "tracked")
+      + tableRow("Launch vector", fmt(m.launchVector,1)+"/100", m.launchVector > 70 ? "ready" : "partial")
+      + '</tbody></table>';
+  }
+
+  function envelopeTableHTML(m) {
+    return '<table class="'+NS+'-table"><thead><tr><th>Parameter</th><th>Value</th><th>Assessment</th></tr></thead><tbody>'
+      + tableRow("Approach velocity", fmt(STATE.approachVel,1)+" m/s", STATE.approachVel < 2 ? "safe" : STATE.approachVel < 5 ? "conditional" : "high")
+      + tableRow("Alignment error", STATE.alignmentErr+"°", STATE.alignmentErr < 8 ? "safe" : STATE.alignmentErr < 16 ? "conditional" : "high")
+      + tableRow("Hold margin", STATE.holdMargin+"%", STATE.holdMargin > 20 ? "strong" : "thin")
+      + tableRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? "good" : m.safetyEnvelope > 55 ? "watch" : "poor")
+      + tableRow("State", esc(m.stateName), m.stateName.toLowerCase())
+      + '</tbody></table>';
+  }
+
+  function tableRow(a, b, c) {
+    return '<tr><td>'+a+'</td><td>'+b+'</td><td>'+c+'</td></tr>';
+  }
+
+  function routeTableHTML() {
+    var path = activeRoute();
+    return '<table class="'+NS+'-table"><thead><tr><th>Step</th><th>Node</th><th>Phase</th><th>Status</th></tr></thead><tbody>'
+      + path.map(function (n, i) {
+          var phase = i === 0 && path.length > 1 ? "Origin / inbound" : i === path.length - 1 ? "Destination / handoff" : "Relay";
+          var status = i === 0 ? "active" : i === path.length - 1 ? "pending arrival" : "queued";
+          return '<tr><td>'+(i+1)+'</td><td>'+esc(n)+'</td><td>'+phase+'</td><td>'+status+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function activeRoute() {
+    return {
+      "Inbound to GEO": ["NEA Inbound", "GEO Luke II"],
+      "Inbound to LEO": ["NEA Inbound", "GEO Luke II", "LEO Depot"],
+      "Hold at GEO": ["GEO Luke II"],
+      "Outbound Lunar": ["GEO Luke II", "Cislunar Node"],
+      "Outbound Mars": ["GEO Luke II", "Cislunar Node", "Mars Relay"]
+    }[STATE.routeMode] || ["NEA Inbound", "GEO Luke II"];
+  }
+
+  function bind() {
+    mount.querySelectorAll("."+NS+"-tab").forEach(function (el) {
+      el.addEventListener("click", function () {
+        STATE.tab = this.getAttribute("data-tab");
+        render();
+      });
+    });
+
+    [
+      [NS+"-mode","mode"],
+      [NS+"-route","routeMode"],
+      [NS+"-pc","payloadClass"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("change", function () {
+          STATE[pair[1]] = this.value;
+          pushLog("config", pair[1] + " updated");
+          render();
+        });
+      }
+    });
+
+    [
+      [NS+"-cr","catchRadius"],
+      [NS+"-av","approachVel"],
+      [NS+"-hf","holdingForce"],
+      [NS+"-cc","coilCurrent"],
+      [NS+"-ef","emFreq"],
+      [NS+"-mass","massKg"],
+      [NS+"-ae","alignmentErr"],
+      [NS+"-hm","holdMargin"],
+      [NS+"-la","launchAssist"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("input", function () {
+          STATE[pair[1]] = parseFloat(this.value);
+          render();
+        });
+      }
+    });
+
+    mount.querySelectorAll("."+NS+"-btn[data-action]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a = this.getAttribute("data-action");
+        if (a === "run") {
+          var m = model();
+          pushLog("run", "W2 run logged | state " + m.stateName + " | capture " + fmt(m.captureScore,1) + " | hold " + fmt(m.holdStability,1));
+          render();
+          return;
+        }
+        if (a === "export") {
+          var payload = {
+            mode: STATE.mode,
+            routeMode: STATE.routeMode,
+            payloadClass: STATE.payloadClass,
+            catchRadiusM: STATE.catchRadius,
+            approachVelocityMs: STATE.approachVel,
+            holdingForceN: STATE.holdingForce,
+            coilCurrentA: STATE.coilCurrent,
+            emFrequencyHz: STATE.emFreq,
+            payloadMassKg: STATE.massKg,
+            alignmentErrorDeg: STATE.alignmentErr,
+            holdMarginPct: STATE.holdMargin,
+            launchAssistPct: STATE.launchAssist,
+            metrics: model(),
+            exportedUtc: new Date().toISOString()
+          };
+          var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "w2_catch_hold_payload.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          pushLog("export", "Catch/hold payload exported");
+          render();
+          return;
+        }
+        STATE.selectedSweep = a;
+        pushLog("sweep", "Sweep triggered: " + a.toUpperCase());
+        render();
+      });
+    });
+  }
+
+  function drawFieldCanvas() {
+    var c = mount.querySelector("#"+NS+"-field-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W / 2, cy = H / 2;
+    var rings = 6;
+    for (var i = 1; i <= rings; i++) {
+      var r = i * (Math.min(W,H) * 0.06 + STATE.catchRadius * 0.08);
+      var alpha = Math.max(0.06, 0.36 - i * 0.04);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 0.2, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(123,44,191," + alpha + ")";
+      ctx.lineWidth = 2 - i * 0.18;
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+    ctx.fillStyle = C.purple;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(123,44,191,.65)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    var avs = Math.min(W,H) * 0.34;
+    ctx.strokeStyle = "rgba(0,255,136,.75)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + avs, cy - avs * 0.25);
+    ctx.lineTo(cx + 24, cy);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx + avs, cy - avs * 0.25, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0,255,136,.88)";
+    ctx.fill();
+
+    for (var a = 0; a < 8; a++) {
+      var ang = a / 8 * Math.PI * 2;
+      var r2 = Math.min(W,H) * 0.16;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(ang) * r2, cy + Math.sin(ang) * r2);
+      ctx.lineTo(cx + Math.cos(ang) * (r2 - 14), cy + Math.sin(ang) * (r2 - 14));
+      ctx.strokeStyle = "rgba(123,44,191,.45)";
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+    }
+  }
+
+  function drawForceCanvas() {
+    var c = mount.querySelector("#"+NS+"-force-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    var m = model();
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var baseY = H * 0.72;
+    var leftX = W * 0.20;
+    var barW = W * 0.18;
+    var scale = Math.max(m.effectiveHold, m.captureDemand, 1);
+
+    ctx.fillStyle = C.amber;
+    ctx.fillRect(leftX, baseY - (m.captureDemand / scale) * H * 0.46, barW, (m.captureDemand / scale) * H * 0.46);
+
+    ctx.fillStyle = C.green;
+    ctx.fillRect(leftX + W * 0.30, baseY - (m.effectiveHold / scale) * H * 0.46, barW, (m.effectiveHold / scale) * H * 0.46);
+
+    ctx.fillStyle = C.text;
+    ctx.font = "12px Inter, sans-serif";
+    ctx.fillText("Capture Demand", leftX, baseY + 20);
+    ctx.fillText("Effective Hold", leftX + W * 0.30, baseY + 20);
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText(fmt(m.captureDemand,1), leftX + 8, baseY - (m.captureDemand / scale) * H * 0.46 - 8);
+    ctx.fillText(fmt(m.effectiveHold,1), leftX + W * 0.30 + 8, baseY - (m.effectiveHold / scale) * H * 0.46 - 8);
+  }
+
+  function drawEnvelopeCanvas() {
+    var c = mount.querySelector("#"+NS+"-envelope-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cols = 18, rows = 12;
+    var cw = W / cols, rh = H / rows;
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        var vel = (x / (cols - 1)) * 10;
+        var err = (y / (rows - 1)) * 30;
+        var score = 96
+          - vel * 8
+          - err * 2.1
+          + STATE.holdMargin * 0.55
+          + STATE.holdingForce * 0.03
+          - STATE.massKg * 0.002;
+        score = Math.max(0, Math.min(100, score));
+        ctx.fillStyle = score > 75 ? "rgba(0,255,136,.72)" : score > 55 ? "rgba(255,170,0,.70)" : "rgba(255,91,91,.65)";
+        ctx.fillRect(x*cw + 1, y*rh + 1, cw - 2, rh - 2);
+      }
+    }
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("Approach velocity →", 10, H - 8);
+    ctx.save();
+    ctx.translate(10, H - 24);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("Alignment error ↑", 0, 0);
+    ctx.restore();
+  }
+
+  function drawRouteCanvas() {
+    var c = mount.querySelector("#"+NS+"-route-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var path = activeRoute();
+    path.forEach(function (name, i) {
+      var n = ROUTE_NODES[name];
+      if (!n) return;
+      if (i < path.length - 1) {
+        var next = ROUTE_NODES[path[i+1]];
+        ctx.beginPath();
+        ctx.moveTo(n.x * W, n.y * H);
+        ctx.lineTo(next.x * W, next.y * H);
+        ctx.strokeStyle = C.green;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+    });
+
+    Object.keys(ROUTE_NODES).forEach(function (name) {
+      var n = ROUTE_NODES[name];
+      var active = path.indexOf(name) !== -<div id="w2-root"></div>
+<script>
+(function () {
+  var mount = document.getElementById("w2-root");
+  if (!mount) return;
+
+  var NS = "w2sq";
+  var C = {
+    bg: "#0a0e1a",
+    bg2: "#1a1f2e",
+    bg3: "#252b3d",
+    panel: "#11182a",
+    line: "#3a4059",
+    purple: "#7b2cbf",
+    pink: "#ff6b9d",
+    cyan: "#00d4ff",
+    blue: "#00aaff",
+    green: "#00ff88",
+    amber: "#ffaa00",
+    red: "#ff5b5b",
+    text: "#e8eaf0",
+    muted: "#8b92a8"
+  };
+
+  var ROUTE_NODES = {
+    "LEO Depot": { x: 0.18, y: 0.78, kind: "earth" },
+    "GEO Luke II": { x: 0.36, y: 0.56, kind: "geo" },
+    "Cislunar Node": { x: 0.54, y: 0.34, kind: "lunar" },
+    "NEA Inbound": { x: 0.70, y: 0.66, kind: "nea" },
+    "Mars Relay": { x: 0.82, y: 0.22, kind: "mars" }
+  };
+
+  var STATE = {
+    tab: "field",
+    mode: "Capture",
+    routeMode: "Inbound to GEO",
+    payloadClass: "Ore Packet",
+    catchRadius: 50,
+    approachVel: 0.5,
+    holdingForce: 120,
+    coilCurrent: 850,
+    emFreq: 60,
+    massKg: 1800,
+    alignmentErr: 6,
+    holdMargin: 18,
+    launchAssist: 22,
+    logs: [
+      { t: "2026-04-08T02:12:00Z", type: "field", msg: "Luke II catch field initialized for operator preview" },
+      { t: "2026-04-08T02:16:00Z", type: "hold", msg: "Hold envelope refreshed from current capture assumptions" },
+      { t: "2026-04-08T02:20:00Z", type: "route", msg: "Route state synchronized with inbound GEO chain" }
+    ],
+    selectedSweep: null
+  };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmt(n, d) {
+    return Number(n).toFixed(d == null ? 2 : d);
+  }
+
+  function pushLog(type, msg) {
+    STATE.logs.unshift({ t: new Date().toISOString(), type: type, msg: msg });
+    if (STATE.logs.length > 24) STATE.logs.length = 24;
+  }
+
+  function model() {
+    var mu0 = 4 * Math.PI * 1e-7;
+    var cr = STATE.catchRadius;
+    var av = STATE.approachVel;
+    var hf = STATE.holdingForce;
+    var cc = STATE.coilCurrent;
+    var ef = STATE.emFreq;
+    var mass = STATE.massKg;
+    var align = STATE.alignmentErr;
+    var hm = STATE.holdMargin;
+    var la = STATE.launchAssist;
+
+    var Bcoil = (mu0 * cc * 100) / Math.max(2 * cr, 1);
+    var v = av;
+    var momentum = mass * v;
+    var captureDemand = Math.max(1, momentum / Math.max(cr, 1));
+    var effectiveHold = hf * (1 + hm / 100) * Math.max(0.45, 1 - align / 30);
+    var captureScore = Math.max(0, Math.min(100,
+      84
+      + (effectiveHold / Math.max(captureDemand,1)) * 8
+      - v * 18
+      - align * 1.2
+      + Math.log(Math.max(cc,1)) * 6
+    ));
+    var holdStability = Math.max(0, Math.min(100,
+      78 + (effectiveHold / Math.max(mass * 0.06, 1)) * 5 - align * 1.4 - v * 10
+    ));
+    var powerDraw = (cc * ef * 0.0022) + (hf * 0.03) + (la * 0.8);
+    var thermalLoad = powerDraw * 0.72 + ef * 0.35 + cc * 0.01;
+    var launchVector = Math.max(0, Math.min(100,
+      40 + la * 1.8 + ef * 0.08 - align * 0.8
+    ));
+    var safetyEnvelope = Math.max(0, Math.min(100,
+      92 - thermalLoad * 0.35 - v * 14 - align * 1.1 + hm * 0.9
+    ));
+    var routeReadiness = Math.max(0, Math.min(100,
+      captureScore * 0.32 + holdStability * 0.28 + safetyEnvelope * 0.22 + launchVector * 0.18
+    ));
+    var phaseLock = Math.max(0, Math.min(100,
+      88 - Math.abs((ef % 120) - 60) * 0.5 - align * 1.3
+    ));
+    var stateName = captureScore > 78 && holdStability > 72
+      ? (STATE.mode === "Launch" ? "Launch-Ready" : STATE.mode === "Hold" ? "Stable Hold" : "Capture Nominal")
+      : captureScore > 58
+      ? "Conditional"
+      : "Unsafe";
+
+    return {
+      Bcoil: Bcoil,
+      momentum: momentum,
+      captureDemand: captureDemand,
+      effectiveHold: effectiveHold,
+      captureScore: captureScore,
+      holdStability: holdStability,
+      powerDraw: powerDraw,
+      thermalLoad: thermalLoad,
+      launchVector: launchVector,
+      safetyEnvelope: safetyEnvelope,
+      routeReadiness: routeReadiness,
+      phaseLock: phaseLock,
+      stateName: stateName
+    };
+  }
+
+  function activeRoute() {
+    var map = {
+      "Inbound to GEO": ["NEA Inbound", "GEO Luke II"],
+      "Inbound to LEO": ["NEA Inbound", "GEO Luke II", "LEO Depot"],
+      "Hold at GEO": ["GEO Luke II"],
+      "Outbound Lunar": ["GEO Luke II", "Cislunar Node"],
+      "Outbound Mars": ["GEO Luke II", "Cislunar Node", "Mars Relay"]
+    };
+    return map[STATE.routeMode] || ["NEA Inbound", "GEO Luke II"];
+  }
+
+  var style = document.createElement("style");
+  style.textContent = `
+    #w2-root{width:100%}
+    .${NS}-wrap{
+      width:100%;
+      min-height:980px;
+      display:flex;
+      flex-direction:column;
+      background:${C.bg};
+      color:${C.text};
+      border:1px solid ${C.line};
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.3);
+      font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+    }
+    .${NS}-hdr{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;background:${C.bg2};border-bottom:1px solid ${C.line};
+    }
+    .${NS}-logo{
+      width:30px;height:30px;border-radius:50%;
+      display:grid;place-items:center;font-weight:900;
+      color:#081019;background:linear-gradient(135deg,${C.purple},${C.pink});
+    }
+    .${NS}-titlewrap{flex:1;min-width:240px}
+    .${NS}-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${C.purple}}
+    .${NS}-sub{font-size:11px;color:${C.muted};margin-top:2px}
+    .${NS}-fuse{display:flex;gap:6px;flex-wrap:wrap}
+    .${NS}-fuse a,.${NS}-btn{
+      padding:6px 10px;border-radius:8px;text-decoration:none;
+      background:${C.bg3};border:1px solid ${C.line};color:${C.text};
+      font-size:11px;font-weight:700;cursor:pointer;
+    }
+    .${NS}-fuse a.on{color:${C.purple};border-color:${C.purple};background:rgba(123,44,191,.12)}
+    .${NS}-fuse a.ds{color:${C.cyan};border-color:${C.cyan};background:rgba(0,212,255,.08)}
+    .${NS}-meta{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:8px 16px;background:${C.bg3};border-bottom:1px solid ${C.line};
+      font-size:11px;color:${C.muted};
+    }
+    .${NS}-pill{
+      padding:3px 8px;border-radius:999px;border:1px solid ${C.green};
+      color:${C.green};font-size:10px;font-weight:800;background:rgba(0,255,136,.08)
+    }
+    .${NS}-body{display:grid;grid-template-columns:290px 1fr;flex:1;min-height:0}
+    .${NS}-side{background:${C.bg2};border-right:1px solid ${C.line};padding:12px;overflow:auto}
+    .${NS}-main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .${NS}-panel{background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px;margin-bottom:12px}
+    .${NS}-ph{font-size:11px;font-weight:800;color:${C.purple};text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .${NS}-field{margin-bottom:10px}
+    .${NS}-label{display:block;font-size:11px;color:${C.muted};margin-bottom:6px}
+    .${NS}-input,.${NS}-select,.${NS}-range{width:100%;box-sizing:border-box}
+    .${NS}-input,.${NS}-select{
+      padding:9px 10px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.text};font-size:12px;
+    }
+    .${NS}-range{accent-color:${C.purple}}
+    .${NS}-rv{font-size:11px;color:${C.purple};font-weight:700;margin-top:4px}
+    .${NS}-small{font-size:11px;color:${C.muted};line-height:1.45}
+    .${NS}-btnrow{display:flex;gap:8px;flex-wrap:wrap}
+    .${NS}-tabs{display:flex;gap:2px;flex-wrap:wrap;padding:10px;border-bottom:1px solid ${C.line};background:${C.bg2}}
+    .${NS}-tab{
+      padding:8px 12px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.muted};font-size:11px;font-weight:800;cursor:pointer;
+    }
+    .${NS}-tab.on{background:${C.cyan};border-color:${C.cyan};color:#081019}
+    .${NS}-viewport{
+      flex:1;overflow:auto;padding:12px;
+      background:radial-gradient(circle at top, #1b1730 0%, ${C.bg} 54%, #09111d 100%);
+    }
+    .${NS}-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .${NS}-card{
+      background:linear-gradient(180deg,#11182a 0%, #0f1524 100%);
+      border:1px solid ${C.line};border-radius:12px;padding:12px;min-width:0;
+    }
+    .${NS}-ct{font-size:11px;font-weight:800;color:${C.pink};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .${NS}-kpi{font-size:28px;font-weight:900;color:${C.green};line-height:1.1}
+    .${NS}-subk{font-size:11px;color:${C.muted};margin-top:6px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .${NS}-canvaswrap{
+      position:relative;height:330px;border:1px solid ${C.line};border-radius:12px;overflow:hidden;background:#0b101b;
+    }
+    .${NS}-canvaswrap canvas{width:100%;height:100%;display:block}
+    .${NS}-overlay{
+      position:absolute;top:10px;left:10px;padding:8px 10px;border-radius:10px;
+      background:rgba(10,14,26,.9);border:1px solid ${C.line};font-size:11px;color:${C.muted};line-height:1.5;
+    }
+    .${NS}-table{width:100%;border-collapse:collapse;font-size:11px}
+    .${NS}-table th{text-align:left;padding:8px 6px;color:${C.muted};border-bottom:1px solid ${C.line};font-weight:700}
+    .${NS}-table td{padding:8px 6px;border-bottom:1px solid rgba(58,64,89,.34);vertical-align:top}
+    .${NS}-table tr:hover td{background:rgba(255,255,255,.02)}
+    .${NS}-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(58,64,89,.34)}
+    .${NS}-row:last-child{border-bottom:none}
+    .${NS}-key{font-size:11px;color:${C.muted}}
+    .${NS}-val{font-size:11px;color:${C.text};font-weight:700;text-align:right}
+    .${NS}-bar{height:8px;border-radius:999px;overflow:hidden;background:#09111d;border:1px solid #1f2a42}
+    .${NS}-bar > span{display:block;height:100%;background:linear-gradient(90deg,${C.purple},${C.green})}
+    .${NS}-chip{
+      display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+      border:1px solid ${C.line};background:${C.bg3};font-size:10px;margin:0 6px 6px 0
+    }
+    @media (max-width:1100px){
+      .${NS}-body{grid-template-columns:1fr}
+      .${NS}-side{border-right:none;border-bottom:1px solid ${C.line}}
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+    }
+  `;
+  mount.appendChild(style);
+
+  function render() {
+    mount.querySelectorAll(":scope > ." + NS + "-wrap").forEach(function(n){ n.remove(); });
+    var m = model();
+
+    var wrap = document.createElement("div");
+    wrap.className = NS + "-wrap";
+    wrap.innerHTML =
+      '<div class="'+NS+'-hdr">'
+      + '<div class="'+NS+'-logo">⚡</div>'
+      + '<div class="'+NS+'-titlewrap">'
+      +   '<div class="'+NS+'-title">Workspace: W2 · Luke II Catch / Hold</div>'
+      +   '<div class="'+NS+'-sub">Electromagnetic catch, station-keep, hold envelope, outbound release, route-state preview</div>'
+      + '</div>'
+      + '<div class="'+NS+'-fuse">'
+      +   '<a href="#">W1</a><a href="#" class="on">W2</a><a href="#">W3</a><a href="#">W4</a><a href="#">W5</a><a href="#">W6</a><a href="#" class="ds">DATA</a>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-meta">'
+      +   '<span class="'+NS+'-pill">● OPERATIONAL</span>'
+      +   '<span>/w2/data</span>'
+      +   '<span>v2.0.0</span>'
+      +   '<span>Units: SI + capture proxy</span>'
+      +   '<span>Römer Industries / EMASSC</span>'
+      +   '<span id="'+NS+'-utc" style="margin-left:auto"></span>'
+      + '</div>'
+
+      + '<div class="'+NS+'-body">'
+      +   '<div class="'+NS+'-side">'+sideHTML(m)+'</div>'
+      +   '<div class="'+NS+'-main">'
+      +     tabsHTML()
+      +     '<div class="'+NS+'-viewport" id="'+NS+'-viewport"></div>'
+      +   '</div>'
+      + '</div>';
+
+    mount.appendChild(wrap);
+    bind();
+    renderTab();
+    tickUTC();
+  }
+
+  function sideHTML(m) {
+    return ''
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Mode Controls</div>'
+      +   fieldSelect("Mode", NS+"-mode", ["Rendezvous","Capture","Hold","Launch"], STATE.mode)
+      +   fieldSelect("Route State", NS+"-route", ["Inbound to GEO","Inbound to LEO","Hold at GEO","Outbound Lunar","Outbound Mars"], STATE.routeMode)
+      +   fieldSelect("Payload Class", NS+"-pc", ["Ore Packet","Refined Ingot","Container Pod","Probe Bus"], STATE.payloadClass)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Core Variables</div>'
+      +   fieldRange("Catch Radius (m)", NS+"-cr", 5, 200, 1, STATE.catchRadius, STATE.catchRadius)
+      +   fieldRange("Approach Velocity (m/s)", NS+"-av", 0.1, 10.0, 0.1, STATE.approachVel, fmt(STATE.approachVel,1))
+      +   fieldRange("Holding Force (N)", NS+"-hf", 10, 500, 1, STATE.holdingForce, STATE.holdingForce)
+      +   fieldRange("Coil Current (A)", NS+"-cc", 100, 2000, 1, STATE.coilCurrent, STATE.coilCurrent)
+      +   fieldRange("EM Frequency (Hz)", NS+"-ef", 10, 500, 1, STATE.emFreq, STATE.emFreq)
+      +   fieldRange("Payload Mass (kg)", NS+"-mass", 100, 10000, 50, STATE.massKg, STATE.massKg)
+      +   fieldRange("Alignment Error (deg)", NS+"-ae", 0, 30, 1, STATE.alignmentErr, STATE.alignmentErr)
+      +   fieldRange("Hold Margin (%)", NS+"-hm", 0, 60, 1, STATE.holdMargin, STATE.holdMargin + "%")
+      +   fieldRange("Launch Assist (%)", NS+"-la", 0, 100, 1, STATE.launchAssist, STATE.launchAssist + "%")
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Quick Actions</div>'
+      +   '<div class="'+NS+'-btnrow">'
+      +     btn("Variable Compound", "vca")
+      +     btn("Pattern Simplify", "ps")
+      +     btn("Large Optimise", "lso")
+      +     btn("Widen Search", "ws")
+      +   '</div>'
+      +   '<div class="'+NS+'-btnrow" style="margin-top:8px;">'
+      +     btn("Run & Log", "run")
+      +     btn("Export JSON", "export")
+      +   '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Instant Readout</div>'
+      +   statRow("B-coil", m.Bcoil.toExponential(2)+" T", C.cyan)
+      +   statRow("Capture score", fmt(m.captureScore,1)+"/100", m.captureScore > 78 ? C.green : m.captureScore > 58 ? C.amber : C.red)
+      +   statRow("Hold stability", fmt(m.holdStability,1)+"/100", m.holdStability > 75 ? C.green : m.holdStability > 55 ? C.amber : C.red)
+      +   statRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? C.green : m.safetyEnvelope > 55 ? C.amber : C.red)
+      +   statRow("State", esc(m.stateName), m.stateName === "Unsafe" ? C.red : m.stateName === "Conditional" ? C.amber : C.green)
+      + '</div>';
+  }
+
+  function fieldSelect(label, id, values, current) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<select class="'+NS+'-select" id="'+id+'">'
+      + values.map(function (v) {
+          return '<option value="'+esc(v)+'"'+(v === current ? ' selected' : '')+'>'+esc(v)+'</option>';
+        }).join("")
+      + '</select></div>';
+  }
+
+  function fieldRange(label, id, min, max, step, value, displayValue) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<input class="'+NS+'-range" type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">'
+      + '<div class="'+NS+'-rv">'+esc(displayValue)+'</div>'
+      + '</div>';
+  }
+
+  function btn(label, action) {
+    return '<button class="'+NS+'-btn" data-action="'+action+'">'+label+'</button>';
+  }
+
+  function statRow(k, v, color) {
+    return '<div class="'+NS+'-row"><div class="'+NS+'-key">'+k+'</div><div class="'+NS+'-val" style="color:'+color+'">'+v+'</div></div>';
+  }
+
+  function tabsHTML() {
+    var tabs = [
+      ["field","EM Field Sim"],
+      ["force","Force Analysis"],
+      ["envelope","Hold Envelope"],
+      ["route","Route State"],
+      ["exports","Exports & Sweep"],
+      ["connections","Connections"]
+    ];
+    return '<div class="'+NS+'-tabs">'
+      + tabs.map(function (t) {
+          return '<button class="'+NS+'-tab'+(STATE.tab === t[0] ? ' on' : '')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+        }).join("")
+      + '</div>';
+  }
+
+  function renderTab() {
+    var vp = mount.querySelector("#"+NS+"-viewport");
+    if (!vp) return;
+    if (STATE.tab === "field") vp.innerHTML = renderField();
+    if (STATE.tab === "force") vp.innerHTML = renderForce();
+    if (STATE.tab === "envelope") vp.innerHTML = renderEnvelope();
+    if (STATE.tab === "route") vp.innerHTML = renderRoute();
+    if (STATE.tab === "exports") vp.innerHTML = renderExports();
+    if (STATE.tab === "connections") vp.innerHTML = renderConnections();
+
+    if (STATE.tab === "field") drawFieldCanvas();
+    if (STATE.tab === "force") drawForceCanvas();
+    if (STATE.tab === "envelope") drawEnvelopeCanvas();
+    if (STATE.tab === "route") drawRouteCanvas();
+  }
+
+  function renderField() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Catch Radius", '<div class="'+NS+'-kpi">'+STATE.catchRadius+'</div><div class="'+NS+'-subk">m operator capture radius</div>', "span-3")
+      + card("Approach Velocity", '<div class="'+NS+'-kpi">'+fmt(STATE.approachVel,1)+'</div><div class="'+NS+'-subk">m/s inbound relative speed</div>', "span-3")
+      + card("Holding Force", '<div class="'+NS+'-kpi">'+STATE.holdingForce+'</div><div class="'+NS+'-subk">N nominal hold force</div>', "span-3")
+      + card("Coil Current", '<div class="'+NS+'-kpi">'+STATE.coilCurrent+'</div><div class="'+NS+'-subk">A active current load</div>', "span-3")
+      + card("EM Field Simulation", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-field-canvas"></canvas><div class="'+NS+'-overlay">Catch rings, coil core, approach vector, and field spokes. Green = inbound packet.</div></div>', "span-8")
+      + card("Capture State",
+          statRow("Mode", esc(STATE.mode), C.purple)
+        + statRow("Payload class", esc(STATE.payloadClass), C.cyan)
+        + statRow("Capture score", fmt(m.captureScore,1)+"/100", m.captureScore > 78 ? C.green : m.captureScore > 58 ? C.amber : C.red)
+        + statRow("Phase lock", fmt(m.phaseLock,1)+"/100", m.phaseLock > 75 ? C.green : m.phaseLock > 55 ? C.amber : C.red)
+        + statRow("Power draw", fmt(m.powerDraw,1)+" kW", C.blue)
+        + statRow("Thermal load", fmt(m.thermalLoad,1), C.red),
+        "span-4")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderForce() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Force Analysis", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-force-canvas"></canvas><div class="'+NS+'-overlay">Capture demand vs effective hold.<br>Purple = magnetic hold envelope.</div></div>', "span-8")
+      + card("Force Readout",
+          statRow("Momentum", fmt(m.momentum,1)+" kg·m/s", C.cyan)
+        + statRow("Capture demand", fmt(m.captureDemand,1), C.amber)
+        + statRow("Effective hold", fmt(m.effectiveHold,1)+" N", C.green)
+        + statRow("Launch vector", fmt(m.launchVector,1)+"/100", C.blue),
+        "span-4")
+      + card("Force Table", forceTableHTML(m), "span-12")
+      + '</div>';
+  }
+
+  function renderEnvelope() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Hold Envelope", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-envelope-canvas"></canvas><div class="'+NS+'-overlay">Safe operating region for approach velocity and alignment error under current hold assumptions.</div></div>', "span-8")
+      + card("Envelope State",
+          statRow("Hold stability", fmt(m.holdStability,1)+"/100", m.holdStability > 75 ? C.green : m.holdStability > 55 ? C.amber : C.red)
+        + statRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? C.green : m.safetyEnvelope > 55 ? C.amber : C.red)
+        + statRow("Route readiness", fmt(m.routeReadiness,1)+"/100", m.routeReadiness > 75 ? C.green : m.routeReadiness > 55 ? C.amber : C.red)
+        + statRow("State", esc(m.stateName), m.stateName === "Unsafe" ? C.red : m.stateName === "Conditional" ? C.amber : C.green),
+        "span-4")
+      + card("Envelope Readout", envelopeTableHTML(m), "span-12")
+      + '</div>';
+  }
+
+  function renderRoute() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Route State", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-route-canvas"></canvas><div class="'+NS+'-overlay">Luke II route-state window: inbound, hold, or outbound transfer context.</div></div>', "span-8")
+      + card("Route Readout",
+          statRow("Route mode", esc(STATE.routeMode), C.purple)
+        + statRow("Route readiness", fmt(m.routeReadiness,1)+"/100", m.routeReadiness > 75 ? C.green : m.routeReadiness > 55 ? C.amber : C.red)
+        + statRow("Launch assist", STATE.launchAssist+"%", C.blue)
+        + statRow("Alignment error", STATE.alignmentErr+"°", C.amber),
+        "span-4")
+      + card("Transfer Steps", routeTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderExports() {
+    return '<div class="'+NS+'-grid">'
+      + card("Sweep Actions",
+          '<div style="margin-bottom:8px;">'
+        + '<span class="'+NS+'-chip">Variable Compound Analysis</span>'
+        + '<span class="'+NS+'-chip">Pattern Simplification</span>'
+        + '<span class="'+NS+'-chip">Large-Scale Optimisation</span>'
+        + '<span class="'+NS+'-chip">Widen Search</span>'
+        + '</div>'
+        + '<div class="'+NS+'-small">Front-end triggers are exposed here; heavy-lift trajectory coupling, stability solve, and export validation should live in dataspace.</div>',
+        "span-4")
+      + card("Exports",
+          '<table class="'+NS+'-table"><thead><tr><th>Item</th><th>Source</th><th>Date</th><th>Type</th><th>Action</th></tr></thead><tbody>'
+          + '<tr><td>catch_state_payload.json</td><td>W2 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>publish</td><td>Ready</td></tr>'
+          + '<tr><td>hold_envelope_payload.json</td><td>W2 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>handoff</td><td>Ready</td></tr>'
+          + '<tr><td>launch_vector_payload.json</td><td>W2 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>route</td><td>Ready</td></tr>'
+          + '</tbody></table>',
+        "span-8")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderConnections() {
+    return '<div class="'+NS+'-grid">'
+      + card("Consumes From",
+          '<div class="'+NS+'-small">W1 deposit — target object and mass assumptions<br>W3 RFS / EMFF — field configuration envelope<br>W5 mission planning — trajectory and route-state timing</div>',
+        "span-6")
+      + card("Feeds Into",
+          '<div class="'+NS+'-small">W4 supply chain — dispatch and hold timing<br>W6 asset library — state and target handoff<br>Operational capture envelopes for Luke chain</div>',
+        "span-6")
+      + card("Operational Intent",
+          '<div class="'+NS+'-small">W2 should act as the operator-facing capture workspace: approach, catch, stable hold, controlled drop, and outbound launch context. The front-end previews state and physics relationships while dataspace handles deeper solving, validation, and persistent export.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function card(title, body, span) {
+    return '<div class="'+NS+'-card '+(span || "span-3")+'"><div class="'+NS+'-ct">'+title+'</div>'+body+'</div>';
+  }
+
+  function logTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>UTC</th><th>Type</th><th>Message</th></tr></thead><tbody>'
+      + STATE.logs.map(function (l) {
+          return '<tr><td>'+esc(l.t.replace("T"," ").replace("Z"," UTC"))+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.msg)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function forceTableHTML(m) {
+    return '<table class="'+NS+'-table"><thead><tr><th>Metric</th><th>Value</th><th>Status</th></tr></thead><tbody>'
+      + tableRow("B-coil", m.Bcoil.toExponential(2)+" T", "nominal")
+      + tableRow("Capture demand", fmt(m.captureDemand,1), m.captureDemand < m.effectiveHold ? "covered" : "high")
+      + tableRow("Effective hold", fmt(m.effectiveHold,1)+" N", "available")
+      + tableRow("Momentum", fmt(m.momentum,1)+" kg·m/s", "tracked")
+      + tableRow("Launch vector", fmt(m.launchVector,1)+"/100", m.launchVector > 70 ? "ready" : "partial")
+      + '</tbody></table>';
+  }
+
+  function envelopeTableHTML(m) {
+    return '<table class="'+NS+'-table"><thead><tr><th>Parameter</th><th>Value</th><th>Assessment</th></tr></thead><tbody>'
+      + tableRow("Approach velocity", fmt(STATE.approachVel,1)+" m/s", STATE.approachVel < 2 ? "safe" : STATE.approachVel < 5 ? "conditional" : "high")
+      + tableRow("Alignment error", STATE.alignmentErr+"°", STATE.alignmentErr < 8 ? "safe" : STATE.alignmentErr < 16 ? "conditional" : "high")
+      + tableRow("Hold margin", STATE.holdMargin+"%", STATE.holdMargin > 20 ? "strong" : "thin")
+      + tableRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? "good" : m.safetyEnvelope > 55 ? "watch" : "poor")
+      + tableRow("State", esc(m.stateName), m.stateName.toLowerCase())
+      + '</tbody></table>';
+  }
+
+  function tableRow(a, b, c) {
+    return '<tr><td>'+a+'</td><td>'+b+'</td><td>'+c+'</td></tr>';
+  }
+
+  function routeTableHTML() {
+    var path = activeRoute();
+    return '<table class="'+NS+'-table"><thead><tr><th>Step</th><th>Node</th><th>Phase</th><th>Status</th></tr></thead><tbody>'
+      + path.map(function (n, i) {
+          var phase = i === 0 && path.length > 1 ? "Origin / inbound" : i === path.length - 1 ? "Destination / handoff" : "Relay";
+          var status = i === 0 ? "active" : i === path.length - 1 ? "pending arrival" : "queued";
+          return '<tr><td>'+(i+1)+'</td><td>'+esc(n)+'</td><td>'+phase+'</td><td>'+status+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function activeRoute() {
+    return {
+      "Inbound to GEO": ["NEA Inbound", "GEO Luke II"],
+      "Inbound to LEO": ["NEA Inbound", "GEO Luke II", "LEO Depot"],
+      "Hold at GEO": ["GEO Luke II"],
+      "Outbound Lunar": ["GEO Luke II", "Cislunar Node"],
+      "Outbound Mars": ["GEO Luke II", "Cislunar Node", "Mars Relay"]
+    }[STATE.routeMode] || ["NEA Inbound", "GEO Luke II"];
+  }
+
+  function bind() {
+    mount.querySelectorAll("."+NS+"-tab").forEach(function (el) {
+      el.addEventListener("click", function () {
+        STATE.tab = this.getAttribute("data-tab");
+        render();
+      });
+    });
+
+    [
+      [NS+"-mode","mode"],
+      [NS+"-route","routeMode"],
+      [NS+"-pc","payloadClass"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("change", function () {
+          STATE[pair[1]] = this.value;
+          pushLog("config", pair[1] + " updated");
+          render();
+        });
+      }
+    });
+
+    [
+      [NS+"-cr","catchRadius"],
+      [NS+"-av","approachVel"],
+      [NS+"-hf","holdingForce"],
+      [NS+"-cc","coilCurrent"],
+      [NS+"-ef","emFreq"],
+      [NS+"-mass","massKg"],
+      [NS+"-ae","alignmentErr"],
+      [NS+"-hm","holdMargin"],
+      [NS+"-la","launchAssist"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("input", function () {
+          STATE[pair[1]] = parseFloat(this.value);
+          render();
+        });
+      }
+    });
+
+    mount.querySelectorAll("."+NS+"-btn[data-action]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a = this.getAttribute("data-action");
+        if (a === "run") {
+          var m = model();
+          pushLog("run", "W2 run logged | state " + m.stateName + " | capture " + fmt(m.captureScore,1) + " | hold " + fmt(m.holdStability,1));
+          render();
+          return;
+        }
+        if (a === "export") {
+          var payload = {
+            mode: STATE.mode,
+            routeMode: STATE.routeMode,
+            payloadClass: STATE.payloadClass,
+            catchRadiusM: STATE.catchRadius,
+            approachVelocityMs: STATE.approachVel,
+            holdingForceN: STATE.holdingForce,
+            coilCurrentA: STATE.coilCurrent,
+            emFrequencyHz: STATE.emFreq,
+            payloadMassKg: STATE.massKg,
+            alignmentErrorDeg: STATE.alignmentErr,
+            holdMarginPct: STATE.holdMargin,
+            launchAssistPct: STATE.launchAssist,
+            metrics: model(),
+            exportedUtc: new Date().toISOString()
+          };
+          var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "w2_catch_hold_payload.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          pushLog("export", "Catch/hold payload exported");
+          render();
+          return;
+        }
+        STATE.selectedSweep = a;
+        pushLog("sweep", "Sweep triggered: " + a.toUpperCase());
+        render();
+      });
+    });
+  }
+
+  function drawFieldCanvas() {
+    var c = mount.querySelector("#"+NS+"-field-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W / 2, cy = H / 2;
+    var rings = 6;
+    for (var i = 1; i <= rings; i++) {
+      var r = i * (Math.min(W,H) * 0.06 + STATE.catchRadius * 0.08);
+      var alpha = Math.max(0.06, 0.36 - i * 0.04);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 0.2, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(123,44,191," + alpha + ")";
+      ctx.lineWidth = 2 - i * 0.18;
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+    ctx.fillStyle = C.purple;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(123,44,191,.65)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    var avs = Math.min(W,H) * 0.34;
+    ctx.strokeStyle = "rgba(0,255,136,.75)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + avs, cy - avs * 0.25);
+    ctx.lineTo(cx + 24, cy);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx + avs, cy - avs * 0.25, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0,255,136,.88)";
+    ctx.fill();
+
+    for (var a = 0; a < 8; a++) {
+      var ang = a / 8 * Math.PI * 2;
+      var r2 = Math.min(W,H) * 0.16;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(ang) * r2, cy + Math.sin(ang) * r2);
+      ctx.lineTo(cx + Math.cos(ang) * (r2 - 14), cy + Math.sin(ang) * (r2 - 14));
+      ctx.strokeStyle = "rgba(123,44,191,.45)";
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+    }
+  }
+
+  function drawForceCanvas() {
+    var c = mount.querySelector("#"+NS+"-force-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    var m = model();
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var baseY = H * 0.72;
+    var leftX = W * 0.20;
+    var barW = W * 0.18;
+    var scale = Math.max(m.effectiveHold, m.captureDemand, 1);
+
+    ctx.fillStyle = C.amber;
+    ctx.fillRect(leftX, baseY - (m.captureDemand / scale) * H * 0.46, barW, (m.captureDemand / scale) * H * 0.46);
+
+    ctx.fillStyle = C.green;
+    ctx.fillRect(leftX + W * 0.30, baseY - (m.effectiveHold / scale) * H * 0.46, barW, (m.effectiveHold / scale) * H * 0.46);
+
+    ctx.fillStyle = C.text;
+    ctx.font = "12px Inter, sans-serif";
+    ctx.fillText("Capture Demand", leftX, baseY + 20);
+    ctx.fillText("Effective Hold", leftX + W * 0.30, baseY + 20);
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText(fmt(m.captureDemand,1), leftX + 8, baseY - (m.captureDemand / scale) * H * 0.46 - 8);
+    ctx.fillText(fmt(m.effectiveHold,1), leftX + W * 0.30 + 8, baseY - (m.effectiveHold / scale) * H * 0.46 - 8);
+  }
+
+  function drawEnvelopeCanvas() {
+    var c = mount.querySelector("#"+NS+"-envelope-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cols = 18, rows = 12;
+    var cw = W / cols, rh = H / rows;
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        var vel = (x / (cols - 1)) * 10;
+        var err = (y / (rows - 1)) * 30;
+        var score = 96
+          - vel * 8
+          - err * 2.1
+          + STATE.holdMargin * 0.55
+          + STATE.holdingForce * 0.03
+          - STATE.massKg * 0.002;
+        score = Math.max(0, Math.min(100, score));
+        ctx.fillStyle = score > 75 ? "rgba(0,255,136,.72)" : score > 55 ? "rgba(255,170,0,.70)" : "rgba(255,91,91,.65)";
+        ctx.fillRect(x*cw + 1, y*rh + 1, cw - 2, rh - 2);
+      }
+    }
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("Approach velocity →", 10, H - 8);
+    ctx.save();
+    ctx.translate(10, H - 24);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("Alignment error ↑", 0, 0);
+    ctx.restore();
+  }
+
+  function drawRouteCanvas() {
+    var c = mount.querySelector("#"+NS+"-route-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var path = activeRoute();
+    path.forEach(function (name, i) {
+      var n = ROUTE_NODES[name];
+      if (!n) return;
+      if (i < path.length - 1) {
+        var next = ROUTE_NODES[path[i+1]];
+        ctx.beginPath();
+        ctx.moveTo(n.x * W, n.y * H);
+        ctx.lineTo(next.x * W, next.y * H);
+        ctx.strokeStyle = C.green;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+    });
+
+    Object.keys(ROUTE_NODES).forEach(function (name) {
+      var n = ROUTE_NODES[name];
+      var active = path.indexOf(name) !== -1;
+      ctx.beginPath();
+      ctx.arc(n.x * W, n.y * H, active ? 9 : 6, 0, Math.PI*2);
+      ctx.fillStyle = active ? C.green : C.cyan;
+      ctx.fill();
+      ctx.fillStyle = C.text;
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText(name, n.x * W + 10, n.y * H - 8);
+    });
+  }
+
+  function tickUTC() {
+    var el = mount.querySelector("#"+NS+"-utc");
+    if (el) el.textContent = new Date().toUTCString().replace("GMT","UTC");
+  }
+
+  render();
+  setInterval(function () { tickUTC(); }, 1000);
+
+  window.W2App = window.W2App || {};
+  window.W2App.state = function () { return JSON.parse(JSON.stringify(STATE)); };
+  window.W2App.model = model;
+  window.W2App.rerender = render;
+})();
+</script>1;
+      ctx.beginPath();
+      ctx.arc(n.x * W, n.y * H, active ? 9 : 6, 0, Math.PI*2);
+      ctx.fillStyle = active ? C.green : C.cyan;
+      ctx.fill();
+      ctx.fillStyle = C.text;
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText(name, n.x * W + 10, n.y * H - 8);
+    });
+  }
+
+  function tickUTC() {
+    var el = mount.querySelector("#"+NS+"-utc");
+    if (el) el.textContent = new Date().toUTCString().replace("GMT","UTC");
+  }
+
+  render();
+  setInterval(function () { tickUTC(); }, 1000);
+
+  window.W2App = window.W2App || {};
+  window.W2App.state = function () { return JSON.parse(JSON.stringify(STATE)); };
+  window.W2App.model = model;
+  window.W2App.rerender = render;
+})();
+</script>
