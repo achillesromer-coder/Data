@@ -1,0 +1,965 @@
+<div id="w5-root"></div>
+<script>
+(function () {
+  var mount = document.getElementById("w5-root");
+  if (!mount) return;
+
+  var NS = "w5sq";
+  var C = {
+    bg: "#0a0e1a",
+    bg2: "#1a1f2e",
+    bg3: "#252b3d",
+    panel: "#11182a",
+    line: "#3a4059",
+    cyan: "#00d4ff",
+    blue: "#00aaff",
+    green: "#00ff88",
+    teal: "#00c2a8",
+    pink: "#ff6b9d",
+    amber: "#ffaa00",
+    red: "#ff5b5b",
+    text: "#e8eaf0",
+    muted: "#8b92a8"
+  };
+
+  var BODY_DATA = {
+    nodes: {
+      "LEO Depot": { x: 0.18, y: 0.78, kind: "earth" },
+      "GEO Luke II": { x: 0.36, y: 0.56, kind: "earth" },
+      "Cislunar Node": { x: 0.54, y: 0.35, kind: "lunar" },
+      "Mars Relay": { x: 0.78, y: 0.22, kind: "mars" },
+      "MBA Site": { x: 0.78, y: 0.72, kind: "belt" },
+      "NEA Site": { x: 0.60, y: 0.62, kind: "nea" },
+      "Trojan Node": { x: 0.88, y: 0.48, kind: "trojan" }
+    },
+    templates: {
+      "Mark III Return": {
+        origin: "NEA Site",
+        destination: "GEO Luke II",
+        payload: 12000,
+        duration: 120,
+        sma: 18000,
+        ecc: 0.18,
+        inc: 12,
+        raan: 45
+      },
+      "Mark V Capture Trial": {
+        origin: "MBA Site",
+        destination: "GEO Luke II",
+        payload: 32000,
+        duration: 260,
+        sma: 26000,
+        ecc: 0.24,
+        inc: 18,
+        raan: 80
+      },
+      "Luke Chain Logistics": {
+        origin: "GEO Luke II",
+        destination: "Mars Relay",
+        payload: 18000,
+        duration: 220,
+        sma: 42000,
+        ecc: 0.32,
+        inc: 7,
+        raan: 120
+      },
+      "Earth Return Window": {
+        origin: "Cislunar Node",
+        destination: "LEO Depot",
+        payload: 9000,
+        duration: 24,
+        sma: 9000,
+        ecc: 0.08,
+        inc: 28.5,
+        raan: 12
+      }
+    },
+    launchCapabilities: ["MPL", "Luke I", "Luke II", "Luke III", "Luke IV", "Surface Lift", "Chemical Boost Assist"],
+    logsSeed: [
+      { t: "2026-04-08T01:40:00Z", type: "window", msg: "Window sweep refreshed for W1 downstream request" },
+      { t: "2026-04-08T01:58:00Z", type: "gmat", msg: "Template validation completed against GMAT planning assumptions" },
+      { t: "2026-04-08T02:11:00Z", type: "route", msg: "GEO oversight view synchronized with Luke-chain transfer context" }
+    ]
+  };
+
+  var STATE = {
+    tab: "overview",
+    template: "Mark III Return",
+    propagator: "RungeKutta89",
+    origin: "NEA Site",
+    destination: "GEO Luke II",
+    payload: 12000,
+    sma: 18000,
+    ecc: 0.18,
+    inc: 12,
+    raan: 45,
+    duration: 120,
+    launchCadence: 3,
+    weatherBias: 0.82,
+    launchCapability: "MPL",
+    autoAgent: true,
+    logs: BODY_DATA.logsSeed.slice(),
+    chat: [
+      { role: "system", text: "Mission assistant online. Tracking trajectory state, window score, and downstream dependencies." }
+    ],
+    sweepMode: "window",
+    selectedScenario: null
+  };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmt(n, d) {
+    return Number(n).toFixed(d == null ? 2 : d);
+  }
+
+  function avg(arr) {
+    if (!arr.length) return 0;
+    return arr.reduce(function (a, b) { return a + b; }, 0) / arr.length;
+  }
+
+  function nowUTC() {
+    return new Date().toISOString().replace("T", " ").replace("Z", " UTC");
+  }
+
+  function pushLog(type, msg) {
+    STATE.logs.unshift({
+      t: new Date().toISOString(),
+      type: type,
+      msg: msg
+    });
+    if (STATE.logs.length > 24) STATE.logs.length = 24;
+  }
+
+  function orbitalPeriodHours(smaKm) {
+    var mu = 398600.4418;
+    return 2 * Math.PI * Math.sqrt(Math.pow(smaKm, 3) / mu) / 3600;
+  }
+
+  function missionModel() {
+    var payloadT = STATE.payload / 1000;
+    var periodHr = orbitalPeriodHours(STATE.sma);
+    var dvProxy = (
+      1.15 +
+      STATE.ecc * 3.4 +
+      (STATE.inc / 180) * 2.1 +
+      Math.max(0, (STATE.duration - 40) / 240) * 0.8 +
+      (payloadT / 40) * 0.7
+    );
+    var tofDays = STATE.duration;
+    var fuelProxyT = payloadT * (0.11 + dvProxy * 0.16);
+    var weatherScore = Math.max(0, Math.min(100, STATE.weatherBias * 100 - (STATE.launchCadence - 1) * 4));
+    var geometryScore = Math.max(0, Math.min(100,
+      82
+      - Math.abs(STATE.raan - 60) * 0.18
+      - STATE.inc * 0.35
+      - STATE.ecc * 40
+      + (STATE.sma > 14000 && STATE.sma < 32000 ? 8 : -4)
+    ));
+    var capabilityScore = {
+      "MPL": 84,
+      "Luke I": 68,
+      "Luke II": 91,
+      "Luke III": 88,
+      "Luke IV": 93,
+      "Surface Lift": 61,
+      "Chemical Boost Assist": 74
+    }[STATE.launchCapability] || 70;
+    var windowScore = Math.max(0, Math.min(100,
+      0.42 * weatherScore + 0.38 * geometryScore + 0.20 * capabilityScore
+    ));
+    var executionRisk = Math.max(0, Math.min(100,
+      62 - windowScore * 0.48 + dvProxy * 8 + (payloadT / 10) * 2
+    ));
+    var routeComplexity = Math.max(1, Math.min(10,
+      2 + dvProxy * 1.3 + (STATE.origin === "MBA Site" ? 2.2 : 0) + (STATE.destination === "Mars Relay" ? 1.6 : 0)
+    ));
+    var launchEnergyIndex = payloadT * dvProxy * 18;
+    var burn1 = dvProxy * 0.44;
+    var burn2 = dvProxy * 0.34;
+    var burn3 = dvProxy * 0.22;
+    return {
+      periodHr: periodHr,
+      dvProxy: dvProxy,
+      tofDays: tofDays,
+      fuelProxyT: fuelProxyT,
+      weatherScore: weatherScore,
+      geometryScore: geometryScore,
+      capabilityScore: capabilityScore,
+      windowScore: windowScore,
+      executionRisk: executionRisk,
+      routeComplexity: routeComplexity,
+      launchEnergyIndex: launchEnergyIndex,
+      burns: [burn1, burn2, burn3]
+    };
+  }
+
+  function aiReply(text) {
+    var m = missionModel();
+    var q = text.toLowerCase();
+    if (q.indexOf("window") !== -1) {
+      return "Current window score is " + fmt(m.windowScore, 1) + "/100. Weather contributes " + fmt(m.weatherScore, 1) + ", geometry " + fmt(m.geometryScore, 1) + ", capability " + fmt(m.capabilityScore, 1) + ".";
+    }
+    if (q.indexOf("risk") !== -1) {
+      return "Execution risk proxy is " + fmt(m.executionRisk, 1) + "/100. Main drivers are payload mass, route geometry, and Δv proxy.";
+    }
+    if (q.indexOf("fuel") !== -1 || q.indexOf("delta") !== -1 || q.indexOf("dv") !== -1) {
+      return "Estimated Δv proxy is " + fmt(m.dvProxy, 2) + " km/s with fuel proxy " + fmt(m.fuelProxyT, 2) + " t.";
+    }
+    if (q.indexOf("route") !== -1 || q.indexOf("trajectory") !== -1) {
+      return "Active route is " + STATE.origin + " → " + STATE.destination + " with transit duration " + STATE.duration + " d and complexity " + fmt(m.routeComplexity, 1) + "/10.";
+    }
+    return "Mission context: " + STATE.origin + " → " + STATE.destination + ", payload " + STATE.payload + " kg, propagator " + STATE.propagator + ", window score " + fmt(m.windowScore, 1) + ".";
+  }
+
+  var style = document.createElement("style");
+  style.textContent = `
+    #w5-root{width:100%}
+    .${NS}-wrap{
+      width:100%;
+      min-height:980px;
+      display:flex;
+      flex-direction:column;
+      background:${C.bg};
+      color:${C.text};
+      border:1px solid ${C.line};
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.3);
+      font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+    }
+    .${NS}-hdr{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;background:${C.bg2};border-bottom:1px solid ${C.line};
+    }
+    .${NS}-logo{
+      width:30px;height:30px;border-radius:50%;
+      display:grid;place-items:center;font-weight:900;
+      color:#081019;background:linear-gradient(135deg,${C.blue},${C.green});
+    }
+    .${NS}-titlewrap{flex:1;min-width:250px}
+    .${NS}-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${C.green}}
+    .${NS}-sub{font-size:11px;color:${C.muted};margin-top:2px}
+    .${NS}-fuse{display:flex;gap:6px;flex-wrap:wrap}
+    .${NS}-fuse a,.${NS}-btn{
+      padding:6px 10px;border-radius:8px;text-decoration:none;
+      background:${C.bg3};border:1px solid ${C.line};color:${C.text};
+      font-size:11px;font-weight:700;cursor:pointer;
+    }
+    .${NS}-fuse a.on{color:${C.green};border-color:${C.green};background:rgba(0,255,136,.08)}
+    .${NS}-fuse a.ds{color:${C.cyan};border-color:${C.cyan};background:rgba(0,212,255,.08)}
+    .${NS}-meta{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:8px 16px;background:${C.bg3};border-bottom:1px solid ${C.line};
+      font-size:11px;color:${C.muted};
+    }
+    .${NS}-pill{
+      padding:3px 8px;border-radius:999px;border:1px solid ${C.green};
+      color:${C.green};font-size:10px;font-weight:800;background:rgba(0,255,136,.08)
+    }
+    .${NS}-body{
+      display:grid;grid-template-columns:290px 1fr;flex:1;min-height:0;
+    }
+    .${NS}-side{
+      background:${C.bg2};border-right:1px solid ${C.line};padding:12px;overflow:auto;
+    }
+    .${NS}-main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .${NS}-panel{
+      background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px;margin-bottom:12px;
+    }
+    .${NS}-ph{
+      font-size:11px;font-weight:800;color:${C.cyan};text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;
+    }
+    .${NS}-field{margin-bottom:10px}
+    .${NS}-label{display:block;font-size:11px;color:${C.muted};margin-bottom:6px}
+    .${NS}-input,.${NS}-select,.${NS}-range{
+      width:100%;box-sizing:border-box;
+    }
+    .${NS}-input,.${NS}-select{
+      padding:9px 10px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.text};font-size:12px;
+    }
+    .${NS}-range{accent-color:${C.green}}
+    .${NS}-rv{font-size:11px;color:${C.green};font-weight:700;margin-top:4px}
+    .${NS}-small{font-size:11px;color:${C.muted};line-height:1.45}
+    .${NS}-btnrow{display:flex;gap:8px;flex-wrap:wrap}
+    .${NS}-tabs{
+      display:flex;gap:2px;flex-wrap:wrap;padding:10px;border-bottom:1px solid ${C.line};background:${C.bg2};
+    }
+    .${NS}-tab{
+      padding:8px 12px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.muted};font-size:11px;font-weight:800;cursor:pointer;
+    }
+    .${NS}-tab.on{background:${C.cyan};border-color:${C.cyan};color:#081019}
+    .${NS}-viewport{
+      flex:1;overflow:auto;padding:12px;
+      background:radial-gradient(circle at top, #122033 0%, ${C.bg} 52%, #09111d 100%);
+    }
+    .${NS}-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .${NS}-card{
+      background:linear-gradient(180deg,#11182a 0%, #0f1524 100%);
+      border:1px solid ${C.line};border-radius:12px;padding:12px;min-width:0;
+    }
+    .${NS}-ct{font-size:11px;font-weight:800;color:${C.pink};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .${NS}-kpi{font-size:28px;font-weight:900;color:${C.green};line-height:1.1}
+    .${NS}-subk{font-size:11px;color:${C.muted};margin-top:6px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .${NS}-canvaswrap{
+      position:relative;height:320px;border:1px solid ${C.line};border-radius:12px;overflow:hidden;background:#0b101b;
+    }
+    .${NS}-canvaswrap canvas{width:100%;height:100%;display:block}
+    .${NS}-overlay{
+      position:absolute;top:10px;left:10px;padding:8px 10px;border-radius:10px;
+      background:rgba(10,14,26,.9);border:1px solid ${C.line};font-size:11px;color:${C.muted};line-height:1.5;
+    }
+    .${NS}-table{width:100%;border-collapse:collapse;font-size:11px}
+    .${NS}-table th{text-align:left;padding:8px 6px;color:${C.muted};border-bottom:1px solid ${C.line};font-weight:700}
+    .${NS}-table td{padding:8px 6px;border-bottom:1px solid rgba(58,64,89,.34);vertical-align:top}
+    .${NS}-table tr:hover td{background:rgba(255,255,255,.02)}
+    .${NS}-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(58,64,89,.34)}
+    .${NS}-row:last-child{border-bottom:none}
+    .${NS}-key{font-size:11px;color:${C.muted}}
+    .${NS}-val{font-size:11px;color:${C.text};font-weight:700;text-align:right}
+    .${NS}-bar{height:8px;border-radius:999px;overflow:hidden;background:#09111d;border:1px solid #1f2a42}
+    .${NS}-bar > span{display:block;height:100%;background:linear-gradient(90deg,${C.blue},${C.green})}
+    .${NS}-chip{
+      display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+      border:1px solid ${C.line};background:${C.bg3};font-size:10px;margin:0 6px 6px 0
+    }
+    .${NS}-chatlog{
+      height:180px;overflow:auto;background:#0b101b;border:1px solid ${C.line};border-radius:10px;padding:10px;margin-bottom:10px;
+    }
+    .${NS}-msg{font-size:11px;line-height:1.45;margin-bottom:8px}
+    .${NS}-msg strong{color:${C.cyan}}
+    @media (max-width:1100px){
+      .${NS}-body{grid-template-columns:1fr}
+      .${NS}-side{border-right:none;border-bottom:1px solid ${C.line}}
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+    }
+  `;
+  mount.appendChild(style);
+
+  function render() {
+    mount.querySelectorAll(":scope > ."+NS+"-wrap").forEach(function (n) { n.remove(); });
+    var m = missionModel();
+
+    var wrap = document.createElement("div");
+    wrap.className = NS + "-wrap";
+    wrap.innerHTML =
+      '<div class="'+NS+'-hdr">'
+      + '<div class="'+NS+'-logo">⚡</div>'
+      + '<div class="'+NS+'-titlewrap">'
+      +   '<div class="'+NS+'-title">Workspace: W5 · Mission Planning GMAT</div>'
+      +   '<div class="'+NS+'-sub">Trajectory mapping, launch windows, maneuver planning, intersol oversight, downstream routing</div>'
+      + '</div>'
+      + '<div class="'+NS+'-fuse">'
+      +   '<a href="#">W1</a><a href="#">W2</a><a href="#">W3</a><a href="#">W4</a><a href="#" class="on">W5</a><a href="#">W6</a><a href="#" class="ds">GMAT</a>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-meta">'
+      +   '<span class="'+NS+'-pill">● OPERATIONAL</span>'
+      +   '<span>/w5/data</span>'
+      +   '<span>v2.0.0</span>'
+      +   '<span>Template: '+esc(STATE.template)+'</span>'
+      +   '<span>Propagator: '+esc(STATE.propagator)+'</span>'
+      +   '<span id="'+NS+'-utc" style="margin-left:auto"></span>'
+      + '</div>'
+
+      + '<div class="'+NS+'-body">'
+      +   '<div class="'+NS+'-side">'+sideHTML(m)+'</div>'
+      +   '<div class="'+NS+'-main">'
+      +     tabsHTML()
+      +     '<div class="'+NS+'-viewport" id="'+NS+'-viewport"></div>'
+      +   '</div>'
+      + '</div>';
+
+    mount.appendChild(wrap);
+    bind();
+    renderTab();
+    tickUTC();
+  }
+
+  function sideHTML(m) {
+    return ''
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Mission Controls</div>'
+      +   fieldSelect("Template", NS+"-template", Object.keys(BODY_DATA.templates), STATE.template)
+      +   fieldSelect("Propagator", NS+"-prop", ["RungeKutta89","PrinceDormand78","BulirschStoer"], STATE.propagator)
+      +   fieldSelect("Origin", NS+"-origin", Object.keys(BODY_DATA.nodes), STATE.origin)
+      +   fieldSelect("Destination", NS+"-destination", Object.keys(BODY_DATA.nodes), STATE.destination)
+      +   fieldSelect("Launch Capability", NS+"-cap", BODY_DATA.launchCapabilities, STATE.launchCapability)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Orbital Variables</div>'
+      +   fieldRange("Semi-major axis (km)", NS+"-sma", 6600, 50000, 100, STATE.sma, STATE.sma)
+      +   fieldRange("Eccentricity", NS+"-ecc", 0, 90, 1, Math.round(STATE.ecc*100), fmt(STATE.ecc,2))
+      +   fieldRange("Inclination (deg)", NS+"-inc", 0, 180, 1, STATE.inc, fmt(STATE.inc,1))
+      +   fieldRange("RAAN (deg)", NS+"-raan", 0, 360, 1, STATE.raan, fmt(STATE.raan,0))
+      +   fieldRange("Duration (days)", NS+"-dur", 1, 365, 1, STATE.duration, STATE.duration)
+      +   fieldRange("Payload (kg)", NS+"-payload", 1000, 50000, 500, STATE.payload, STATE.payload)
+      +   fieldRange("Launch cadence", NS+"-cad", 1, 10, 1, STATE.launchCadence, STATE.launchCadence + " / mo")
+      +   fieldRange("Weather bias", NS+"-weather", 40, 100, 1, Math.round(STATE.weatherBias*100), Math.round(STATE.weatherBias*100) + "%")
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Quick Actions</div>'
+      +   '<div class="'+NS+'-btnrow">'
+      +     btn("Run & Log", "run")
+      +     btn("Window Sweep", "sweep")
+      +     btn("Widen Search", "search")
+      +     btn("Export JSON", "export")
+      +   '</div>'
+      +   '<div class="'+NS+'-small" style="margin-top:10px;">Auto-agent: '+(STATE.autoAgent ? '<span style="color:'+C.green+'">Enabled</span>' : '<span style="color:'+C.red+'">Disabled</span>')+'</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Instant Readout</div>'
+      +   statRow("Window score", fmt(m.windowScore,1)+"/100", m.windowScore > 75 ? C.green : m.windowScore > 55 ? C.amber : C.red)
+      +   statRow("Δv proxy", fmt(m.dvProxy,2)+" km/s", C.cyan)
+      +   statRow("Fuel proxy", fmt(m.fuelProxyT,2)+" t", C.blue)
+      +   statRow("Execution risk", fmt(m.executionRisk,1)+"/100", m.executionRisk < 30 ? C.green : m.executionRisk < 55 ? C.amber : C.red)
+      + '</div>';
+  }
+
+  function fieldSelect(label, id, values, current) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<select class="'+NS+'-select" id="'+id+'">'
+      + values.map(function (v) {
+          return '<option value="'+esc(v)+'"'+(v === current ? ' selected' : '')+'>'+esc(v)+'</option>';
+        }).join("")
+      + '</select></div>';
+  }
+
+  function fieldRange(label, id, min, max, step, value, displayValue) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<input class="'+NS+'-range" type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">'
+      + '<div class="'+NS+'-rv">'+esc(displayValue)+'</div>'
+      + '</div>';
+  }
+
+  function btn(label, action) {
+    return '<button class="'+NS+'-btn" data-action="'+action+'">'+label+'</button>';
+  }
+
+  function statRow(k, v, color) {
+    return '<div class="'+NS+'-row"><div class="'+NS+'-key">'+k+'</div><div class="'+NS+'-val" style="color:'+color+'">'+v+'</div></div>';
+  }
+
+  function tabsHTML() {
+    var tabs = [
+      ["overview","Intersol / GEO"],
+      ["route","Mine ↔ Destination"],
+      ["site","Mine Site"],
+      ["window","Window Analysis"],
+      ["maneuver","Maneuver Plan"],
+      ["assistant","AI Assistant"],
+      ["connections","Connections"]
+    ];
+    return '<div class="'+NS+'-tabs">'
+      + tabs.map(function (t) {
+        return '<button class="'+NS+'-tab'+(STATE.tab === t[0] ? ' on' : '')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+      }).join("")
+      + '</div>';
+  }
+
+  function renderTab() {
+    var vp = mount.querySelector("#"+NS+"-viewport");
+    if (!vp) return;
+    if (STATE.tab === "overview") vp.innerHTML = renderOverview();
+    if (STATE.tab === "route") vp.innerHTML = renderRoute();
+    if (STATE.tab === "site") vp.innerHTML = renderSite();
+    if (STATE.tab === "window") vp.innerHTML = renderWindow();
+    if (STATE.tab === "maneuver") vp.innerHTML = renderManeuver();
+    if (STATE.tab === "assistant") vp.innerHTML = renderAssistant();
+    if (STATE.tab === "connections") vp.innerHTML = renderConnections();
+
+    if (STATE.tab === "overview") drawOverviewCanvas();
+    if (STATE.tab === "route") drawRouteCanvas();
+    if (STATE.tab === "site") drawSiteCanvas();
+    if (STATE.tab === "window") drawWindowCanvas();
+  }
+
+  function renderOverview() {
+    var m = missionModel();
+    return '<div class="'+NS+'-grid">'
+      + card("Window Score", '<div class="'+NS+'-kpi">'+fmt(m.windowScore,1)+'</div><div class="'+NS+'-subk">Composite weather / geometry / capability index</div>', "span-3")
+      + card("Transit Duration", '<div class="'+NS+'-kpi">'+STATE.duration+'</div><div class="'+NS+'-subk">Days</div>', "span-3")
+      + card("Fuel Proxy", '<div class="'+NS+'-kpi">'+fmt(m.fuelProxyT,2)+'</div><div class="'+NS+'-subk">t equivalent mission burden</div>', "span-3")
+      + card("Route Complexity", '<div class="'+NS+'-kpi">'+fmt(m.routeComplexity,1)+'</div><div class="'+NS+'-subk">/10 operational complexity</div>', "span-3")
+      + card("Intersol / GEO Operations Window", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-overview-canvas"></canvas><div class="'+NS+'-overlay">Primary window locked on intersol / mag-lev to geostationary oversight.<br>Green route = active trajectory chain.</div></div>', "span-8")
+      + card("Mission State", 
+          statRow("Origin", esc(STATE.origin), C.cyan)
+        + statRow("Destination", esc(STATE.destination), C.green)
+        + statRow("Capability", esc(STATE.launchCapability), C.blue)
+        + statRow("Propagator", esc(STATE.propagator), C.amber)
+        + statRow("Orbital period", fmt(m.periodHr,2)+" hr", C.text)
+        + statRow("Launch energy index", fmt(m.launchEnergyIndex,1), C.text),
+        "span-4")
+      + card("Recent Ops Log", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderRoute() {
+    var m = missionModel();
+    return '<div class="'+NS+'-grid">'
+      + card("Mine Site → Destination Route", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-route-canvas"></canvas><div class="'+NS+'-overlay">Second panel: route context between source site and destination chain.</div></div>', "span-8")
+      + card("Transfer Readout",
+          statRow("Window score", fmt(m.windowScore,1)+"/100", C.green)
+        + statRow("Δv proxy", fmt(m.dvProxy,2)+" km/s", C.cyan)
+        + statRow("Fuel proxy", fmt(m.fuelProxyT,2)+" t", C.blue)
+        + statRow("Risk", fmt(m.executionRisk,1)+"/100", C.amber)
+        + statRow("Cadence", STATE.launchCadence+"/mo", C.text),
+        "span-4")
+      + card("Route Event Schedule", routeTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderSite() {
+    return '<div class="'+NS+'-grid">'
+      + card("Mine Site Overview", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-site-canvas"></canvas><div class="'+NS+'-overlay">Fourth window: mine-site operational overview and extraction traffic.</div></div>', "span-8")
+      + card("Site State",
+          statRow("Active site", esc(STATE.origin), C.green)
+        + statRow("Payload mass", STATE.payload+" kg", C.cyan)
+        + statRow("Export cadence", STATE.launchCadence+"/mo", C.blue)
+        + statRow("Downstream route", esc(STATE.destination), C.text)
+        + statRow("Launch capability", esc(STATE.launchCapability), C.amber),
+        "span-4")
+      + card("Extraction / Dispatch Notes",
+          '<div class="'+NS+'-small">W5 should remain the trajectory authority for dispatch timing, route windows, and mission-phase handoff. This front-end preview exposes timing and route implications while heavy trajectory computation remains in dataspace / GMAT-backed logic.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function renderWindow() {
+    var m = missionModel();
+    return '<div class="'+NS+'-grid">'
+      + card("Launch Window Heatmap", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-window-canvas"></canvas><div class="'+NS+'-overlay">Static-dynamic porkchop style proxy. X: departure phase, Y: duration, color: window quality.</div></div>', "span-8")
+      + card("Window Decomposition",
+          statRow("Weather score", fmt(m.weatherScore,1), C.cyan)
+        + statRow("Geometry score", fmt(m.geometryScore,1), C.green)
+        + statRow("Capability score", fmt(m.capabilityScore,1), C.blue)
+        + statRow("Composite window", fmt(m.windowScore,1), m.windowScore > 75 ? C.green : C.amber)
+        + statRow("Recommended state", m.windowScore > 75 ? "Proceed" : m.windowScore > 55 ? "Conditional" : "Hold", m.windowScore > 75 ? C.green : m.windowScore > 55 ? C.amber : C.red),
+        "span-4")
+      + card("Sweep / Export Queue", sweepQueueHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderManeuver() {
+    var m = missionModel();
+    return '<div class="'+NS+'-grid">'
+      + card("Maneuver Sequence",
+          '<table class="'+NS+'-table"><thead><tr><th>Phase</th><th>Purpose</th><th>Δv proxy</th><th>Duration</th></tr></thead><tbody>'
+          + '<tr><td>Burn 1</td><td>Departure shaping</td><td>'+fmt(m.burns[0],2)+' km/s</td><td>'+fmt(STATE.duration*0.18,1)+' d</td></tr>'
+          + '<tr><td>Burn 2</td><td>Transfer correction</td><td>'+fmt(m.burns[1],2)+' km/s</td><td>'+fmt(STATE.duration*0.54,1)+' d</td></tr>'
+          + '<tr><td>Burn 3</td><td>Arrival / capture alignment</td><td>'+fmt(m.burns[2],2)+' km/s</td><td>'+fmt(STATE.duration*0.28,1)+' d</td></tr>'
+          + '</tbody></table>',
+        "span-7")
+      + card("Planning Notes",
+          '<div class="'+NS+'-small">This front-end uses a deterministic trajectory proxy rather than full GMAT execution. It is designed for operator-facing preview, run intent, and downstream handoff. Mission scripts, targeting, and full optimization should be emitted by the dataspace runner.</div>',
+        "span-5")
+      + card("Exports & Sweep Analysis",
+          '<table class="'+NS+'-table"><thead><tr><th>Item</th><th>Source</th><th>Date</th><th>Type</th><th>Action</th></tr></thead><tbody>'
+          + '<tr><td>mission_window_payload.json</td><td>W5 front-end run</td><td>'+esc(nowUTC())+'</td><td>publish</td><td>Ready</td></tr>'
+          + '<tr><td>maneuver_plan_payload.json</td><td>W5 front-end run</td><td>'+esc(nowUTC())+'</td><td>handoff</td><td>Ready</td></tr>'
+          + '<tr><td>route_trace_payload.json</td><td>W5 front-end run</td><td>'+esc(nowUTC())+'</td><td>trace</td><td>Ready</td></tr>'
+          + '</tbody></table>'
+          + '<div style="margin-top:10px;">'
+          + '<span class="'+NS+'-chip">Variable Compound Analysis</span>'
+          + '<span class="'+NS+'-chip">Pattern Simplification</span>'
+          + '<span class="'+NS+'-chip">Large-Scale Optimisation</span>'
+          + '<span class="'+NS+'-chip">Widen Search</span>'
+          + '</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function renderAssistant() {
+    return '<div class="'+NS+'-grid">'
+      + card("AI Mission Assistant",
+          '<div class="'+NS+'-chatlog" id="'+NS+'-chatlog">'
+          + STATE.chat.map(function (m) {
+              return '<div class="'+NS+'-msg"><strong>'+(m.role === "user" ? "Operator" : "Assistant")+':</strong> '+esc(m.text)+'</div>';
+            }).join("")
+          + '</div>'
+          + '<div class="'+NS+'-btnrow">'
+          +   '<input class="'+NS+'-input" id="'+NS+'-chatinput" placeholder="Ask about windows, route, dv, risk, fuel…">'
+          +   '<button class="'+NS+'-btn" data-action="send-chat">Send</button>'
+          + '</div>',
+        "span-7")
+      + card("Current Context",
+          statRow("Origin", esc(STATE.origin), C.cyan)
+        + statRow("Destination", esc(STATE.destination), C.green)
+        + statRow("Payload", STATE.payload+" kg", C.blue)
+        + statRow("Launch capability", esc(STATE.launchCapability), C.amber)
+        + statRow("Auto-agent", STATE.autoAgent ? "Enabled" : "Disabled", STATE.autoAgent ? C.green : C.red),
+        "span-5")
+      + '</div>';
+  }
+
+  function renderConnections() {
+    return '<div class="'+NS+'-grid">'
+      + card("Consumes From",
+          '<div class="'+NS+'-small">W6 asset library for target and vehicle context<br>W3 field / EMFF configuration envelope<br>W1 deposit shortlist and capture intent<br>Drive/library mission references</div>',
+        "span-6")
+      + card("Feeds Into",
+          '<div class="'+NS+'-small">W1 deposit analysis via orbital windows<br>W2 Luke chain trajectory context<br>W4 supply chain timing and route constraints<br>GMAT dataspace runner / mission logs</div>',
+        "span-6")
+      + card("Intended Scope",
+          '<div class="'+NS+'-small">Clean blue-velvet to pthalo-green front end with a locked intersol/GEO window, route window, site overview, variable controls, launch capability toggles, and AI-assisted run/log behavior while the page is open.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function card(title, body, span) {
+    return '<div class="'+NS+'-card '+(span || "span-3")+'"><div class="'+NS+'-ct">'+title+'</div>'+body+'</div>';
+  }
+
+  function logTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>UTC</th><th>Type</th><th>Message</th></tr></thead><tbody>'
+      + STATE.logs.map(function (l) {
+          return '<tr><td>'+esc(l.t.replace("T"," ").replace("Z"," UTC"))+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.msg)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function routeTableHTML() {
+    var m = missionModel();
+    return '<table class="'+NS+'-table"><thead><tr><th>Step</th><th>Node</th><th>State</th><th>ETA</th></tr></thead><tbody>'
+      + '<tr><td>1</td><td>'+esc(STATE.origin)+'</td><td>Dispatch prep</td><td>T+0 d</td></tr>'
+      + '<tr><td>2</td><td>'+(STATE.origin === "MBA Site" ? "Mars Relay" : "GEO Luke II")+'</td><td>Transfer phase</td><td>T+'+fmt(STATE.duration*0.35,0)+' d</td></tr>'
+      + '<tr><td>3</td><td>'+esc(STATE.destination)+'</td><td>Arrival / alignment</td><td>T+'+fmt(m.tofDays,0)+' d</td></tr>'
+      + '</tbody></table>';
+  }
+
+  function sweepQueueHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>Queued Item</th><th>Status</th><th>Downstream</th></tr></thead><tbody>'
+      + '<tr><td>Window surface refresh</td><td>Ready</td><td>W1, W4</td></tr>'
+      + '<tr><td>Capability sweep</td><td>Ready</td><td>W2</td></tr>'
+      + '<tr><td>Trajectory handoff packet</td><td>Ready</td><td>W4, W5 dataspace</td></tr>'
+      + '</tbody></table>';
+  }
+
+  function bind() {
+    mount.querySelectorAll("."+NS+"-tab").forEach(function (el) {
+      el.addEventListener("click", function () {
+        STATE.tab = this.getAttribute("data-tab");
+        render();
+      });
+    });
+
+    [
+      [NS+"-template", "template"],
+      [NS+"-prop", "propagator"],
+      [NS+"-origin", "origin"],
+      [NS+"-destination", "destination"],
+      [NS+"-cap", "launchCapability"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("change", function () {
+          STATE[pair[1]] = this.value;
+          if (pair[1] === "template") applyTemplate(this.value);
+          if (pair[1] === "origin" && STATE.destination === STATE.origin) {
+            var alts = Object.keys(BODY_DATA.nodes).filter(function (n) { return n !== STATE.origin; });
+            STATE.destination = alts[0];
+          }
+          render();
+        });
+      }
+    });
+
+    [
+      [NS+"-sma", "sma", 1],
+      [NS+"-ecc", "ecc", 0.01],
+      [NS+"-inc", "inc", 1],
+      [NS+"-raan", "raan", 1],
+      [NS+"-dur", "duration", 1],
+      [NS+"-payload", "payload", 1],
+      [NS+"-cad", "launchCadence", 1],
+      [NS+"-weather", "weatherBias", 0.01]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("input", function () {
+          var v = parseFloat(this.value);
+          STATE[pair[1]] = pair[1] === "ecc" ? v / 100 : pair[1] === "weatherBias" ? v / 100 : v;
+          render();
+        });
+      }
+    });
+
+    mount.querySelectorAll("."+NS+"-btn[data-action]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a = this.getAttribute("data-action");
+        if (a === "run") {
+          var m = missionModel();
+          pushLog("run", "Mission run logged: " + STATE.origin + " → " + STATE.destination + " | window " + fmt(m.windowScore,1) + " | dv " + fmt(m.dvProxy,2));
+          render();
+          return;
+        }
+        if (a === "sweep") {
+          STATE.tab = "window";
+          pushLog("sweep", "Window sweep requested from front-end workspace");
+          render();
+          return;
+        }
+        if (a === "search") {
+          pushLog("search", "Widen search triggered for target and window expansion");
+          render();
+          return;
+        }
+        if (a === "export") {
+          var payload = {
+            template: STATE.template,
+            propagator: STATE.propagator,
+            origin: STATE.origin,
+            destination: STATE.destination,
+            payloadKg: STATE.payload,
+            durationDays: STATE.duration,
+            launchCapability: STATE.launchCapability,
+            metrics: missionModel(),
+            exportedUtc: new Date().toISOString()
+          };
+          var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "w5_mission_payload.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          pushLog("export", "Mission payload exported");
+          render();
+          return;
+        }
+        if (a === "send-chat") {
+          var inp = mount.querySelector("#"+NS+"-chatinput");
+          if (!inp) return;
+          var txt = inp.value.trim();
+          if (!txt) return;
+          STATE.chat.push({ role: "user", text: txt });
+          STATE.chat.push({ role: "assistant", text: aiReply(txt) });
+          inp.value = "";
+          pushLog("assistant", "AI assistant interaction recorded");
+          render();
+        }
+      });
+    });
+  }
+
+  function applyTemplate(name) {
+    var t = BODY_DATA.templates[name];
+    if (!t) return;
+    STATE.origin = t.origin;
+    STATE.destination = t.destination;
+    STATE.payload = t.payload;
+    STATE.duration = t.duration;
+    STATE.sma = t.sma;
+    STATE.ecc = t.ecc;
+    STATE.inc = t.inc;
+    STATE.raan = t.raan;
+    pushLog("template", "Template applied: " + name);
+  }
+
+  function drawOverviewCanvas() {
+    var c = mount.querySelector("#"+NS+"-overview-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W * 0.32, cy = H * 0.58;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 14, 0, Math.PI*2);
+    ctx.fillStyle = "#1a6ef5";
+    ctx.fill();
+
+    [50, 92, 138].forEach(function (r, idx) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = idx === 1 ? "rgba(0,255,136,.35)" : "rgba(0,212,255,.18)";
+      ctx.lineWidth = idx === 1 ? 2 : 1;
+      ctx.stroke();
+    });
+
+    var o = BODY_DATA.nodes[STATE.origin] || { x:.60, y:.62 };
+    var d = BODY_DATA.nodes[STATE.destination] || { x:.36, y:.56 };
+    var ox = o.x * W, oy = o.y * H, dx = d.x * W, dy = d.y * H;
+
+    ctx.beginPath();
+    ctx.moveTo(ox, oy);
+    ctx.quadraticCurveTo(W*0.56, H*0.12, dx, dy);
+    ctx.strokeStyle = C.green;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    drawNode(ctx, ox, oy, STATE.origin, C.cyan);
+    drawNode(ctx, dx, dy, STATE.destination, C.green);
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("Earth / GEO oversight", cx + 24, cy - 18);
+    ctx.fillText("Intersol route trace", W*0.53, H*0.18);
+  }
+
+  function drawRouteCanvas() {
+    var c = mount.querySelector("#"+NS+"-route-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    Object.keys(BODY_DATA.nodes).forEach(function (name) {
+      var n = BODY_DATA.nodes[name];
+      drawNode(ctx, n.x * W, n.y * H, name, name === STATE.origin ? C.cyan : name === STATE.destination ? C.green : C.muted);
+    });
+
+    var o = BODY_DATA.nodes[STATE.origin];
+    var d = BODY_DATA.nodes[STATE.destination];
+    if (o && d) {
+      ctx.beginPath();
+      ctx.moveTo(o.x * W, o.y * H);
+      ctx.quadraticCurveTo(W*0.5, H*0.1, d.x * W, d.y * H);
+      ctx.strokeStyle = C.green;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  }
+
+  function drawSiteCanvas() {
+    var c = mount.querySelector("#"+NS+"-site-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.fillStyle = "rgba(0,212,255,.08)";
+    for (var i=0;i<18;i++) {
+      ctx.beginPath();
+      ctx.arc(40 + (i*33)%W, 40 + (i*19)%H, 3 + (i%4), 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.strokeStyle = "rgba(0,255,136,.35)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(W*0.16, H*0.22, W*0.38, H*0.46);
+
+    ctx.fillStyle = C.green;
+    ctx.font = "12px Inter, sans-serif";
+    ctx.fillText("Mine Site Operational Footprint", W*0.18, H*0.18);
+
+    ctx.fillStyle = C.cyan;
+    ctx.fillRect(W*0.24, H*0.42, 18, 18);
+    ctx.fillRect(W*0.34, H*0.50, 18, 18);
+    ctx.fillRect(W*0.44, H*0.36, 18, 18);
+
+    ctx.strokeStyle = C.green;
+    ctx.beginPath();
+    ctx.moveTo(W*0.25, H*0.43);
+    ctx.lineTo(W*0.35, H*0.51);
+    ctx.lineTo(W*0.45, H*0.37);
+    ctx.stroke();
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("dispatch", W*0.56, H*0.37);
+    ctx.fillText("processing", W*0.56, H*0.47);
+    ctx.fillText("queue", W*0.56, H*0.57);
+  }
+
+  function drawWindowCanvas() {
+    var c = mount.querySelector("#"+NS+"-window-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cols = 22, rows = 14;
+    var cw = W / cols, rh = H / rows;
+    for (var y=0;y<rows;y++) {
+      for (var x=0;x<cols;x++) {
+        var score = 100
+          - Math.abs(x - 8) * 6
+          - Math.abs(y - 5) * 5
+          - STATE.ecc * 30
+          - (STATE.inc / 180) * 22
+          + STATE.weatherBias * 20
+          - (STATE.payload / 50000) * 18;
+        score = Math.max(0, Math.min(100, score));
+        ctx.fillStyle = score > 75 ? "rgba(0,255,136,.75)" : score > 55 ? "rgba(255,170,0,.72)" : "rgba(255,91,91,.65)";
+        ctx.fillRect(x*cw + 1, y*rh + 1, cw - 2, rh - 2);
+      }
+    }
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("Departure phase →", 10, H - 8);
+    ctx.save();
+    ctx.translate(10, H - 20);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("Transit duration ↑", 0, 0);
+    ctx.restore();
+  }
+
+  function drawNode(ctx, x, y, label, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.fillStyle = C.text;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText(label, x + 10, y - 8);
+  }
+
+  function tickUTC() {
+    var el = mount.querySelector("#"+NS+"-utc");
+    if (el) el.textContent = new Date().toUTCString().replace("GMT","UTC");
+  }
+
+  render();
+  setInterval(function () {
+    tickUTC();
+    if (STATE.autoAgent && Math.random() < 0.08) {
+      pushLog("agent", "Window watch active for " + STATE.origin + " → " + STATE.destination);
+      if (STATE.logs.length > 24) STATE.logs.length = 24;
+      if (STATE.tab === "overview" || STATE.tab === "route" || STATE.tab === "window") render();
+    } else {
+      tickUTC();
+    }
+  }, 1000);
+
+  window.W5App = window.W5App || {};
+  window.W5App.state = function () { return JSON.parse(JSON.stringify(STATE)); };
+  window.W5App.model = missionModel;
+  window.W5App.rerender = render;
+})();
+</script>
