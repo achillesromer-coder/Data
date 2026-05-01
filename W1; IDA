@@ -1,0 +1,755 @@
+<div id="w1-root"></div>
+<script>
+(function () {
+  var mount = document.getElementById("w1-root");
+  if (!mount) return;
+
+  var NS = "w1sq";
+  var C = {
+    bg: "#0a0e1a",
+    bg2: "#1a1f2e",
+    bg3: "#252b3d",
+    panel: "#11182a",
+    line: "#3a4059",
+    cyan: "#00d4ff",
+    blue: "#00aaff",
+    green: "#00ff88",
+    amber: "#ffaa00",
+    pink: "#ff6b9d",
+    red: "#ff5b5b",
+    text: "#e8eaf0",
+    muted: "#8b92a8"
+  };
+
+  var PRESETS = {
+    "Custom": null,
+    "16 Psyche": { R: 150, iv: 8, dh: 35786, ri: 4, mo: 10, dip: 9, density: 3990, tax: "M", site: "MBA" },
+    "Ryugu": { R: 250, iv: 12, dh: 40000, ri: 5, mo: 12, dip: 10, density: 1190, tax: "Cg", site: "Apollo" },
+    "Bennu": { R: 100, iv: 5, dh: 30000, ri: 3, mo: 8, dip: 7, density: 1260, tax: "B", site: "Apollo" }
+  };
+
+  var STATE = {
+    tab: "field",
+    preset: "Custom",
+    targetName: "Custom Target",
+    taxonomy: "M",
+    siteClass: "MBA",
+    radiusM: 100,
+    ironVolumeKm3: 5.0,
+    depthM: 35786,
+    rings: 3,
+    modulesPerRing: 8,
+    dipoleScale: 9,
+    densityKgM3: 3990,
+    extractionMode: "Mag-Lev",
+    sweepMode: null,
+    logs: [
+      { t: "2026-04-08T02:08:00Z", type: "deposit", msg: "Deposit registry initialized for W1 dataspace preview" },
+      { t: "2026-04-08T02:12:00Z", type: "field", msg: "Luke IV field and trajectory visual refreshed" },
+      { t: "2026-04-08T02:18:00Z", type: "handoff", msg: "Downstream W2 / W4 / W6 compatibility summary updated" }
+    ]
+  };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmt(n, d) {
+    return Number(n).toFixed(d == null ? 2 : d);
+  }
+
+  function pushLog(type, msg) {
+    STATE.logs.unshift({ t: new Date().toISOString(), type: type, msg: msg });
+    if (STATE.logs.length > 30) STATE.logs.length = 30;
+  }
+
+  function model() {
+    var R = STATE.radiusM;
+    var iv = STATE.ironVolumeKm3;
+    var dh = STATE.depthM;
+    var ri = STATE.rings;
+    var mo = STATE.modulesPerRing;
+    var dip = STATE.dipoleScale * 1e7;
+    var density = STATE.densityKgM3;
+    var totalModules = ri * mo;
+    var Bsurface = 1e-7 * 2 * dip / Math.pow(Math.max(R, 1), 3);
+    var depositMass = iv * 1e9 * density;
+    var captureProxy = Math.max(0, Math.min(100,
+      66 + Math.log10(Math.max(dip, 1)) * 8 + ri * 2.5 + mo * 0.8 - (R / 150) * 9
+    ));
+    var fieldCoverage = Math.max(0, Math.min(100,
+      44 + ri * 7 + mo * 1.5 + (Bsurface * 1e6) * 2
+    ));
+    var orbitalBurden = Math.max(0, Math.min(100,
+      18 + (dh / 35786) * 20 + (depositMass / 1e13) * 35 + totalModules * 0.6
+    ));
+    var extractionReadiness = Math.max(0, Math.min(100,
+      captureProxy * 0.42 + fieldCoverage * 0.26 + (100 - orbitalBurden) * 0.22 + (STATE.taxonomy === "M" ? 10 : STATE.taxonomy === "S" ? 4 : 0)
+    ));
+    var paretoScore = Math.max(0, Math.min(100,
+      extractionReadiness * 0.50 + fieldCoverage * 0.20 + (100 - orbitalBurden) * 0.30
+    ));
+    var moduleEfficiency = Math.max(0, Math.min(100,
+      52 + mo * 1.8 + ri * 2.2 - Math.abs(mo - 12) * 1.1
+    ));
+    var launchBurden = Math.max(0, Math.min(100,
+      24 + ri * 4.5 + mo * 0.9 + (dh / 50000) * 18
+    ));
+    var recommended = paretoScore > 76 ? "Proceed" : paretoScore > 58 ? "Conditional" : "Reconfigure";
+    return {
+      dipole: dip,
+      totalModules: totalModules,
+      Bsurface: Bsurface,
+      depositMass: depositMass,
+      captureProxy: captureProxy,
+      fieldCoverage: fieldCoverage,
+      orbitalBurden: orbitalBurden,
+      extractionReadiness: extractionReadiness,
+      paretoScore: paretoScore,
+      moduleEfficiency: moduleEfficiency,
+      launchBurden: launchBurden,
+      recommended: recommended
+    };
+  }
+
+  var style = document.createElement("style");
+  style.textContent = `
+    #w1-root{width:100%}
+    .${NS}-wrap{
+      width:100%;
+      min-height:1020px;
+      display:flex;
+      flex-direction:column;
+      background:${C.bg};
+      color:${C.text};
+      border:1px solid ${C.line};
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.3);
+      font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+    }
+    .${NS}-hdr{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;background:${C.bg2};border-bottom:1px solid ${C.line};
+    }
+    .${NS}-logo{
+      width:30px;height:30px;border-radius:50%;
+      display:grid;place-items:center;font-weight:900;
+      color:#081019;background:linear-gradient(135deg,${C.cyan},${C.blue});
+    }
+    .${NS}-titlewrap{flex:1;min-width:240px}
+    .${NS}-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${C.cyan}}
+    .${NS}-sub{font-size:11px;color:${C.muted};margin-top:2px}
+    .${NS}-fuse{display:flex;gap:6px;flex-wrap:wrap}
+    .${NS}-fuse a,.${NS}-btn{
+      padding:6px 10px;border-radius:8px;text-decoration:none;
+      background:${C.bg3};border:1px solid ${C.line};color:${C.text};
+      font-size:11px;font-weight:700;cursor:pointer;
+    }
+    .${NS}-fuse a.on{color:${C.cyan};border-color:${C.cyan};background:rgba(0,212,255,.10)}
+    .${NS}-fuse a.ds{color:${C.green};border-color:${C.green};background:rgba(0,255,136,.08)}
+    .${NS}-meta{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:8px 16px;background:${C.bg3};border-bottom:1px solid ${C.line};
+      font-size:11px;color:${C.muted};
+    }
+    .${NS}-pill{
+      padding:3px 8px;border-radius:999px;border:1px solid ${C.green};
+      color:${C.green};font-size:10px;font-weight:800;background:rgba(0,255,136,.08)
+    }
+    .${NS}-body{display:grid;grid-template-columns:300px 1fr;flex:1;min-height:0}
+    .${NS}-side{background:${C.bg2};border-right:1px solid ${C.line};padding:12px;overflow:auto}
+    .${NS}-main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .${NS}-panel{background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px;margin-bottom:12px}
+    .${NS}-ph{font-size:11px;font-weight:800;color:${C.cyan};text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .${NS}-field{margin-bottom:10px}
+    .${NS}-label{display:block;font-size:11px;color:${C.muted};margin-bottom:6px}
+    .${NS}-input,.${NS}-select,.${NS}-range{width:100%;box-sizing:border-box}
+    .${NS}-input,.${NS}-select{
+      padding:9px 10px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.text};font-size:12px;
+    }
+    .${NS}-range{accent-color:${C.cyan}}
+    .${NS}-rv{font-size:11px;color:${C.cyan};font-weight:700;margin-top:4px}
+    .${NS}-small{font-size:11px;color:${C.muted};line-height:1.45}
+    .${NS}-btnrow{display:flex;gap:8px;flex-wrap:wrap}
+    .${NS}-tabs{display:flex;gap:2px;flex-wrap:wrap;padding:10px;border-bottom:1px solid ${C.line};background:${C.bg2}}
+    .${NS}-tab{
+      padding:8px 12px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.muted};font-size:11px;font-weight:800;cursor:pointer;
+    }
+    .${NS}-tab.on{background:${C.cyan};border-color:${C.cyan};color:#081019}
+    .${NS}-viewport{
+      flex:1;overflow:auto;padding:12px;
+      background:radial-gradient(circle at top, #122033 0%, ${C.bg} 54%, #09111d 100%);
+    }
+    .${NS}-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .${NS}-card{
+      background:linear-gradient(180deg,#11182a 0%, #0f1524 100%);
+      border:1px solid ${C.line};border-radius:12px;padding:12px;min-width:0;
+    }
+    .${NS}-ct{font-size:11px;font-weight:800;color:${C.pink};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .${NS}-kpi{font-size:28px;font-weight:900;color:${C.green};line-height:1.1}
+    .${NS}-subk{font-size:11px;color:${C.muted};margin-top:6px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .${NS}-canvaswrap{
+      position:relative;height:340px;border:1px solid ${C.line};border-radius:12px;overflow:hidden;background:#0b101b;
+    }
+    .${NS}-canvaswrap canvas{width:100%;height:100%;display:block}
+    .${NS}-overlay{
+      position:absolute;top:10px;left:10px;padding:8px 10px;border-radius:10px;
+      background:rgba(10,14,26,.9);border:1px solid ${C.line};font-size:11px;color:${C.muted};line-height:1.5;
+    }
+    .${NS}-table{width:100%;border-collapse:collapse;font-size:11px}
+    .${NS}-table th{text-align:left;padding:8px 6px;color:${C.muted};border-bottom:1px solid ${C.line};font-weight:700}
+    .${NS}-table td{padding:8px 6px;border-bottom:1px solid rgba(58,64,89,.34);vertical-align:top}
+    .${NS}-table tr:hover td{background:rgba(255,255,255,.02)}
+    .${NS}-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(58,64,89,.34)}
+    .${NS}-row:last-child{border-bottom:none}
+    .${NS}-key{font-size:11px;color:${C.muted}}
+    .${NS}-val{font-size:11px;color:${C.text};font-weight:700;text-align:right}
+    .${NS}-bar{height:8px;border-radius:999px;overflow:hidden;background:#09111d;border:1px solid #1f2a42}
+    .${NS}-bar > span{display:block;height:100%;background:linear-gradient(90deg,${C.cyan},${C.green})}
+    .${NS}-chip{
+      display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+      border:1px solid ${C.line};background:${C.bg3};font-size:10px;margin:0 6px 6px 0
+    }
+    @media (max-width:1100px){
+      .${NS}-body{grid-template-columns:1fr}
+      .${NS}-side{border-right:none;border-bottom:1px solid ${C.line}}
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+    }
+  `;
+  mount.appendChild(style);
+
+  function render() {
+    mount.querySelectorAll(":scope > ." + NS + "-wrap").forEach(function(n){ n.remove(); });
+    var m = model();
+
+    var wrap = document.createElement("div");
+    wrap.className = NS + "-wrap";
+    wrap.innerHTML =
+      '<div class="'+NS+'-hdr">'
+      + '<div class="'+NS+'-logo">⚡</div>'
+      + '<div class="'+NS+'-titlewrap">'
+      +   '<div class="'+NS+'-title">Workspace: W1 · Deposit Analysis</div>'
+      +   '<div class="'+NS+'-sub">Ore body characterisation, Luke IV field + trajectory, Pareto comparison, capture-readiness and downstream routing</div>'
+      + '</div>'
+      + '<div class="'+NS+'-fuse">'
+      +   '<a href="#" class="on">W1</a><a href="#">W2</a><a href="#">W3</a><a href="#">W4</a><a href="#">W5</a><a href="#">W6</a><a href="#" class="ds">DATA</a>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-meta">'
+      +   '<span class="'+NS+'-pill">● OPERATIONAL</span>'
+      +   '<span>/w1/data</span>'
+      +   '<span>Units: SI + orbital / capture proxy</span>'
+      +   '<span>Römer Industries / EMASSC</span>'
+      +   '<span id="'+NS+'-utc" style="margin-left:auto"></span>'
+      + '</div>'
+
+      + '<div class="'+NS+'-body">'
+      +   '<div class="'+NS+'-side">'+sideHTML(m)+'</div>'
+      +   '<div class="'+NS+'-main">'
+      +     tabsHTML()
+      +     '<div class="'+NS+'-viewport" id="'+NS+'-viewport"></div>'
+      +   '</div>'
+      + '</div>';
+
+    mount.appendChild(wrap);
+    bind();
+    renderTab();
+    tickUTC();
+  }
+
+  function sideHTML(m) {
+    return ''
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Preset & Classification</div>'
+      +   fieldSelect("Preset", NS+"-preset", Object.keys(PRESETS), STATE.preset)
+      +   fieldSelect("Taxonomy", NS+"-tax", ["M","S","Cg","B","C","V","X"], STATE.taxonomy)
+      +   fieldSelect("Site Class", NS+"-site", ["MBA","Apollo","Amor","Aten","IEO"], STATE.siteClass)
+      +   fieldSelect("Extraction Mode", NS+"-emode", ["Mag-Lev","EMFF Assist","Refine In Situ","Survey Only"], STATE.extractionMode)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Core Variables</div>'
+      +   fieldRange("Radius R (m)", NS+"-R", 10, 500, 1, STATE.radiusM, STATE.radiusM)
+      +   fieldRange("Iron Volume (km³)", NS+"-iv", 1, 50, 0.1, STATE.ironVolumeKm3, fmt(STATE.ironVolumeKm3,1))
+      +   fieldRange("Depth (m)", NS+"-dh", 1000, 100000, 100, STATE.depthM, Math.round(STATE.depthM))
+      +   fieldRange("Rings", NS+"-ri", 1, 8, 1, STATE.rings, STATE.rings)
+      +   fieldRange("Modules / Ring", NS+"-mo", 4, 24, 1, STATE.modulesPerRing, STATE.modulesPerRing)
+      +   fieldRange("Dipole Scale", NS+"-dip", 1, 20, 1, STATE.dipoleScale, (STATE.dipoleScale*1e7).toExponential(1))
+      +   fieldRange("Density (kg/m³)", NS+"-den", 800, 8000, 10, STATE.densityKgM3, STATE.densityKgM3)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Quick Actions</div>'
+      +   '<div class="'+NS+'-btnrow">'
+      +     btn("Variable Compound", "vca")
+      +     btn("Pattern Simplify", "ps")
+      +     btn("Large Optimise", "lso")
+      +     btn("Widen Search", "ws")
+      +   '</div>'
+      +   '<div class="'+NS+'-btnrow" style="margin-top:8px;">'
+      +     btn("Run & Log", "run")
+      +     btn("Export JSON", "export")
+      +   '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Instant Readout</div>'
+      +   statRow("B-surface", m.Bsurface.toExponential(2)+" T", C.cyan)
+      +   statRow("Total modules", m.totalModules, C.blue)
+      +   statRow("Field coverage", fmt(m.fieldCoverage,1)+"/100", m.fieldCoverage > 75 ? C.green : m.fieldCoverage > 55 ? C.amber : C.red)
+      +   statRow("Extraction readiness", fmt(m.extractionReadiness,1)+"/100", m.extractionReadiness > 75 ? C.green : m.extractionReadiness > 55 ? C.amber : C.red)
+      +   statRow("Recommendation", esc(m.recommended), m.recommended === "Proceed" ? C.green : m.recommended === "Conditional" ? C.amber : C.red)
+      + '</div>';
+  }
+
+  function fieldSelect(label, id, values, current) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<select class="'+NS+'-select" id="'+id+'">'
+      + values.map(function (v) {
+          return '<option value="'+esc(v)+'"'+(v === current ? ' selected' : '')+'>'+esc(v)+'</option>';
+        }).join("")
+      + '</select></div>';
+  }
+
+  function fieldRange(label, id, min, max, step, value, displayValue) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<input class="'+NS+'-range" type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">'
+      + '<div class="'+NS+'-rv">'+esc(displayValue)+'</div>'
+      + '</div>';
+  }
+
+  function btn(label, action) {
+    return '<button class="'+NS+'-btn" data-action="'+action+'">'+label+'</button>';
+  }
+
+  function statRow(k, v, color) {
+    return '<div class="'+NS+'-row"><div class="'+NS+'-key">'+k+'</div><div class="'+NS+'-val" style="color:'+color+'">'+v+'</div></div>';
+  }
+
+  function tabsHTML() {
+    var tabs = [
+      ["field","Field + Trajectory"],
+      ["pareto","Pareto"],
+      ["capture","Capture Analysis"],
+      ["exports","Exports & Sweep"],
+      ["connections","Connections"]
+    ];
+    return '<div class="'+NS+'-tabs">'
+      + tabs.map(function (t) {
+          return '<button class="'+NS+'-tab'+(STATE.tab === t[0] ? ' on' : '')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+        }).join("")
+      + '</div>';
+  }
+
+  function renderTab() {
+    var vp = mount.querySelector("#"+NS+"-viewport");
+    if (!vp) return;
+    if (STATE.tab === "field") vp.innerHTML = renderField();
+    if (STATE.tab === "pareto") vp.innerHTML = renderPareto();
+    if (STATE.tab === "capture") vp.innerHTML = renderCapture();
+    if (STATE.tab === "exports") vp.innerHTML = renderExports();
+    if (STATE.tab === "connections") vp.innerHTML = renderConnections();
+
+    if (STATE.tab === "field") drawFieldCanvas();
+    if (STATE.tab === "pareto") drawParetoCanvas();
+    if (STATE.tab === "capture") drawCaptureCanvas();
+  }
+
+  function renderField() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Radius", '<div class="'+NS+'-kpi">'+STATE.radiusM+'</div><div class="'+NS+'-subk">m target radius</div>', "span-3")
+      + card("Iron Volume", '<div class="'+NS+'-kpi">'+fmt(STATE.ironVolumeKm3,1)+'</div><div class="'+NS+'-subk">km³ iron-rich deposit proxy</div>', "span-3")
+      + card("Depth", '<div class="'+NS+'-kpi">'+Math.round(STATE.depthM)+'</div><div class="'+NS+'-subk">m trajectory depth proxy</div>', "span-3")
+      + card("Deposit Mass", '<div class="'+NS+'-kpi">'+massShort(m.depositMass)+'</div><div class="'+NS+'-subk">kg estimated resource mass</div>', "span-3")
+      + card("Luke IV Field + Trajectory", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-field-canvas"></canvas><div class="'+NS+'-overlay">Ring topology, module distribution, central dipole, and stylized approach trajectory.</div></div>', "span-8")
+      + card("Field State",
+          statRow("Preset", esc(STATE.preset), C.cyan)
+        + statRow("Taxonomy", esc(STATE.taxonomy), C.blue)
+        + statRow("Site", esc(STATE.siteClass), C.green)
+        + statRow("Dipole", m.dipole.toExponential(2)+" Am²", C.amber)
+        + statRow("Capture proxy", fmt(m.captureProxy,1)+"/100", m.captureProxy > 75 ? C.green : m.captureProxy > 55 ? C.amber : C.red)
+        + statRow("Orbital burden", fmt(m.orbitalBurden,1)+"/100", m.orbitalBurden < 35 ? C.green : m.orbitalBurden < 60 ? C.amber : C.red),
+        "span-4")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderPareto() {
+    return '<div class="'+NS+'-grid">'
+      + card("Pareto Surface", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-pareto-canvas"></canvas><div class="'+NS+'-overlay">Proxy comparison across ring count, module density, and orbital burden. Green = stronger front.</div></div>', "span-8")
+      + card("Pareto Readout",
+          statRow("Pareto score", fmt(model().paretoScore,1)+"/100", model().paretoScore > 76 ? C.green : model().paretoScore > 58 ? C.amber : C.red)
+        + statRow("Module efficiency", fmt(model().moduleEfficiency,1)+"/100", model().moduleEfficiency > 75 ? C.green : model().moduleEfficiency > 55 ? C.amber : C.red)
+        + statRow("Launch burden", fmt(model().launchBurden,1)+"/100", model().launchBurden < 40 ? C.green : model().launchBurden < 65 ? C.amber : C.red)
+        + statRow("Sweep state", STATE.sweepMode ? esc(STATE.sweepMode.toUpperCase()) : "None", C.cyan),
+        "span-4")
+      + card("Comparison Table", paretoTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderCapture() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Capture Analysis", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-capture-canvas"></canvas><div class="'+NS+'-overlay">Deposit mass, field strength, and orbital depth combined into capture-readiness proxy space.</div></div>', "span-8")
+      + card("Capture Readout",
+          statRow("Capture proxy", fmt(m.captureProxy,1)+"/100", m.captureProxy > 75 ? C.green : m.captureProxy > 55 ? C.amber : C.red)
+        + statRow("Field coverage", fmt(m.fieldCoverage,1)+"/100", m.fieldCoverage > 75 ? C.green : m.fieldCoverage > 55 ? C.amber : C.red)
+        + statRow("Extraction readiness", fmt(m.extractionReadiness,1)+"/100", m.extractionReadiness > 75 ? C.green : m.extractionReadiness > 55 ? C.amber : C.red)
+        + statRow("Recommendation", esc(m.recommended), m.recommended === "Proceed" ? C.green : m.recommended === "Conditional" ? C.amber : C.red),
+        "span-4")
+      + card("Capture Metrics", captureTableHTML(m), "span-12")
+      + '</div>';
+  }
+
+  function renderExports() {
+    return '<div class="'+NS+'-grid">'
+      + card("Sweep Actions",
+          '<div style="margin-bottom:8px;">'
+        + '<span class="'+NS+'-chip">Variable Compound Analysis</span>'
+        + '<span class="'+NS+'-chip">Pattern Simplification</span>'
+        + '<span class="'+NS+'-chip">Large-Scale Optimisation</span>'
+        + '<span class="'+NS+'-chip">Widen Search</span>'
+        + '</div>'
+        + '<div class="'+NS+'-small">W1 front-end exposes sweep triggers and preview metrics; heavier registry/search/export workflows should resolve in dataspace.</div>',
+        "span-4")
+      + card("Exports",
+          '<table class="'+NS+'-table"><thead><tr><th>Item</th><th>Source</th><th>Date</th><th>Type</th><th>Action</th></tr></thead><tbody>'
+          + '<tr><td>deposit_analysis_payload.json</td><td>W1 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>publish</td><td>Ready</td></tr>'
+          + '<tr><td>capture_proxy_payload.json</td><td>W1 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>handoff</td><td>Ready</td></tr>'
+          + '<tr><td>pareto_surface_payload.json</td><td>W1 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>analysis</td><td>Ready</td></tr>'
+          + '</tbody></table>',
+        "span-8")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderConnections() {
+    return '<div class="'+NS+'-grid">'
+      + card("Consumes From",
+          '<div class="'+NS+'-small">W3 RFS / EMFF — field assumptions and power envelope<br>W5 GMAT — route / window / orbital context<br>Library / asset references — target enrichment and comparisons</div>',
+        "span-6")
+      + card("Feeds Into",
+          '<div class="'+NS+'-small">W2 Luke II — catch / hold candidate inputs<br>W4 supply chain — mass and logistics assumptions<br>W6 asset library — asset-level publish / shortlist layer</div>',
+        "span-6")
+      + card("Operational Intent",
+          '<div class="'+NS+'-small">W1 should act as the deposit-analysis authority: resource body characterization, capture feasibility proxy, field/deployment comparison, and downstream candidate handoff. The front-end previews those relationships; dataspace performs the deeper analysis and persistent export.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function card(title, body, span) {
+    return '<div class="'+NS+'-card '+(span || "span-3")+'"><div class="'+NS+'-ct">'+title+'</div>'+body+'</div>';
+  }
+
+  function logTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>UTC</th><th>Type</th><th>Message</th></tr></thead><tbody>'
+      + STATE.logs.map(function (l) {
+          return '<tr><td>'+esc(l.t.replace("T"," ").replace("Z"," UTC"))+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.msg)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function paretoTableHTML() {
+    var rows = [
+      { name: "Current Config", score: model().paretoScore, eff: model().moduleEfficiency, burden: model().launchBurden },
+      { name: "High Ring Bias", score: clamp(model().paretoScore + 4), eff: clamp(model().moduleEfficiency + 8), burden: clamp(model().launchBurden + 10) },
+      { name: "Module Dense", score: clamp(model().paretoScore + 7), eff: clamp(model().moduleEfficiency + 10), burden: clamp(model().launchBurden + 6) },
+      { name: "Low Burden", score: clamp(model().paretoScore - 2), eff: clamp(model().moduleEfficiency - 3), burden: clamp(model().launchBurden - 12) }
+    ];
+    return '<table class="'+NS+'-table"><thead><tr><th>Config</th><th>Pareto</th><th>Efficiency</th><th>Burden</th></tr></thead><tbody>'
+      + rows.map(function (r) {
+          return '<tr><td>'+esc(r.name)+'</td><td>'+fmt(r.score,1)+'</td><td>'+fmt(r.eff,1)+'</td><td>'+fmt(r.burden,1)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function captureTableHTML(m) {
+    return '<table class="'+NS+'-table"><thead><tr><th>Metric</th><th>Value</th><th>Assessment</th></tr></thead><tbody>'
+      + rowMetric("Deposit mass", massShort(m.depositMass)+" kg", m.depositMass > 1e12 ? "large" : "moderate")
+      + rowMetric("B-surface", m.Bsurface.toExponential(2)+" T", m.Bsurface > 1e-5 ? "strong" : "thin")
+      + rowMetric("Capture proxy", fmt(m.captureProxy,1)+"/100", m.captureProxy > 75 ? "good" : m.captureProxy > 55 ? "watch" : "poor")
+      + rowMetric("Extraction readiness", fmt(m.extractionReadiness,1)+"/100", m.extractionReadiness > 75 ? "good" : m.extractionReadiness > 55 ? "watch" : "poor")
+      + rowMetric("Recommendation", esc(m.recommended), m.recommended.toLowerCase())
+      + '</tbody></table>';
+  }
+
+  function rowMetric(a, b, c) {
+    return '<tr><td>'+a+'</td><td>'+b+'</td><td>'+c+'</td></tr>';
+  }
+
+  function clamp(n) {
+    return Math.max(0, Math.min(100, n));
+  }
+
+  function massShort(v) {
+    if (v >= 1e15) return fmt(v / 1e15, 2) + "Q";
+    if (v >= 1e12) return fmt(v / 1e12, 2) + "T";
+    if (v >= 1e9) return fmt(v / 1e9, 2) + "B";
+    if (v >= 1e6) return fmt(v / 1e6, 2) + "M";
+    return fmt(v, 0);
+  }
+
+  function bind() {
+    mount.querySelectorAll("."+NS+"-tab").forEach(function (el) {
+      el.addEventListener("click", function () {
+        STATE.tab = this.getAttribute("data-tab");
+        render();
+      });
+    });
+
+    [
+      [NS+"-preset","preset"],
+      [NS+"-tax","taxonomy"],
+      [NS+"-site","siteClass"],
+      [NS+"-emode","extractionMode"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("change", function () {
+          STATE[pair[1]] = this.value;
+          if (pair[1] === "preset") applyPreset(this.value);
+          pushLog("config", pair[1] + " updated");
+          render();
+        });
+      }
+    });
+
+    [
+      [NS+"-R","radiusM"],
+      [NS+"-iv","ironVolumeKm3"],
+      [NS+"-dh","depthM"],
+      [NS+"-ri","rings"],
+      [NS+"-mo","modulesPerRing"],
+      [NS+"-dip","dipoleScale"],
+      [NS+"-den","densityKgM3"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("input", function () {
+          STATE[pair[1]] = parseFloat(this.value);
+          render();
+        });
+      }
+    });
+
+    mount.querySelectorAll("."+NS+"-btn[data-action]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a = this.getAttribute("data-action");
+        if (a === "run") {
+          var m = model();
+          pushLog("run", "W1 run logged | capture " + fmt(m.captureProxy,1) + " | readiness " + fmt(m.extractionReadiness,1) + " | score " + fmt(m.paretoScore,1));
+          render();
+          return;
+        }
+        if (a === "export") {
+          var payload = {
+            preset: STATE.preset,
+            taxonomy: STATE.taxonomy,
+            siteClass: STATE.siteClass,
+            extractionMode: STATE.extractionMode,
+            radiusM: STATE.radiusM,
+            ironVolumeKm3: STATE.ironVolumeKm3,
+            depthM: STATE.depthM,
+            rings: STATE.rings,
+            modulesPerRing: STATE.modulesPerRing,
+            dipoleScale: STATE.dipoleScale,
+            densityKgM3: STATE.densityKgM3,
+            metrics: model(),
+            exportedUtc: new Date().toISOString()
+          };
+          var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "w1_deposit_analysis_payload.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          pushLog("export", "Deposit analysis payload exported");
+          render();
+          return;
+        }
+        STATE.sweepMode = a;
+        pushLog("sweep", "Sweep triggered: " + a.toUpperCase());
+        render();
+      });
+    });
+  }
+
+  function applyPreset(name) {
+    var p = PRESETS[name];
+    if (!p) return;
+    STATE.targetName = name;
+    STATE.radiusM = p.R;
+    STATE.ironVolumeKm3 = p.iv;
+    STATE.depthM = p.dh;
+    STATE.rings = p.ri;
+    STATE.modulesPerRing = p.mo;
+    STATE.dipoleScale = p.dip;
+    STATE.densityKgM3 = p.density;
+    STATE.taxonomy = p.tax;
+    STATE.siteClass = p.site;
+  }
+
+  function drawFieldCanvas() {
+    var c = mount.querySelector("#"+NS+"-field-canvas");
+    if (!c) return;
+    var ctx = c.getContext("2d");
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W/2, cy = H/2;
+    var sc = Math.min(W,H) * 0.32 / Math.max(STATE.radiusM, 1);
+
+    for (var r = 1; r <= STATE.rings; r++) {
+      var rad = r * STATE.radiusM * sc * 0.18;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0,212,255,.22)";
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+      for (var m = 0; m < STATE.modulesPerRing; m++) {
+        var a = m / STATE.modulesPerRing * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(cx + Math.cos(a) * rad, cy + Math.sin(a) * rad, 3, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0,212,255,.92)";
+        ctx.fill();
+      }
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+    ctx.fillStyle = C.cyan;
+    ctx.fill();
+
+    var y = cy - Math.min(STATE.depthM * sc * 0.007, cy * 0.82);
+    var vy = STATE.ironVolumeKm3 * sc * 0.001;
+    var x = cx, dt = 0.5;
+    ctx.strokeStyle = "rgba(255,170,0,.88)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    for (var i = 0; i < 320; i++) {
+      var dy2 = y - cy;
+      vy += (-0.0022 * dy2 / (Math.abs(dy2) + 1)) * dt;
+      y += vy * dt;
+      x += Math.sin(i * 0.1) * 0.42;
+      ctx.lineTo(x, y);
+      if (y > H * 0.96 || y < 4) break;
+    }
+    ctx.stroke();
+  }
+
+  function drawParetoCanvas() {
+    var c = mount.querySelector("#"+NS+"-pareto-canvas");
+    if (!c) return;
+    var ctx = c.getContext("2d");
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var points = [];
+    for (var r = 1; r <= 8; r++) {
+      for (var m = 4; m <= 24; m += 2) {
+        var eff = 52 + m * 1.8 + r * 2.2 - Math.abs(m - 12) * 1.1;
+        var burden = 24 + r * 4.5 + m * 0.9 + (STATE.depthM / 50000) * 18;
+        var score = Math.max(0, Math.min(100, eff * 0.55 + (100 - burden) * 0.45));
+        points.push({ r:r, m:m, eff:eff, burden:burden, score:score });
+      }
+    }
+
+    points.forEach(function (p) {
+      var x = 40 + (p.burden / 100) * (W - 80);
+      var y = H - 40 - (p.eff / 100) * (H - 80);
+      ctx.beginPath();
+      ctx.arc(x, y, p.score > 72 ? 4.5 : 3, 0, Math.PI * 2);
+      ctx.fillStyle = p.score > 72 ? C.green : p.score > 58 ? C.amber : C.cyan;
+      ctx.fill();
+    });
+
+    ctx.strokeStyle = "rgba(0,255,136,.6)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(48, H - 54);
+    ctx.quadraticCurveTo(W * 0.44, H * 0.48, W - 54, 50);
+    ctx.stroke();
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("Burden →", W - 90, H - 14);
+    ctx.save();
+    ctx.translate(14, H - 70);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("Efficiency ↑", 0, 0);
+    ctx.restore();
+  }
+
+  function drawCaptureCanvas() {
+    var c = mount.querySelector("#"+NS+"-capture-canvas");
+    if (!c) return;
+    var ctx = c.getContext("2d");
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cols = 18, rows = 12;
+    var cw = W / cols, rh = H / rows;
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        var field = x / (cols - 1) * 100;
+        var burden = y / (rows - 1) * 100;
+        var score = field * 0.62 + (100 - burden) * 0.38 + (STATE.taxonomy === "M" ? 8 : 0);
+        score = Math.max(0, Math.min(100, score));
+        ctx.fillStyle = score > 75 ? "rgba(0,255,136,.72)" : score > 55 ? "rgba(255,170,0,.70)" : "rgba(255,91,91,.65)";
+        ctx.fillRect(x*cw + 1, y*rh + 1, cw - 2, rh - 2);
+      }
+    }
+
+    ctx.fillStyle = C.muted;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("Field strength / coverage →", 10, H - 8);
+    ctx.save();
+    ctx.translate(12, H - 18);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("Orbital / deployment burden ↑", 0, 0);
+    ctx.restore();
+  }
+
+  function tickUTC() {
+    var el = mount.querySelector("#"+NS+"-utc");
+    if (el) el.textContent = new Date().toUTCString().replace("GMT","UTC");
+  }
+
+  render();
+  setInterval(function () { tickUTC(); }, 1000);
+
+  window.W1App = window.W1App || {};
+  window.W1App.state = function () { return JSON.parse(JSON.stringify(STATE)); };
+  window.W1App.model = model;
+  window.W1App.rerender = render;
+})();
+</script>
