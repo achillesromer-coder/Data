@@ -1,0 +1,775 @@
+<div id="w4-root"></div>
+<script>
+(function () {
+  var mount = document.getElementById("w4-root");
+  if (!mount) return;
+
+  var NS = "w4sq";
+  var C = {
+    bg: "#0a0e1a",
+    bg2: "#1a1f2e",
+    bg3: "#252b3d",
+    panel: "#11182a",
+    line: "#3a4059",
+    amber: "#ffaa00",
+    cyan: "#00d4ff",
+    blue: "#00aaff",
+    green: "#00ff88",
+    pink: "#ff6b9d",
+    red: "#ff5b5b",
+    text: "#e8eaf0",
+    muted: "#8b92a8"
+  };
+
+  var NETWORK = {
+    nodes: {
+      "Earth LEO Depot": { x: 0.18, y: 0.74, kind: "earth", cap: 120 },
+      "GEO Luke II": { x: 0.32, y: 0.52, kind: "geo", cap: 96 },
+      "Cislunar Hub": { x: 0.47, y: 0.30, kind: "lunar", cap: 54 },
+      "NEA Dispatch": { x: 0.58, y: 0.66, kind: "nea", cap: 40 },
+      "Inner Belt Relay": { x: 0.72, y: 0.58, kind: "belt", cap: 72 },
+      "Mars Chain": { x: 0.83, y: 0.20, kind: "mars", cap: 68 },
+      "Trojan Storage": { x: 0.90, y: 0.46, kind: "trojan", cap: 34 }
+    },
+    links: [
+      ["Earth LEO Depot","GEO Luke II"],
+      ["GEO Luke II","Cislunar Hub"],
+      ["GEO Luke II","NEA Dispatch"],
+      ["NEA Dispatch","Inner Belt Relay"],
+      ["Inner Belt Relay","Mars Chain"],
+      ["Inner Belt Relay","Trojan Storage"],
+      ["Cislunar Hub","Mars Chain"]
+    ],
+    exportsSeed: [
+      { item:"route_trace_payload.json", source:"W4 front-end run", date:"2026-04-08 UTC", type:"trace", action:"Ready" },
+      { item:"mass_budget_payload.json", source:"W4 front-end run", date:"2026-04-08 UTC", type:"budget", action:"Ready" },
+      { item:"supply_network_payload.json", source:"W4 front-end run", date:"2026-04-08 UTC", type:"publish", action:"Ready" }
+    ]
+  };
+
+  var STATE = {
+    tab: "trajectory",
+    missionPhase: "Transit",
+    dv: 4.2,
+    payload: 12.0,
+    transitDays: 210,
+    fuel: 28.5,
+    supplyNodes: 4,
+    routeOrigin: "NEA Dispatch",
+    routeDestination: "GEO Luke II",
+    convoyCount: 3,
+    margin: 22,
+    automation: true,
+    logs: [
+      { t: "2026-04-08T02:04:00Z", type: "route", msg: "Trajectory chain refreshed for current transfer lane" },
+      { t: "2026-04-08T02:09:00Z", type: "mass", msg: "Mass budget recomputed for active payload and fuel assumptions" },
+      { t: "2026-04-08T02:14:00Z", type: "queue", msg: "Supply-node queue synchronized with route topology" }
+    ],
+    selectedNode: null,
+    selectedSweep: null
+  };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmt(n, d) {
+    return Number(n).toFixed(d == null ? 2 : d);
+  }
+
+  function avg(arr) {
+    return arr.length ? arr.reduce(function(a,b){ return a+b; },0) / arr.length : 0;
+  }
+
+  function pushLog(type, msg) {
+    STATE.logs.unshift({ t: new Date().toISOString(), type: type, msg: msg });
+    if (STATE.logs.length > 24) STATE.logs.length = 24;
+  }
+
+  function routeModel() {
+    var pm = STATE.payload;
+    var fm = STATE.fuel;
+    var dv = STATE.dv;
+    var tt = STATE.transitDays;
+    var sn = STATE.supplyNodes;
+    var convoy = STATE.convoyCount;
+    var mg = STATE.margin;
+
+    var massRatio = (pm + fm) / Math.max(pm, 0.1);
+    var throughput = Math.max(0.5, (pm * convoy * 30) / Math.max(tt, 1));
+    var nodeLoad = Math.min(100, (throughput / Math.max(sn,1)) * 4.8 + convoy * 6);
+    var chainResilience = Math.max(0, Math.min(100, 78 + sn * 4 - dv * 6 - convoy * 3 + mg * 0.4));
+    var routeRisk = Math.max(0, Math.min(100, 26 + dv * 9 + (tt/365)*22 + convoy * 4 - mg * 0.22 - sn * 2.5));
+    var logisticsScore = Math.max(0, Math.min(100, 88 - routeRisk * 0.45 + chainResilience * 0.3));
+    var fuelFraction = fm / Math.max(pm + fm, 1);
+    var queuePressure = Math.max(0, Math.min(100, nodeLoad + convoy * 5 - sn * 3));
+    var costIndex = dv * 14 + tt * 0.18 + convoy * 6 + fm * 0.7;
+    var handoffReadiness = Math.max(0, Math.min(100, logisticsScore * 0.55 + (100 - queuePressure) * 0.25 + mg * 0.7));
+    return {
+      massRatio: massRatio,
+      throughput: throughput,
+      nodeLoad: nodeLoad,
+      chainResilience: chainResilience,
+      routeRisk: routeRisk,
+      logisticsScore: logisticsScore,
+      fuelFraction: fuelFraction,
+      queuePressure: queuePressure,
+      costIndex: costIndex,
+      handoffReadiness: handoffReadiness
+    };
+  }
+
+  function activeRoutePath() {
+    var start = STATE.routeOrigin;
+    var end = STATE.routeDestination;
+    if (start === end) return [start];
+    var preferred = {
+      "NEA Dispatch|GEO Luke II": ["NEA Dispatch","GEO Luke II"],
+      "NEA Dispatch|Earth LEO Depot": ["NEA Dispatch","GEO Luke II","Earth LEO Depot"],
+      "Inner Belt Relay|GEO Luke II": ["Inner Belt Relay","NEA Dispatch","GEO Luke II"],
+      "Inner Belt Relay|Earth LEO Depot": ["Inner Belt Relay","NEA Dispatch","GEO Luke II","Earth LEO Depot"],
+      "Inner Belt Relay|Mars Chain": ["Inner Belt Relay","Mars Chain"],
+      "GEO Luke II|Mars Chain": ["GEO Luke II","Cislunar Hub","Mars Chain"],
+      "Earth LEO Depot|Mars Chain": ["Earth LEO Depot","GEO Luke II","Cislunar Hub","Mars Chain"],
+      "Trojan Storage|GEO Luke II": ["Trojan Storage","Inner Belt Relay","NEA Dispatch","GEO Luke II"]
+    };
+    return preferred[start + "|" + end] || [start, end];
+  }
+
+  var style = document.createElement("style");
+  style.textContent = `
+    #w4-root{width:100%}
+    .${NS}-wrap{
+      width:100%;
+      min-height:960px;
+      display:flex;
+      flex-direction:column;
+      background:${C.bg};
+      color:${C.text};
+      border:1px solid ${C.line};
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.3);
+      font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+    }
+    .${NS}-hdr{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;background:${C.bg2};border-bottom:1px solid ${C.line};
+    }
+    .${NS}-logo{
+      width:30px;height:30px;border-radius:50%;
+      display:grid;place-items:center;font-weight:900;
+      color:#081019;background:linear-gradient(135deg,${C.amber},${C.green});
+    }
+    .${NS}-titlewrap{flex:1;min-width:240px}
+    .${NS}-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${C.amber}}
+    .${NS}-sub{font-size:11px;color:${C.muted};margin-top:2px}
+    .${NS}-fuse{display:flex;gap:6px;flex-wrap:wrap}
+    .${NS}-fuse a,.${NS}-btn{
+      padding:6px 10px;border-radius:8px;text-decoration:none;
+      background:${C.bg3};border:1px solid ${C.line};color:${C.text};
+      font-size:11px;font-weight:700;cursor:pointer;
+    }
+    .${NS}-fuse a.on{color:${C.amber};border-color:${C.amber};background:rgba(255,170,0,.08)}
+    .${NS}-fuse a.ds{color:${C.cyan};border-color:${C.cyan};background:rgba(0,212,255,.08)}
+    .${NS}-meta{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:8px 16px;background:${C.bg3};border-bottom:1px solid ${C.line};
+      font-size:11px;color:${C.muted};
+    }
+    .${NS}-pill{
+      padding:3px 8px;border-radius:999px;border:1px solid ${C.green};
+      color:${C.green};font-size:10px;font-weight:800;background:rgba(0,255,136,.08)
+    }
+    .${NS}-body{display:grid;grid-template-columns:290px 1fr;flex:1;min-height:0}
+    .${NS}-side{background:${C.bg2};border-right:1px solid ${C.line};padding:12px;overflow:auto}
+    .${NS}-main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .${NS}-panel{background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px;margin-bottom:12px}
+    .${NS}-ph{font-size:11px;font-weight:800;color:${C.amber};text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .${NS}-field{margin-bottom:10px}
+    .${NS}-label{display:block;font-size:11px;color:${C.muted};margin-bottom:6px}
+    .${NS}-input,.${NS}-select,.${NS}-range{width:100%;box-sizing:border-box}
+    .${NS}-input,.${NS}-select{
+      padding:9px 10px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.text};font-size:12px;
+    }
+    .${NS}-range{accent-color:${C.amber}}
+    .${NS}-rv{font-size:11px;color:${C.amber};font-weight:700;margin-top:4px}
+    .${NS}-small{font-size:11px;color:${C.muted};line-height:1.45}
+    .${NS}-btnrow{display:flex;gap:8px;flex-wrap:wrap}
+    .${NS}-tabs{display:flex;gap:2px;flex-wrap:wrap;padding:10px;border-bottom:1px solid ${C.line};background:${C.bg2}}
+    .${NS}-tab{
+      padding:8px 12px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.muted};font-size:11px;font-weight:800;cursor:pointer;
+    }
+    .${NS}-tab.on{background:${C.cyan};border-color:${C.cyan};color:#081019}
+    .${NS}-viewport{
+      flex:1;overflow:auto;padding:12px;
+      background:radial-gradient(circle at top, #1a2336 0%, ${C.bg} 54%, #09111d 100%);
+    }
+    .${NS}-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .${NS}-card{
+      background:linear-gradient(180deg,#11182a 0%, #0f1524 100%);
+      border:1px solid ${C.line};border-radius:12px;padding:12px;min-width:0;
+    }
+    .${NS}-ct{font-size:11px;font-weight:800;color:${C.pink};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .${NS}-kpi{font-size:28px;font-weight:900;color:${C.green};line-height:1.1}
+    .${NS}-subk{font-size:11px;color:${C.muted};margin-top:6px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .${NS}-canvaswrap{
+      position:relative;height:330px;border:1px solid ${C.line};border-radius:12px;overflow:hidden;background:#0b101b;
+    }
+    .${NS}-canvaswrap canvas{width:100%;height:100%;display:block}
+    .${NS}-overlay{
+      position:absolute;top:10px;left:10px;padding:8px 10px;border-radius:10px;
+      background:rgba(10,14,26,.9);border:1px solid ${C.line};font-size:11px;color:${C.muted};line-height:1.5;
+    }
+    .${NS}-table{width:100%;border-collapse:collapse;font-size:11px}
+    .${NS}-table th{text-align:left;padding:8px 6px;color:${C.muted};border-bottom:1px solid ${C.line};font-weight:700}
+    .${NS}-table td{padding:8px 6px;border-bottom:1px solid rgba(58,64,89,.34);vertical-align:top}
+    .${NS}-table tr:hover td{background:rgba(255,255,255,.02)}
+    .${NS}-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(58,64,89,.34)}
+    .${NS}-row:last-child{border-bottom:none}
+    .${NS}-key{font-size:11px;color:${C.muted}}
+    .${NS}-val{font-size:11px;color:${C.text};font-weight:700;text-align:right}
+    .${NS}-bar{height:8px;border-radius:999px;overflow:hidden;background:#09111d;border:1px solid #1f2a42}
+    .${NS}-bar > span{display:block;height:100%;background:linear-gradient(90deg,${C.amber},${C.green})}
+    .${NS}-chip{
+      display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+      border:1px solid ${C.line};background:${C.bg3};font-size:10px;margin:0 6px 6px 0
+    }
+    @media (max-width:1100px){
+      .${NS}-body{grid-template-columns:1fr}
+      .${NS}-side{border-right:none;border-bottom:1px solid ${C.line}}
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+    }
+  `;
+  mount.appendChild(style);
+
+  function render() {
+    mount.querySelectorAll(":scope > ." + NS + "-wrap").forEach(function(n){ n.remove(); });
+    var m = routeModel();
+
+    var wrap = document.createElement("div");
+    wrap.className = NS + "-wrap";
+    wrap.innerHTML =
+      '<div class="'+NS+'-hdr">'
+      + '<div class="'+NS+'-logo">⚡</div>'
+      + '<div class="'+NS+'-titlewrap">'
+      +   '<div class="'+NS+'-title">Workspace: W4 · Supply Chain & Trajectory</div>'
+      +   '<div class="'+NS+'-sub">Interplanetary supply chain optimisation, route topology, mass budget, queue and handoff logic</div>'
+      + '</div>'
+      + '<div class="'+NS+'-fuse">'
+      +   '<a href="#">W1</a><a href="#">W2</a><a href="#">W3</a><a href="#" class="on">W4</a><a href="#">W5</a><a href="#">W6</a><a href="#" class="ds">DATA</a>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-meta">'
+      +   '<span class="'+NS+'-pill">● OPERATIONAL</span>'
+      +   '<span>/w4/data</span>'
+      +   '<span>v2.0.0</span>'
+      +   '<span>Units: SI + mission proxy</span>'
+      +   '<span>Römer Industries / EMASSC</span>'
+      +   '<span id="'+NS+'-utc" style="margin-left:auto"></span>'
+      + '</div>'
+
+      + '<div class="'+NS+'-body">'
+      +   '<div class="'+NS+'-side">'+sideHTML(m)+'</div>'
+      +   '<div class="'+NS+'-main">'
+      +     tabsHTML()
+      +     '<div class="'+NS+'-viewport" id="'+NS+'-viewport"></div>'
+      +   '</div>'
+      + '</div>';
+
+    mount.appendChild(wrap);
+    bind();
+    renderTab();
+    tickUTC();
+  }
+
+  function sideHTML(m) {
+    return ''
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Mission Controls</div>'
+      +   fieldSelect("Mission Phase", NS+"-phase", ["Transit","Capture","Return","Resupply"], STATE.missionPhase)
+      +   fieldSelect("Origin", NS+"-origin", Object.keys(NETWORK.nodes), STATE.routeOrigin)
+      +   fieldSelect("Destination", NS+"-destination", Object.keys(NETWORK.nodes), STATE.routeDestination)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Core Variables</div>'
+      +   fieldRange("Transfer Δv (km/s)", NS+"-dv", 1.0, 12.0, 0.1, STATE.dv, fmt(STATE.dv,1))
+      +   fieldRange("Payload Mass (t)", NS+"-payload", 1, 100, 0.5, STATE.payload, fmt(STATE.payload,1))
+      +   fieldRange("Transit Time (days)", NS+"-tt", 30, 900, 1, STATE.transitDays, STATE.transitDays)
+      +   fieldRange("Fuel Mass (t)", NS+"-fuel", 5, 200, 0.5, STATE.fuel, fmt(STATE.fuel,1))
+      +   fieldRange("Supply Nodes", NS+"-nodes", 1, 12, 1, STATE.supplyNodes, STATE.supplyNodes)
+      +   fieldRange("Convoy Count", NS+"-convoy", 1, 10, 1, STATE.convoyCount, STATE.convoyCount)
+      +   fieldRange("Reserve Margin (%)", NS+"-margin", 0, 50, 1, STATE.margin, STATE.margin + "%")
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Quick Actions</div>'
+      +   '<div class="'+NS+'-btnrow">'
+      +     btn("Variable Compound", "vca")
+      +     btn("Pattern Simplify", "ps")
+      +     btn("Large Optimise", "lso")
+      +     btn("Widen Search", "ws")
+      +   '</div>'
+      +   '<div class="'+NS+'-btnrow" style="margin-top:8px;">'
+      +     btn("Run & Log", "run")
+      +     btn("Export JSON", "export")
+      +   '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Instant Readout</div>'
+      +   statRow("Mass ratio", fmt(m.massRatio,2), m.massRatio < 3 ? C.green : m.massRatio < 5 ? C.amber : C.red)
+      +   statRow("Throughput", fmt(m.throughput,2)+" t/mo", C.cyan)
+      +   statRow("Node load", fmt(m.nodeLoad,1)+"/100", m.nodeLoad < 55 ? C.green : m.nodeLoad < 75 ? C.amber : C.red)
+      +   statRow("Route risk", fmt(m.routeRisk,1)+"/100", m.routeRisk < 30 ? C.green : m.routeRisk < 55 ? C.amber : C.red)
+      +   statRow("Handoff readiness", fmt(m.handoffReadiness,1)+"/100", m.handoffReadiness > 75 ? C.green : m.handoffReadiness > 55 ? C.amber : C.red)
+      + '</div>';
+  }
+
+  function fieldSelect(label, id, values, current) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<select class="'+NS+'-select" id="'+id+'">'
+      + values.map(function (v) {
+          return '<option value="'+esc(v)+'"'+(v === current ? ' selected' : '')+'>'+esc(v)+'</option>';
+        }).join("")
+      + '</select></div>';
+  }
+
+  function fieldRange(label, id, min, max, step, value, displayValue) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<input class="'+NS+'-range" type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">'
+      + '<div class="'+NS+'-rv">'+esc(displayValue)+'</div>'
+      + '</div>';
+  }
+
+  function btn(label, action) {
+    return '<button class="'+NS+'-btn" data-action="'+action+'">'+label+'</button>';
+  }
+
+  function statRow(k, v, color) {
+    return '<div class="'+NS+'-row"><div class="'+NS+'-key">'+k+'</div><div class="'+NS+'-val" style="color:'+color+'">'+v+'</div></div>';
+  }
+
+  function tabsHTML() {
+    var tabs = [
+      ["trajectory","Trajectory Map"],
+      ["network","Supply Network"],
+      ["budget","Mass Budget"],
+      ["exports","Exports & Sweep"],
+      ["connections","Connections"]
+    ];
+    return '<div class="'+NS+'-tabs">'
+      + tabs.map(function (t) {
+          return '<button class="'+NS+'-tab'+(STATE.tab === t[0] ? ' on' : '')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+        }).join("")
+      + '</div>';
+  }
+
+  function renderTab() {
+    var vp = mount.querySelector("#"+NS+"-viewport");
+    if (!vp) return;
+    if (STATE.tab === "trajectory") vp.innerHTML = renderTrajectory();
+    if (STATE.tab === "network") vp.innerHTML = renderNetwork();
+    if (STATE.tab === "budget") vp.innerHTML = renderBudget();
+    if (STATE.tab === "exports") vp.innerHTML = renderExports();
+    if (STATE.tab === "connections") vp.innerHTML = renderConnections();
+
+    if (STATE.tab === "trajectory") drawTrajectoryCanvas();
+    if (STATE.tab === "network") drawNetworkCanvas();
+    if (STATE.tab === "budget") drawBudgetCanvas();
+  }
+
+  function renderTrajectory() {
+    var m = routeModel();
+    return '<div class="'+NS+'-grid">'
+      + card("Trajectory Burden", '<div class="'+NS+'-kpi">'+fmt(STATE.dv,1)+'</div><div class="'+NS+'-subk">km/s active transfer Δv</div>', "span-3")
+      + card("Transit Time", '<div class="'+NS+'-kpi">'+STATE.transitDays+'</div><div class="'+NS+'-subk">days</div>', "span-3")
+      + card("Fuel Fraction", '<div class="'+NS+'-kpi">'+fmt(m.fuelFraction*100,1)+'%</div><div class="'+NS+'-subk">fuel share of transfer stack</div>', "span-3")
+      + card("Logistics Score", '<div class="'+NS+'-kpi">'+fmt(m.logisticsScore,1)+'</div><div class="'+NS+'-subk">aggregate supply-chain route fitness</div>', "span-3")
+      + card("Trajectory Map", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-traj-canvas"></canvas><div class="'+NS+'-overlay">Active transfer arc and relay nodes.<br>Green path = selected route.</div></div>', "span-8")
+      + card("Trajectory State",
+          statRow("Phase", esc(STATE.missionPhase), C.amber)
+        + statRow("Origin", esc(STATE.routeOrigin), C.cyan)
+        + statRow("Destination", esc(STATE.routeDestination), C.green)
+        + statRow("Supply nodes", STATE.supplyNodes, C.text)
+        + statRow("Reserve margin", STATE.margin+"%", C.blue)
+        + statRow("Convoys", STATE.convoyCount, C.text),
+        "span-4")
+      + card("Route Event Schedule", routeTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderNetwork() {
+    var m = routeModel();
+    return '<div class="'+NS+'-grid">'
+      + card("Supply Network Topology", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-network-canvas"></canvas><div class="'+NS+'-overlay">Node size = capacity proxy. Amber edges = available lanes. Green edge = active lane chain.</div></div>', "span-8")
+      + card("Network Health",
+          statRow("Node load", fmt(m.nodeLoad,1)+"/100", m.nodeLoad < 55 ? C.green : m.nodeLoad < 75 ? C.amber : C.red)
+        + statRow("Queue pressure", fmt(m.queuePressure,1)+"/100", m.queuePressure < 55 ? C.green : m.queuePressure < 75 ? C.amber : C.red)
+        + statRow("Resilience", fmt(m.chainResilience,1)+"/100", m.chainResilience > 75 ? C.green : m.chainResilience > 55 ? C.amber : C.red)
+        + statRow("Active sweep", STATE.selectedSweep ? esc(STATE.selectedSweep.toUpperCase()) : "None", C.cyan),
+        "span-4")
+      + card("Node Table", nodeTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderBudget() {
+    var m = routeModel();
+    var dryMass = Math.max(0, STATE.payload + STATE.fuel * 0.18);
+    var reserveMass = (STATE.payload + STATE.fuel + dryMass) * (STATE.margin / 100);
+    var stackMass = STATE.payload + STATE.fuel + dryMass + reserveMass;
+    return '<div class="'+NS+'-grid">'
+      + card("Mass Budget Visual", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-budget-canvas"></canvas><div class="'+NS+'-overlay">Relative stack composition. Payload, fuel, dry systems, reserve margin.</div></div>', "span-6")
+      + card("Mass Budget",
+          statRow("Payload", fmt(STATE.payload,1)+" t", C.cyan)
+        + statRow("Fuel", fmt(STATE.fuel,1)+" t", C.amber)
+        + statRow("Dry systems", fmt(dryMass,1)+" t", C.blue)
+        + statRow("Reserve", fmt(reserveMass,1)+" t", C.green)
+        + statRow("Total stack", fmt(stackMass,1)+" t", C.text)
+        + statRow("Mass ratio", fmt(m.massRatio,2), m.massRatio < 3 ? C.green : m.massRatio < 5 ? C.amber : C.red),
+        "span-6")
+      + card("Budget Table", budgetTableHTML(dryMass, reserveMass, stackMass), "span-12")
+      + '</div>';
+  }
+
+  function renderExports() {
+    return '<div class="'+NS+'-grid">'
+      + card("Exports", exportsTableHTML(), "span-8")
+      + card("Sweep Actions",
+          '<div style="margin-bottom:8px;">'
+        + '<span class="'+NS+'-chip">Variable Compound Analysis</span>'
+        + '<span class="'+NS+'-chip">Pattern Simplification</span>'
+        + '<span class="'+NS+'-chip">Large-Scale Optimisation</span>'
+        + '<span class="'+NS+'-chip">Widen Search</span>'
+        + '</div>'
+        + '<div class="'+NS+'-small">These actions are front-end triggers here and should map to dataspace heavy-lift pipelines in the final coupled build.</div>',
+        "span-4")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderConnections() {
+    return '<div class="'+NS+'-grid">'
+      + card("Consumes From",
+          '<div class="'+NS+'-small">W1 deposit analysis — resource model and extraction feasibility<br>W5 mission planning — trajectory truth and window context<br>W6 asset library — manifests and target registry<br>W3 field model — launch / handling constraint context</div>',
+        "span-6")
+      + card("Feeds Into",
+          '<div class="'+NS+'-small">W6 asset library shortlist publication<br>W5 route queue and scenario seeding<br>W1 capture logistics assumptions<br>Downstream supply-chain operations packages</div>',
+        "span-6")
+      + card("Operational Intent",
+          '<div class="'+NS+'-small">W4 should act as the stock-and-flow authority across route topology, mass burden, relay use, convoy count, schedule pressure, and downstream distribution. The front-end demonstrates causal behavior while the dataspace performs the heavy analysis and export work.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function card(title, body, span) {
+    return '<div class="'+NS+'-card '+(span || "span-3")+'"><div class="'+NS+'-ct">'+title+'</div>'+body+'</div>';
+  }
+
+  function routeTableHTML() {
+    var path = activeRoutePath();
+    return '<table class="'+NS+'-table"><thead><tr><th>Step</th><th>Node</th><th>Phase</th><th>ETA</th></tr></thead><tbody>'
+      + path.map(function (n, idx) {
+          var eta = idx === 0 ? "T+0 d" : "T+" + Math.round((STATE.transitDays / Math.max(path.length-1,1)) * idx) + " d";
+          var phase = idx === 0 ? "Dispatch" : idx === path.length - 1 ? "Arrival / handoff" : "Relay / transit";
+          return '<tr><td>'+(idx+1)+'</td><td>'+esc(n)+'</td><td>'+phase+'</td><td>'+eta+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function nodeTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>Node</th><th>Kind</th><th>Capacity</th><th>Status</th></tr></thead><tbody>'
+      + Object.keys(NETWORK.nodes).map(function (name) {
+          var n = NETWORK.nodes[name];
+          var active = activeRoutePath().indexOf(name) !== -1;
+          return '<tr><td>'+esc(name)+'</td><td>'+esc(n.kind)+'</td><td>'+n.cap+' t/mo</td><td style="color:'+(active ? C.green : C.muted)+'">'+(active ? 'Active route' : 'Available')+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function budgetTableHTML(dryMass, reserveMass, stackMass) {
+    return '<table class="'+NS+'-table"><thead><tr><th>Component</th><th>Mass (t)</th><th>Share</th></tr></thead><tbody>'
+      + rowBudget("Payload", STATE.payload, stackMass)
+      + rowBudget("Fuel", STATE.fuel, stackMass)
+      + rowBudget("Dry Systems", dryMass, stackMass)
+      + rowBudget("Reserve Margin", reserveMass, stackMass)
+      + '</tbody></table>';
+  }
+
+  function rowBudget(name, mass, total) {
+    var p = total > 0 ? (mass / total) * 100 : 0;
+    return '<tr><td>'+name+'</td><td>'+fmt(mass,1)+'</td><td><div class="'+NS+'-bar"><span style="width:'+p+'%"></span></div></td></tr>';
+  }
+
+  function exportsTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>Item</th><th>Source</th><th>Date</th><th>Type</th><th>Action</th></tr></thead><tbody>'
+      + NETWORK.exportsSeed.map(function (e) {
+          return '<tr><td>'+esc(e.item)+'</td><td>'+esc(e.source)+'</td><td>'+esc(e.date)+'</td><td>'+esc(e.type)+'</td><td>'+esc(e.action)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function logTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>UTC</th><th>Type</th><th>Message</th></tr></thead><tbody>'
+      + STATE.logs.map(function (l) {
+          return '<tr><td>'+esc(l.t.replace("T"," ").replace("Z"," UTC"))+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.msg)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function bind() {
+    mount.querySelectorAll("."+NS+"-tab").forEach(function (el) {
+      el.addEventListener("click", function () {
+        STATE.tab = this.getAttribute("data-tab");
+        render();
+      });
+    });
+
+    [
+      [NS+"-phase","missionPhase"],
+      [NS+"-origin","routeOrigin"],
+      [NS+"-destination","routeDestination"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("change", function () {
+          STATE[pair[1]] = this.value;
+          if (STATE.routeOrigin === STATE.routeDestination) {
+            var names = Object.keys(NETWORK.nodes).filter(function(n){ return n !== STATE.routeOrigin; });
+            STATE.routeDestination = names[0];
+          }
+          pushLog("route", pair[1] + " updated");
+          render();
+        });
+      }
+    });
+
+    [
+      [NS+"-dv","dv",0.1],
+      [NS+"-payload","payload",1],
+      [NS+"-tt","transitDays",1],
+      [NS+"-fuel","fuel",1],
+      [NS+"-nodes","supplyNodes",1],
+      [NS+"-convoy","convoyCount",1],
+      [NS+"-margin","margin",1]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("input", function () {
+          STATE[pair[1]] = parseFloat(this.value);
+          render();
+        });
+      }
+    });
+
+    mount.querySelectorAll("."+NS+"-btn[data-action]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a = this.getAttribute("data-action");
+        if (a === "run") {
+          var m = routeModel();
+          pushLog("run", "W4 run logged | logistics " + fmt(m.logisticsScore,1) + " | throughput " + fmt(m.throughput,2) + " t/mo");
+          render();
+          return;
+        }
+        if (a === "export") {
+          var payload = {
+            phase: STATE.missionPhase,
+            origin: STATE.routeOrigin,
+            destination: STATE.routeDestination,
+            dv: STATE.dv,
+            payloadT: STATE.payload,
+            transitDays: STATE.transitDays,
+            fuelT: STATE.fuel,
+            supplyNodes: STATE.supplyNodes,
+            convoyCount: STATE.convoyCount,
+            marginPct: STATE.margin,
+            metrics: routeModel(),
+            exportedUtc: new Date().toISOString()
+          };
+          var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "w4_supply_chain_payload.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          pushLog("export", "Supply-chain payload exported");
+          render();
+          return;
+        }
+        STATE.selectedSweep = a;
+        pushLog("sweep", "Sweep triggered: " + a.toUpperCase());
+        render();
+      });
+    });
+  }
+
+  function drawTrajectoryCanvas() {
+    var c = mount.querySelector("#"+NS+"-traj-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W * 0.22, cy = H * 0.58;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 14, 0, Math.PI*2);
+    ctx.fillStyle = "#fff7aa";
+    ctx.fill();
+
+    var earthOrbit = Math.min(W,H) * 0.18;
+    var targetOrbit = Math.min(W,H) * 0.38;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, earthOrbit, 0, Math.PI*2);
+    ctx.strokeStyle = "rgba(0,120,255,.30)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, targetOrbit, 0, Math.PI*2);
+    ctx.strokeStyle = "rgba(255,170,0,.22)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    var p = activeRoutePath();
+    var from = NETWORK.nodes[STATE.routeOrigin];
+    var to = NETWORK.nodes[STATE.routeDestination];
+
+    if (from && to) {
+      ctx.beginPath();
+      ctx.moveTo(from.x * W, from.y * H);
+      ctx.quadraticCurveTo(W*0.52, H*0.10, to.x * W, to.y * H);
+      ctx.strokeStyle = C.green;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    p.forEach(function (name, idx) {
+      var n = NETWORK.nodes[name];
+      if (!n) return;
+      drawNode(ctx, n.x * W, n.y * H, name, idx === 0 ? C.cyan : idx === p.length - 1 ? C.green : C.amber);
+    });
+  }
+
+  function drawNetworkCanvas() {
+    var c = mount.querySelector("#"+NS+"-network-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var active = activeRoutePath();
+
+    NETWORK.links.forEach(function (lnk) {
+      var a = NETWORK.nodes[lnk[0]], b = NETWORK.nodes[lnk[1]];
+      var isActive = active.indexOf(lnk[0]) !== -1 && active.indexOf(lnk[1]) !== -1;
+      ctx.beginPath();
+      ctx.moveTo(a.x * W, a.y * H);
+      ctx.lineTo(b.x * W, b.y * H);
+      ctx.strokeStyle = isActive ? C.green : "rgba(255,170,0,.35)";
+      ctx.lineWidth = isActive ? 3 : 1.4;
+      ctx.stroke();
+    });
+
+    Object.keys(NETWORK.nodes).forEach(function (name) {
+      var n = NETWORK.nodes[name];
+      var r = 6 + n.cap / 20;
+      ctx.beginPath();
+      ctx.arc(n.x * W, n.y * H, r, 0, Math.PI*2);
+      ctx.fillStyle = active.indexOf(name) !== -1 ? C.green : C.cyan;
+      ctx.fill();
+      ctx.fillStyle = C.text;
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText(name, n.x * W + r + 6, n.y * H - 6);
+    });
+  }
+
+  function drawBudgetCanvas() {
+    var c = mount.querySelector("#"+NS+"-budget-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var dry = Math.max(0, STATE.payload + STATE.fuel * 0.18);
+    var reserve = (STATE.payload + STATE.fuel + dry) * (STATE.margin / 100);
+    var total = STATE.payload + STATE.fuel + dry + reserve;
+    var parts = [
+      { name:"Payload", v:STATE.payload, c:C.cyan },
+      { name:"Fuel", v:STATE.fuel, c:C.amber },
+      { name:"Dry", v:dry, c:C.blue },
+      { name:"Reserve", v:reserve, c:C.green }
+    ];
+
+    var x = 50, y = H*0.25, w = W - 100, h = 40;
+    var acc = 0;
+    parts.forEach(function (p) {
+      var pw = w * (p.v / Math.max(total, 1));
+      ctx.fillStyle = p.c;
+      ctx.fillRect(x + acc, y, pw, h);
+      acc += pw;
+    });
+
+    var ly = y + 90;
+    parts.forEach(function (p, i) {
+      ctx.fillStyle = p.c;
+      ctx.fillRect(60, ly + i*28, 14, 14);
+      ctx.fillStyle = C.text;
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText(p.name + " — " + fmt(p.v,1) + " t", 84, ly + 11 + i*28);
+    });
+  }
+
+  function drawNode(ctx, x, y, label, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.fillStyle = C.text;
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillText(label, x + 10, y - 8);
+  }
+
+  function tickUTC() {
+    var el = mount.querySelector("#"+NS+"-utc");
+    if (el) el.textContent = new Date().toUTCString().replace("GMT","UTC");
+  }
+
+  render();
+  setInterval(function () {
+    tickUTC();
+  }, 1000);
+
+  window.W4App = window.W4App || {};
+  window.W4App.state = function () { return JSON.parse(JSON.stringify(STATE)); };
+  window.W4App.model = routeModel;
+  window.W4App.rerender = render;
+})();
+</script>
