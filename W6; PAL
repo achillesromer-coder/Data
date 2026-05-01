@@ -1,0 +1,1031 @@
+<script>
+window.W6_DATASPACE_MASTER_CONTRACT = {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://romer-industries.local/schemas/w6-dataspace-master-contract.schema.json",
+  "title": "W6 Dataspace Master Contract",
+  "description": "Canonical data contract for W6 Asset Library Dataspace. This schema defines source ingestion, normalization, zoning, clustering, publish payloads, QA state, run logs, pass-off packs, and cross-workspace exchange rules for Squarespace front-end embeds and Drive-backed dataspace operations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractMeta",
+    "embedRules",
+    "sourceRegistry",
+    "pipelineConfig",
+    "taxonomyRules",
+    "normalizationRules",
+    "zoningRules",
+    "clusteringRules",
+    "scoringRules",
+    "qaRules",
+    "publishRules",
+    "workspaceResponsibilities",
+    "records",
+    "derivedProducts",
+    "queues",
+    "handoffContracts"
+  ],
+  "properties": {
+    "contractMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "contractName",
+        "version",
+        "status",
+        "ownerWorkspace",
+        "author",
+        "timezone",
+        "units",
+        "dateCreatedUtc",
+        "dateModifiedUtc",
+        "sourceOfTruth"
+      ],
+      "properties": {
+        "contractId": { "type": "string", "const": "w6-dataspace-master-contract" },
+        "contractName": { "type": "string", "const": "W6 Dataspace Master Contract" },
+        "version": { "type": "string", "const": "1.0.0" },
+        "status": { "type": "string", "enum": ["draft", "active", "deprecated"], "const": "active" },
+        "ownerWorkspace": { "type": "string", "const": "W6" },
+        "author": { "type": "string", "const": "Achilles Scout" },
+        "timezone": { "type": "string", "const": "Australia/Brisbane" },
+        "units": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["distanceOrbit", "distanceBody", "density", "velocity", "mass", "angles", "time"],
+          "properties": {
+            "distanceOrbit": { "type": "string", "const": "AU" },
+            "distanceBody": { "type": "string", "const": "km" },
+            "density": { "type": "string", "const": "g/cm^3" },
+            "velocity": { "type": "string", "const": "km/s" },
+            "mass": { "type": "string", "const": "kg" },
+            "angles": { "type": "string", "const": "deg" },
+            "time": { "type": "string", "const": "UTC ISO-8601" }
+          }
+        },
+        "dateCreatedUtc": { "type": "string", "format": "date-time" },
+        "dateModifiedUtc": { "type": "string", "format": "date-time" },
+        "sourceOfTruth": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "type": "string" },
+          "default": [
+            "Google Drive root",
+            "W6 control workbook",
+            "Normalized dataspace cache"
+          ]
+        }
+      }
+    },
+    "embedRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "cssIsolation",
+        "scriptIsolation",
+        "viewportRules",
+        "frontEndPayloadPolicy",
+        "dataspacePayloadPolicy"
+      ],
+      "properties": {
+        "platform": { "type": "string", "const": "Squarespace embed" },
+        "cssIsolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mustUseRootIdScope", "forbiddenPatterns"],
+          "properties": {
+            "mustUseRootIdScope": { "type": "boolean", "const": true },
+            "forbiddenPatterns": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "body global resets",
+                "html global resets",
+                "position:fixed full-page takeover",
+                "100vw layout assumptions",
+                "100vh layout assumptions without container guard"
+              ]
+            }
+          }
+        },
+        "scriptIsolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["singleNamespace", "forbiddenPatterns"],
+          "properties": {
+            "singleNamespace": { "type": "string", "const": "window.W6App" },
+            "forbiddenPatterns": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "multiple window globals for handlers",
+                "implicit body-level query selectors",
+                "duplicate fixed element ids across workspaces"
+              ]
+            }
+          }
+        },
+        "viewportRules": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["containerRelative", "minHeightPx", "responsiveBreakpointsPx"],
+          "properties": {
+            "containerRelative": { "type": "boolean", "const": true },
+            "minHeightPx": { "type": "integer", "const": 720 },
+            "responsiveBreakpointsPx": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "default": [1320, 1100, 900, 680]
+            }
+          }
+        },
+        "frontEndPayloadPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allowedLayers", "forbiddenLayers", "lazyLoadObjectDetails"],
+          "properties": {
+            "allowedLayers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["zoneSummary", "clusterSummary", "selectedObjectDetail", "sourceSummary"]
+            },
+            "forbiddenLayers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["fullRawRegistry", "allMeshMetadata", "allMissionDocuments", "fullQAEventLog"]
+            },
+            "lazyLoadObjectDetails": { "type": "boolean", "const": true }
+          }
+        },
+        "dataspacePayloadPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mayHoldFullRegistry", "mayHoldQaState", "mayHoldRunLogs"],
+          "properties": {
+            "mayHoldFullRegistry": { "type": "boolean", "const": true },
+            "mayHoldQaState": { "type": "boolean", "const": true },
+            "mayHoldRunLogs": { "type": "boolean", "const": true }
+          }
+        }
+      }
+    },
+    "sourceRegistry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedSourceTypes", "records"],
+      "properties": {
+        "allowedSourceTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["drive_folder", "google_sheet", "json_file", "obj_library", "api_endpoint", "pds_archive", "manual_entry"]
+          }
+        },
+        "records": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sourceId",
+              "name",
+              "sourceType",
+              "isAuthoritative",
+              "status",
+              "driveOrEndpoint",
+              "ingestClass",
+              "refreshPolicy",
+              "ownerWorkspace"
+            ],
+            "properties": {
+              "sourceId": { "type": "string" },
+              "name": { "type": "string" },
+              "sourceType": { "$ref": "#/$defs/sourceType" },
+              "isAuthoritative": { "type": "boolean" },
+              "status": { "type": "string", "enum": ["indexed", "live", "pending", "blocked", "deprecated"] },
+              "driveOrEndpoint": { "type": "string" },
+              "ingestClass": { "type": "string", "enum": ["manifest", "registry", "mesh", "enrichment", "reference"] },
+              "refreshPolicy": { "type": "string", "enum": ["manual", "hourly", "daily", "weekly", "on_publish"] },
+              "ownerWorkspace": { "type": "string", "enum": ["W1", "W2", "W3", "W4", "W5", "W6", "LIB"] }
+            }
+          },
+          "default": [
+            {
+              "sourceId": "src-drive-root",
+              "name": "Asset Registry Root",
+              "sourceType": "drive_folder",
+              "isAuthoritative": true,
+              "status": "indexed",
+              "driveOrEndpoint": "https://drive.google.com/drive/folders/1clPyKU1C_Prd-a4g-Cbl2RZQybLL2oag",
+              "ingestClass": "manifest",
+              "refreshPolicy": "manual",
+              "ownerWorkspace": "W6"
+            },
+            {
+              "sourceId": "src-control-workbook",
+              "name": "W6 Control Workbook",
+              "sourceType": "google_sheet",
+              "isAuthoritative": true,
+              "status": "indexed",
+              "driveOrEndpoint": "https://docs.google.com/spreadsheets/d/1POCTGwSyaznMCO-7rA79wNRWT7rReSjOsNx-CLn5u5E/edit",
+              "ingestClass": "registry",
+              "refreshPolicy": "manual",
+              "ownerWorkspace": "W6"
+            },
+            {
+              "sourceId": "src-obj-library",
+              "name": "Asteroids OBJ Library",
+              "sourceType": "obj_library",
+              "isAuthoritative": false,
+              "status": "indexed",
+              "driveOrEndpoint": "https://drive.google.com/drive/folders/12rRVIAAn-MQgHJ1zCC6PfC8TNi3NEA3P",
+              "ingestClass": "mesh",
+              "refreshPolicy": "manual",
+              "ownerWorkspace": "W6"
+            },
+            {
+              "sourceId": "src-ssodnet",
+              "name": "SSODNET API",
+              "sourceType": "api_endpoint",
+              "isAuthoritative": false,
+              "status": "live",
+              "driveOrEndpoint": "https://ssp.imcce.fr/webservices/ssodnet/api/ssocard.php",
+              "ingestClass": "enrichment",
+              "refreshPolicy": "daily",
+              "ownerWorkspace": "LIB"
+            }
+          ]
+        }
+      }
+    },
+    "pipelineConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stages", "dependencies", "stageOutputs"],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["ingest", "normalize", "zone", "cluster", "score", "qa", "publish", "passoff"] },
+          "default": ["ingest", "normalize", "zone", "cluster", "score", "qa", "publish", "passoff"]
+        },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "normalize": { "type": "array", "items": { "type": "string" }, "default": ["ingest"] },
+            "zone": { "type": "array", "items": { "type": "string" }, "default": ["normalize"] },
+            "cluster": { "type": "array", "items": { "type": "string" }, "default": ["zone"] },
+            "score": { "type": "array", "items": { "type": "string" }, "default": ["cluster"] },
+            "qa": { "type": "array", "items": { "type": "string" }, "default": ["score"] },
+            "publish": { "type": "array", "items": { "type": "string" }, "default": ["qa"] },
+            "passoff": { "type": "array", "items": { "type": "string" }, "default": ["publish"] }
+          }
+        },
+        "stageOutputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ingest": { "type": "array", "items": { "type": "string" }, "default": ["source_manifest.json", "ingest_log.jsonl"] },
+            "normalize": { "type": "array", "items": { "type": "string" }, "default": ["object_registry.json", "normalization_report.json"] },
+            "zone": { "type": "array", "items": { "type": "string" }, "default": ["zone_summary.json"] },
+            "cluster": { "type": "array", "items": { "type": "string" }, "default": ["cluster_summary.json"] },
+            "score": { "type": "array", "items": { "type": "string" }, "default": ["readiness_scores.json"] },
+            "qa": { "type": "array", "items": { "type": "string" }, "default": ["qa_status.json", "qa_events.jsonl"] },
+            "publish": { "type": "array", "items": { "type": "string" }, "default": ["front_end_payload.json", "selected_object_payloads.json"] },
+            "passoff": { "type": "array", "items": { "type": "string" }, "default": ["passoff_pack.json"] }
+          }
+        }
+      }
+    },
+    "taxonomyRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptedTaxonomyPrefixes", "metallicityHints", "unknownPolicy"],
+      "properties": {
+        "acceptedTaxonomyPrefixes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["M", "S", "Sq", "Q", "C", "Cg", "Ch", "B", "D", "P", "V", "X", "E"]
+        },
+        "metallicityHints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "high": { "type": "array", "items": { "type": "string" }, "default": ["M", "X", "E"] },
+            "medium": { "type": "array", "items": { "type": "string" }, "default": ["S", "Sq", "V"] },
+            "low": { "type": "array", "items": { "type": "string" }, "default": ["C", "Cg", "Ch", "B", "D", "P"] }
+          }
+        },
+        "unknownPolicy": { "type": "string", "const": "retain raw value, mark qa flag, do not discard record" }
+      }
+    },
+    "normalizationRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mandatoryFields", "fallbackRules", "completenessScoring"],
+      "properties": {
+        "mandatoryFields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["objectId", "objectName", "semiMajorAxisAu", "eccentricity", "inclinationDeg", "zoneId", "clusterId", "sourceIds"]
+        },
+        "fallbackRules": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "densityGcc": { "type": "string", "const": "nullable, never fabricated" },
+            "diameterKm": { "type": "string", "const": "nullable, never fabricated" },
+            "taxonomy": { "type": "string", "const": "nullable, retain rawTaxonomy if unresolved" },
+            "missionReference": { "type": "string", "const": "false if no evidence" },
+            "meshReference": { "type": "string", "const": "false if no file link" }
+          }
+        },
+        "completenessScoring": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxScore", "weights"],
+          "properties": {
+            "maxScore": { "type": "integer", "const": 100 },
+            "weights": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "orbitalElements": { "type": "integer", "const": 30 },
+                "physicalProperties": { "type": "integer", "const": 25 },
+                "taxonomy": { "type": "integer", "const": 10 },
+                "meshReference": { "type": "integer", "const": 10 },
+                "missionReference": { "type": "integer", "const": 10 },
+                "provenance": { "type": "integer", "const": 15 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "zoningRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zoneDefinitions", "emptyZonePolicy"],
+      "properties": {
+        "zoneDefinitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["zoneId", "label", "selectionRule"],
+            "properties": {
+              "zoneId": { "type": "string", "enum": ["IEO", "Aten", "Apollo", "Amor", "MBA", "Trojan", "IMB"] },
+              "label": { "type": "string" },
+              "selectionRule": { "type": "string" }
+            }
+          },
+          "default": [
+            { "zoneId": "IEO", "label": "Inner-Earth Objects", "selectionRule": "Q < 0.983 AU" },
+            { "zoneId": "Aten", "label": "Aten Group", "selectionRule": "a < 1 AU and Q > 0.983 AU" },
+            { "zoneId": "Apollo", "label": "Apollo Group", "selectionRule": "a > 1 AU and q < 1.017 AU" },
+            { "zoneId": "Amor", "label": "Amor Group", "selectionRule": "1.017 AU < q < 1.3 AU" },
+            { "zoneId": "MBA", "label": "Main Belt Asteroids", "selectionRule": "2.0 AU <= a <= 3.3 AU" },
+            { "zoneId": "Trojan", "label": "Jupiter Trojans", "selectionRule": "co-orbital with Jupiter L4/L5 population" },
+            { "zoneId": "IMB", "label": "Inner Main Belt", "selectionRule": "1.8 AU <= a < 2.0 AU" }
+          ]
+        },
+        "emptyZonePolicy": { "type": "string", "const": "retain zone row with count 0 for UI consistency" }
+      }
+    },
+    "clusteringRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clusterMode", "rules"],
+      "properties": {
+        "clusterMode": { "type": "string", "const": "semi-hard operational clusters" },
+        "rules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "cluster inside zone only",
+            "cluster names must remain stable across publishes unless QA override approved",
+            "minimum one object per cluster",
+            "singletons allowed",
+            "cluster summary must expose count, meanA, meanDvProxy, meanReadiness, narrativeSummary"
+          ]
+        }
+      }
+    },
+    "scoringRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readinessScore", "strategicScore"],
+      "properties": {
+        "readinessScore": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weights"],
+          "properties": {
+            "weights": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "completeness": { "type": "number", "const": 0.35 },
+                "missionValidation": { "type": "number", "const": 0.15 },
+                "meshAvailability": { "type": "number", "const": 0.10 },
+                "accessibilityProxy": { "type": "number", "const": 0.20 },
+                "taxonomyStrategicFit": { "type": "number", "const": 0.20 }
+              }
+            }
+          }
+        },
+        "strategicScore": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weights"],
+          "properties": {
+            "weights": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "metallicityProxy": { "type": "number", "const": 0.30 },
+                "sizeUtility": { "type": "number", "const": 0.15 },
+                "accessibilityProxy": { "type": "number", "const": 0.20 },
+                "missionEvidence": { "type": "number", "const": 0.15 },
+                "completeness": { "type": "number", "const": 0.20 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "qaRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criticalFlags", "publishThresholds"],
+      "properties": {
+        "criticalFlags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "duplicateObjectId",
+            "missingSemiMajorAxis",
+            "missingEccentricity",
+            "missingInclination",
+            "unresolvedZone",
+            "orphanCluster",
+            "orphanMeshLink"
+          ]
+        },
+        "publishThresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxCriticalFlags", "minMeanCompleteness", "requireZoneRows", "requireClusterRows"],
+          "properties": {
+            "maxCriticalFlags": { "type": "integer", "const": 0 },
+            "minMeanCompleteness": { "type": "number", "const": 70 },
+            "requireZoneRows": { "type": "boolean", "const": true },
+            "requireClusterRows": { "type": "boolean", "const": true }
+          }
+        }
+      }
+    },
+    "publishRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frontEndPayload", "selectedObjectPayload", "passoffPack"],
+      "properties": {
+        "frontEndPayload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxObjectsInitial", "requiredSections"],
+          "properties": {
+            "maxObjectsInitial": { "type": "integer", "const": 0 },
+            "requiredSections": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["zoneSummary", "clusterSummary", "sourceSummary", "uiStateDefaults"]
+            }
+          }
+        },
+        "selectedObjectPayload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["loadedOnDemand", "requiredSections"],
+          "properties": {
+            "loadedOnDemand": { "type": "boolean", "const": true },
+            "requiredSections": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["objectDetail", "provenance", "meshAvailability", "missionReference", "passoffEligibility"]
+            }
+          }
+        },
+        "passoffPack": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["targetTypes", "requiredSections"],
+          "properties": {
+            "targetTypes": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["zone", "cluster", "object"] },
+              "default": ["cluster", "object"]
+            },
+            "requiredSections": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["selectionMeta", "selectedRecords", "scores", "sourceRefs", "qaState", "downstreamRouting"]
+            }
+          }
+        }
+      }
+    },
+    "workspaceResponsibilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["W1", "W2", "W3", "W4", "W5", "W6"],
+      "properties": {
+        "W1": { "type": "array", "items": { "type": "string" }, "default": ["consume candidate shortlist from W6", "run capture feasibility", "emit capture_result payload"] },
+        "W2": { "type": "array", "items": { "type": "string" }, "default": ["consume W1 payload and W3 field config", "simulate catch/hold/launch state", "emit hold envelope"] },
+        "W3": { "type": "array", "items": { "type": "string" }, "default": ["author field configuration", "author safety envelope", "emit field_config payload"] },
+        "W4": { "type": "array", "items": { "type": "string" }, "default": ["consume W1 W2 W5 outputs", "author route and throughput model"] },
+        "W5": { "type": "array", "items": { "type": "string" }, "default": ["author trajectory truth", "emit mission trajectory payload"] },
+        "W6": { "type": "array", "items": { "type": "string" }, "default": ["ingest assets and sources", "normalize registry", "publish zone and cluster payloads", "build pass-off packs"] }
+      }
+    },
+    "records": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectRegistry"],
+      "properties": {
+        "objectRegistry": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/objectRecord" },
+          "default": [
+            {
+              "objectId": "16",
+              "objectName": "Psyche",
+              "zoneId": "MBA",
+              "clusterId": "MB-1",
+              "semiMajorAxisAu": 2.922,
+              "eccentricity": 0.134,
+              "inclinationDeg": 3.1,
+              "diameterKm": 222,
+              "densityGcc": 3.99,
+              "taxonomy": "M",
+              "rawTaxonomy": "M",
+              "hasMesh": false,
+              "hasMissionReference": true,
+              "completenessScore": 90,
+              "readinessScore": 78,
+              "strategicScore": 88,
+              "sourceIds": ["src-drive-root", "src-control-workbook"],
+              "provenanceNote": "Mission validated metal-rich main belt target"
+            },
+            {
+              "objectId": "101955",
+              "objectName": "Bennu",
+              "zoneId": "Apollo",
+              "clusterId": "AP-1",
+              "semiMajorAxisAu": 1.126,
+              "eccentricity": 0.204,
+              "inclinationDeg": 6.0,
+              "diameterKm": 0.49,
+              "densityGcc": 1.26,
+              "taxonomy": "B",
+              "rawTaxonomy": "B",
+              "hasMesh": true,
+              "hasMissionReference": true,
+              "completenessScore": 95,
+              "readinessScore": 89,
+              "strategicScore": 76,
+              "sourceIds": ["src-drive-root", "src-obj-library"],
+              "provenanceNote": "OSIRIS-REx sample return target"
+            }
+          ]
+        }
+      }
+    },
+    "derivedProducts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zoneSummary", "clusterSummary", "frontEndPayload", "selectedObjectPayloads", "qaStatus", "runLog"],
+      "properties": {
+        "zoneSummary": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/zoneSummaryRow" }
+        },
+        "clusterSummary": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/clusterSummaryRow" }
+        },
+        "frontEndPayload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["zoneSummary", "clusterSummary", "sourceSummary", "uiStateDefaults"],
+          "properties": {
+            "zoneSummary": { "type": "array", "items": { "$ref": "#/$defs/zoneSummaryRow" } },
+            "clusterSummary": { "type": "array", "items": { "$ref": "#/$defs/clusterSummaryRow" } },
+            "sourceSummary": { "type": "array", "items": { "$ref": "#/$defs/sourceSummaryRow" } },
+            "uiStateDefaults": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["mode", "view", "selectedZoneId", "selectedClusterId", "selectedObjectId"],
+              "properties": {
+                "mode": { "type": "string", "enum": ["zones", "clusters", "targets"], "const": "zones" },
+                "view": { "type": "string", "enum": ["2d", "3d", "map"], "const": "2d" },
+                "selectedZoneId": { "type": ["string", "null"], "default": null },
+                "selectedClusterId": { "type": ["string", "null"], "default": null },
+                "selectedObjectId": { "type": ["string", "null"], "default": null }
+              }
+            }
+          }
+        },
+        "selectedObjectPayloads": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/selectedObjectPayload" }
+        },
+        "qaStatus": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["criticalFlagCount", "warningFlagCount", "publishAllowed", "events"],
+          "properties": {
+            "criticalFlagCount": { "type": "integer" },
+            "warningFlagCount": { "type": "integer" },
+            "publishAllowed": { "type": "boolean" },
+            "events": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/qaEvent" }
+            }
+          }
+        },
+        "runLog": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/runLogEntry" }
+        }
+      }
+    },
+    "queues": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataspaceQueue", "publishQueue"],
+      "properties": {
+        "dataspaceQueue": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/queueItem" }
+        },
+        "publishQueue": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/queueItem" }
+        }
+      }
+    },
+    "handoffContracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toW1", "toW4", "toW5"],
+      "properties": {
+        "toW1": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["targetType", "requiredFields"],
+          "properties": {
+            "targetType": { "type": "string", "const": "object_or_cluster" },
+            "requiredFields": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["objectId", "objectName", "zoneId", "clusterId", "diameterKm", "densityGcc", "readinessScore", "strategicScore"]
+            }
+          }
+        },
+        "toW4": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["targetType", "requiredFields"],
+          "properties": {
+            "targetType": { "type": "string", "const": "cluster_or_object" },
+            "requiredFields": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["objectId", "zoneId", "clusterId", "semiMajorAxisAu", "eccentricity", "inclinationDeg", "readinessScore"]
+            }
+          }
+        },
+        "toW5": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["targetType", "requiredFields"],
+          "properties": {
+            "targetType": { "type": "string", "const": "object" },
+            "requiredFields": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["objectId", "objectName", "semiMajorAxisAu", "eccentricity", "inclinationDeg"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sourceType": {
+      "type": "string",
+      "enum": ["drive_folder", "google_sheet", "json_file", "obj_library", "api_endpoint", "pds_archive", "manual_entry"]
+    },
+    "objectRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objectId",
+        "objectName",
+        "zoneId",
+        "clusterId",
+        "semiMajorAxisAu",
+        "eccentricity",
+        "inclinationDeg",
+        "hasMesh",
+        "hasMissionReference",
+        "completenessScore",
+        "readinessScore",
+        "strategicScore",
+        "sourceIds",
+        "provenanceNote"
+      ],
+      "properties": {
+        "objectId": { "type": "string" },
+        "objectName": { "type": "string" },
+        "zoneId": { "type": "string" },
+        "clusterId": { "type": "string" },
+        "semiMajorAxisAu": { "type": "number" },
+        "eccentricity": { "type": "number" },
+        "inclinationDeg": { "type": "number" },
+        "diameterKm": { "type": ["number", "null"] },
+        "densityGcc": { "type": ["number", "null"] },
+        "taxonomy": { "type": ["string", "null"] },
+        "rawTaxonomy": { "type": ["string", "null"] },
+        "hasMesh": { "type": "boolean" },
+        "hasMissionReference": { "type": "boolean" },
+        "completenessScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "readinessScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "strategicScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "sourceIds": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "provenanceNote": { "type": "string" }
+      }
+    },
+    "zoneSummaryRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zoneId", "count", "priority", "meanDvProxy", "meanReadiness", "dominantTaxonomy", "meanCompleteness", "description"],
+      "properties": {
+        "zoneId": { "type": "string" },
+        "count": { "type": "integer" },
+        "priority": { "type": "integer" },
+        "meanDvProxy": { "type": "number" },
+        "meanReadiness": { "type": "number" },
+        "dominantTaxonomy": { "type": "string" },
+        "meanCompleteness": { "type": "number" },
+        "description": { "type": "string" }
+      }
+    },
+    "clusterSummaryRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clusterId", "zoneId", "count", "meanA", "meanDvProxy", "meanReadiness", "summary"],
+      "properties": {
+        "clusterId": { "type": "string" },
+        "zoneId": { "type": "string" },
+        "count": { "type": "integer" },
+        "meanA": { "type": "number" },
+        "meanDvProxy": { "type": "number" },
+        "meanReadiness": { "type": "number" },
+        "summary": { "type": "string" }
+      }
+    },
+    "sourceSummaryRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "name", "status", "recordCount"],
+      "properties": {
+        "sourceId": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "recordCount": { "type": "integer" }
+      }
+    },
+    "selectedObjectPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectId", "objectDetail", "provenance", "meshAvailability", "missionReference", "passoffEligibility"],
+      "properties": {
+        "objectId": { "type": "string" },
+        "objectDetail": { "$ref": "#/$defs/objectRecord" },
+        "provenance": { "type": "array", "items": { "type": "string" } },
+        "meshAvailability": { "type": "boolean" },
+        "missionReference": { "type": "boolean" },
+        "passoffEligibility": { "type": "boolean" }
+      }
+    },
+    "qaEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eventTimeUtc", "severity", "code", "message"],
+      "properties": {
+        "eventTimeUtc": { "type": "string", "format": "date-time" },
+        "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "runLogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId", "stage", "status", "startedUtc", "endedUtc"],
+      "properties": {
+        "runId": { "type": "string" },
+        "stage": { "type": "string" },
+        "status": { "type": "string", "enum": ["started", "completed", "failed"] },
+        "startedUtc": { "type": "string", "format": "date-time" },
+        "endedUtc": { "type": "string", "format": "date-time" },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "queueItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queueId", "itemType", "status", "createdUtc"],
+      "properties": {
+        "queueId": { "type": "string" },
+        "itemType": { "type": "string", "enum": ["ingest", "normalize", "publish", "passoff", "qa"] },
+        "status": { "type": "string", "enum": ["queued", "running", "done", "failed"] },
+        "createdUtc": { "type": "string", "format": "date-time" },
+        "payloadRef": { "type": ["string", "null"] }
+      }
+    }
+  }
+};
+
+window.W6_DATASPACE_MASTER_CONTRACT_READY = true;
+window.W6_DATASPACE_MASTER_CONTRACT_VERSION = window.W6_DATASPACE_MASTER_CONTRACT.contractMeta.properties.version.const;
+
+window.W6App = window.W6App || {};
+window.W6App.contract = window.W6_DATASPACE_MASTER_CONTRACT;
+window.W6App.getContract = function(){ return window.W6_DATASPACE_MASTER_CONTRACT; };
+window.W6App.getContractVersion = function(){ return window.W6_DATASPACE_MASTER_CONTRACT_VERSION; };
+window.W6App.hasContract = function(){ return !!window.W6_DATASPACE_MASTER_CONTRACT_READY; };
+window.W6App.getFrontEndAllowedLayers = function(){
+  return window.W6_DATASPACE_MASTER_CONTRACT.properties.embedRules.properties.frontEndPayloadPolicy.properties.allowedLayers.default.slice();
+};
+window.W6App.getPipelineStages = function(){
+  return window.W6_DATASPACE_MASTER_CONTRACT.properties.pipelineConfig.properties.stages.default.slice();
+};
+window.W6App.getSourceRegistryDefaults = function(){
+  return window.W6_DATASPACE_MASTER_CONTRACT.properties.sourceRegistry.properties.records.default.slice();
+};
+window.W6App.getObjectRegistrySeed = function(){
+  return window.W6_DATASPACE_MASTER_CONTRACT.properties.records.properties.objectRegistry.default.slice();
+};
+
+console.log('W6 Dataspace Master Contract loaded', {
+  ready: window.W6_DATASPACE_MASTER_CONTRACT_READY,
+  version: window.W6_DATASPACE_MASTER_CONTRACT_VERSION,
+  pipelineStages: window.W6App.getPipelineStages(),
+  allowedFrontEndLayers: window.W6App.getFrontEndAllowedLayers()
+});
+</script>
+<script>
+(function () {
+  window.W6App = window.W6App || {};
+
+  var existing = window.W6App.config || {};
+  var WEB_APP_URL = existing.webAppUrl || "https://script.google.com/macros/s/AKfycby4prqrsLx-iT0pETiK3b-zx-OPqapOdMZiPc_7E6pZ35BwIhzlIqX-CxlLBdj7mhsL/exec";
+
+  function clone(v) {
+    return JSON.parse(JSON.stringify(v));
+  }
+
+  window.W6App.config = {
+    workspaceId: "W6",
+    workspaceName: "Asset Library Dataspace",
+    webAppUrl: WEB_APP_URL,
+    statusUrl: WEB_APP_URL + "?action=status",
+    commandUrl: WEB_APP_URL,
+    pollMs: 15000,
+    fetchTimeoutMs: 12000,
+    engine: {
+      id: "Engine_SBDB",
+      readSurface: "Engine Handoff Block 1",
+      commandSurface: "Engine Handoff Block 3",
+      queueSource: "Engine SBDB Block 4",
+      primaryCommands: [
+        "RUN_SBDB_ENGINE",
+        "PAUSE_SBDB_ENGINE",
+        "RESUME_SBDB_ENGINE",
+        "STOP_SBDB_ENGINE",
+        "RESET_STALE_COMMANDS"
+      ],
+      debugCommands: [
+        "FIND_NEXT_QUEUE",
+        "LOCK_QUEUE_ITEM",
+        "MARK_FETCH_STARTED",
+        "MARK_DATA_RETURNED",
+        "ROUTE_TO_REVIEW",
+        "MARK_WRITEBACK_COMPLETE",
+        "FETCH_NEXT_QUEUE",
+        "RETRY_ACTIVE_ITEM"
+      ]
+    },
+    pipelineActions: [
+      "ingest",
+      "normalize",
+      "zone",
+      "cluster",
+      "qa",
+      "publish",
+      "passoff"
+    ]
+  };
+
+  window.W6App.events = window.W6App.events || {};
+
+  window.W6App.on = function (name, fn) {
+    if (!window.W6App.events[name]) window.W6App.events[name] = [];
+    window.W6App.events[name].push(fn);
+    return function () {
+      window.W6App.events[name] = (window.W6App.events[name] || []).filter(function (x) { return x !== fn; });
+    };
+  };
+
+  window.W6App.emit = function (name, payload) {
+    (window.W6App.events[name] || []).forEach(function (fn) {
+      try { fn(payload); } catch (err) { console.error(err); }
+    });
+  };
+
+  window.W6App.helpers = window.W6App.helpers || {};
+
+  window.W6App.helpers.safeText = function (value) {
+    return (value === null || value === undefined || value === "") ? "—" : String(value);
+  };
+
+  window.W6App.helpers.fetchWithTimeout = async function (url, options, timeoutMs) {
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, timeoutMs || window.W6App.config.fetchTimeoutMs);
+    try {
+      return await fetch(url, Object.assign({}, options || {}, { signal: controller.signal }));
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
+  window.W6App.logs = window.W6App.logs || [];
+
+  window.W6App.pushLog = function (message, origin) {
+    var entry = {
+      timeUtc: new Date().toISOString(),
+      origin: origin || "W6",
+      message: String(message || "")
+    };
+    window.W6App.logs.unshift(entry);
+    if (window.W6App.logs.length > 200) window.W6App.logs.length = 200;
+    window.W6App.emit("log:entry", clone(entry));
+    return entry;
+  };
+
+  window.W6App.getRecentLogs = function () {
+    return clone(window.W6App.logs);
+  };
+
+  window.W6App.getEngineBridgeConfig = function () {
+    return clone({
+      webAppUrl: window.W6App.config.webAppUrl,
+      statusUrl: window.W6App.config.statusUrl,
+      commandUrl: window.W6App.config.commandUrl,
+      primaryCommands: window.W6App.config.engine.primaryCommands,
+      debugCommands: window.W6App.config.engine.debugCommands
+    });
+  };
+
+  window.W6App.runPipelineAction = async function (actionName) {
+    var action = String(actionName || "").trim();
+    var primary = window.W6App.config.engine.primaryCommands.indexOf(action) !== -1;
+    var debug = window.W6App.config.engine.debugCommands.indexOf(action) !== -1;
+
+    if ((primary || debug) && window.W6App.sbdb && typeof window.W6App.sbdb.postCommand === "function") {
+      return window.W6App.sbdb.postCommand(action);
+    }
+
+    window.W6App.pushLog("Local pipeline action acknowledged: " + action, "PIPELINE");
+    window.W6App.emit("pipeline:action", { action: action, timeUtc: new Date().toISOString() });
+    return { ok: true, localOnly: true, action: action };
+  };
+
+  if (window.W6_DATASPACE_MASTER_CONTRACT &&
+      window.W6_DATASPACE_MASTER_CONTRACT.properties &&
+      window.W6_DATASPACE_MASTER_CONTRACT.properties.contractMeta &&
+      window.W6_DATASPACE_MASTER_CONTRACT.properties.contractMeta.properties) {
+    try {
+      window.W6_DATASPACE_MASTER_CONTRACT.properties.contractMeta.properties.version.const = "1.1.0";
+    } catch (err) {}
+  }
+
+  window.W6App.pushLog("W6 runtime/config bridge loaded.", "BOOT");
+})();
+</script>
