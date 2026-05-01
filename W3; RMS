@@ -1,0 +1,712 @@
+<div id="w3-root"></div>
+<script>
+(function () {
+  var mount = document.getElementById("w3-root");
+  if (!mount) return;
+
+  var NS = "w3sq";
+  var C = {
+    bg: "#0a0e1a",
+    bg2: "#1a1f2e",
+    bg3: "#252b3d",
+    panel: "#11182a",
+    line: "#3a4059",
+    mag: "#ff3366",
+    pink: "#ff6b9d",
+    cyan: "#00d4ff",
+    blue: "#00aaff",
+    green: "#00ff88",
+    amber: "#ffaa00",
+    text: "#e8eaf0",
+    muted: "#8b92a8",
+    red: "#ff5b5b"
+  };
+
+  var STATE = {
+    tab: "field",
+    config: "Formation A",
+    spinRate: 12,
+    fieldStrength: 0.05,
+    formationSep: 80,
+    power: 45,
+    phaseOffset: 120,
+    syncGain: 0.72,
+    targetMode: "Ore Control",
+    selectedSweep: null,
+    logs: [
+      { t: "2026-04-08T02:10:00Z", type: "field", msg: "RFS field state initialized for formation preview" },
+      { t: "2026-04-08T02:13:00Z", type: "power", msg: "Power envelope synchronized with current coil assumptions" },
+      { t: "2026-04-08T02:17:00Z", type: "handoff", msg: "Downstream configuration made available to W1 / W2 / W4" }
+    ]
+  };
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmt(n, d) {
+    return Number(n).toFixed(d == null ? 2 : d);
+  }
+
+  function pushLog(type, msg) {
+    STATE.logs.unshift({ t: new Date().toISOString(), type: type, msg: msg });
+    if (STATE.logs.length > 24) STATE.logs.length = 24;
+  }
+
+  function model() {
+    var sr = STATE.spinRate;
+    var B = STATE.fieldStrength;
+    var sep = STATE.formationSep;
+    var pw = STATE.power;
+    var po = STATE.phaseOffset;
+    var sg = STATE.syncGain;
+
+    var omega = sr * 2 * Math.PI / 60;
+    var mu0 = 4 * Math.PI * 1e-7;
+    var energyDensity = (B * B) / (2 * mu0);
+    var controlRadius = sep * (0.42 + sg * 0.35);
+    var formationStability = Math.max(0, Math.min(100,
+      82 + sg * 12 - Math.abs(po - 120) * 0.08 - sep * 0.05 - sr * 0.18 + B * 180
+    ));
+    var powerMargin = Math.max(0, Math.min(100,
+      88 - (pw * 0.7 + B * 120 + sr * 0.2)
+    ));
+    var couplingIndex = Math.max(0, Math.min(100,
+      34 + B * 900 + sg * 30 - Math.abs(po - 120) * 0.06
+    ));
+    var extractionBias = Math.max(0, Math.min(100,
+      42 + B * 620 + sr * 0.4 - sep * 0.08
+    ));
+    var thermalLoad = Math.max(0, pw * 0.9 + sr * 0.5 + B * 300);
+    var safetyEnvelope = Math.max(0, Math.min(100,
+      94 - thermalLoad * 0.22 - Math.abs(po - 120) * 0.04 + sg * 16
+    ));
+    var handoffReadiness = Math.max(0, Math.min(100,
+      formationStability * 0.35 + powerMargin * 0.20 + safetyEnvelope * 0.25 + couplingIndex * 0.20
+    ));
+
+    return {
+      omega: omega,
+      energyDensity: energyDensity,
+      controlRadius: controlRadius,
+      formationStability: formationStability,
+      powerMargin: powerMargin,
+      couplingIndex: couplingIndex,
+      extractionBias: extractionBias,
+      thermalLoad: thermalLoad,
+      safetyEnvelope: safetyEnvelope,
+      handoffReadiness: handoffReadiness
+    };
+  }
+
+  var style = document.createElement("style");
+  style.textContent = `
+    #w3-root{width:100%}
+    .${NS}-wrap{
+      width:100%;
+      min-height:960px;
+      display:flex;
+      flex-direction:column;
+      background:${C.bg};
+      color:${C.text};
+      border:1px solid ${C.line};
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.3);
+      font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+    }
+    .${NS}-hdr{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 16px;background:${C.bg2};border-bottom:1px solid ${C.line};
+    }
+    .${NS}-logo{
+      width:30px;height:30px;border-radius:50%;
+      display:grid;place-items:center;font-weight:900;
+      color:#081019;background:linear-gradient(135deg,${C.mag},${C.pink});
+    }
+    .${NS}-titlewrap{flex:1;min-width:240px}
+    .${NS}-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${C.mag}}
+    .${NS}-sub{font-size:11px;color:${C.muted};margin-top:2px}
+    .${NS}-fuse{display:flex;gap:6px;flex-wrap:wrap}
+    .${NS}-fuse a,.${NS}-btn{
+      padding:6px 10px;border-radius:8px;text-decoration:none;
+      background:${C.bg3};border:1px solid ${C.line};color:${C.text};
+      font-size:11px;font-weight:700;cursor:pointer;
+    }
+    .${NS}-fuse a.on{color:${C.mag};border-color:${C.mag};background:rgba(255,51,102,.10)}
+    .${NS}-fuse a.ds{color:${C.cyan};border-color:${C.cyan};background:rgba(0,212,255,.08)}
+    .${NS}-meta{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:8px 16px;background:${C.bg3};border-bottom:1px solid ${C.line};
+      font-size:11px;color:${C.muted};
+    }
+    .${NS}-pill{
+      padding:3px 8px;border-radius:999px;border:1px solid ${C.green};
+      color:${C.green};font-size:10px;font-weight:800;background:rgba(0,255,136,.08)
+    }
+    .${NS}-body{display:grid;grid-template-columns:290px 1fr;flex:1;min-height:0}
+    .${NS}-side{background:${C.bg2};border-right:1px solid ${C.line};padding:12px;overflow:auto}
+    .${NS}-main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+    .${NS}-panel{background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px;margin-bottom:12px}
+    .${NS}-ph{font-size:11px;font-weight:800;color:${C.mag};text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .${NS}-field{margin-bottom:10px}
+    .${NS}-label{display:block;font-size:11px;color:${C.muted};margin-bottom:6px}
+    .${NS}-input,.${NS}-select,.${NS}-range{width:100%;box-sizing:border-box}
+    .${NS}-input,.${NS}-select{
+      padding:9px 10px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.text};font-size:12px;
+    }
+    .${NS}-range{accent-color:${C.mag}}
+    .${NS}-rv{font-size:11px;color:${C.mag};font-weight:700;margin-top:4px}
+    .${NS}-small{font-size:11px;color:${C.muted};line-height:1.45}
+    .${NS}-btnrow{display:flex;gap:8px;flex-wrap:wrap}
+    .${NS}-tabs{display:flex;gap:2px;flex-wrap:wrap;padding:10px;border-bottom:1px solid ${C.line};background:${C.bg2}}
+    .${NS}-tab{
+      padding:8px 12px;border-radius:8px;border:1px solid ${C.line};
+      background:${C.bg3};color:${C.muted};font-size:11px;font-weight:800;cursor:pointer;
+    }
+    .${NS}-tab.on{background:${C.cyan};border-color:${C.cyan};color:#081019}
+    .${NS}-viewport{
+      flex:1;overflow:auto;padding:12px;
+      background:radial-gradient(circle at top, #20182c 0%, ${C.bg} 54%, #09111d 100%);
+    }
+    .${NS}-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .${NS}-card{
+      background:linear-gradient(180deg,#11182a 0%, #0f1524 100%);
+      border:1px solid ${C.line};border-radius:12px;padding:12px;min-width:0;
+    }
+    .${NS}-ct{font-size:11px;font-weight:800;color:${C.pink};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+    .${NS}-kpi{font-size:28px;font-weight:900;color:${C.green};line-height:1.1}
+    .${NS}-subk{font-size:11px;color:${C.muted};margin-top:6px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .${NS}-canvaswrap{
+      position:relative;height:330px;border:1px solid ${C.line};border-radius:12px;overflow:hidden;background:#0b101b;
+    }
+    .${NS}-canvaswrap canvas{width:100%;height:100%;display:block}
+    .${NS}-overlay{
+      position:absolute;top:10px;left:10px;padding:8px 10px;border-radius:10px;
+      background:rgba(10,14,26,.9);border:1px solid ${C.line};font-size:11px;color:${C.muted};line-height:1.5;
+    }
+    .${NS}-table{width:100%;border-collapse:collapse;font-size:11px}
+    .${NS}-table th{text-align:left;padding:8px 6px;color:${C.muted};border-bottom:1px solid ${C.line};font-weight:700}
+    .${NS}-table td{padding:8px 6px;border-bottom:1px solid rgba(58,64,89,.34);vertical-align:top}
+    .${NS}-table tr:hover td{background:rgba(255,255,255,.02)}
+    .${NS}-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(58,64,89,.34)}
+    .${NS}-row:last-child{border-bottom:none}
+    .${NS}-key{font-size:11px;color:${C.muted}}
+    .${NS}-val{font-size:11px;color:${C.text};font-weight:700;text-align:right}
+    .${NS}-bar{height:8px;border-radius:999px;overflow:hidden;background:#09111d;border:1px solid #1f2a42}
+    .${NS}-bar > span{display:block;height:100%;background:linear-gradient(90deg,${C.mag},${C.green})}
+    .${NS}-chip{
+      display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+      border:1px solid ${C.line};background:${C.bg3};font-size:10px;margin:0 6px 6px 0
+    }
+    @media (max-width:1100px){
+      .${NS}-body{grid-template-columns:1fr}
+      .${NS}-side{border-right:none;border-bottom:1px solid ${C.line}}
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+    }
+  `;
+  mount.appendChild(style);
+
+  function render() {
+    mount.querySelectorAll(":scope > ." + NS + "-wrap").forEach(function(n){ n.remove(); });
+    var m = model();
+
+    var wrap = document.createElement("div");
+    wrap.className = NS + "-wrap";
+    wrap.innerHTML =
+      '<div class="'+NS+'-hdr">'
+      + '<div class="'+NS+'-logo">⚡</div>'
+      + '<div class="'+NS+'-titlewrap">'
+      +   '<div class="'+NS+'-title">Workspace: W3 · RFS & EMFF</div>'
+      +   '<div class="'+NS+'-sub">Rotating field system, electromagnetic formation flight, power envelope, safety state, downstream handoff</div>'
+      + '</div>'
+      + '<div class="'+NS+'-fuse">'
+      +   '<a href="#">W1</a><a href="#">W2</a><a href="#" class="on">W3</a><a href="#">W4</a><a href="#">W5</a><a href="#">W6</a><a href="#" class="ds">DATA</a>'
+      + '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-meta">'
+      +   '<span class="'+NS+'-pill">● OPERATIONAL</span>'
+      +   '<span>/w3/data</span>'
+      +   '<span>v2.0.0</span>'
+      +   '<span>Units: SI + control proxy</span>'
+      +   '<span>Römer Industries / EMASSC</span>'
+      +   '<span id="'+NS+'-utc" style="margin-left:auto"></span>'
+      + '</div>'
+
+      + '<div class="'+NS+'-body">'
+      +   '<div class="'+NS+'-side">'+sideHTML(m)+'</div>'
+      +   '<div class="'+NS+'-main">'
+      +     tabsHTML()
+      +     '<div class="'+NS+'-viewport" id="'+NS+'-viewport"></div>'
+      +   '</div>'
+      + '</div>';
+
+    mount.appendChild(wrap);
+    bind();
+    renderTab();
+    tickUTC();
+  }
+
+  function sideHTML(m) {
+    return ''
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Config Controls</div>'
+      +   fieldSelect("Configuration", NS+"-cfg", ["Formation A","Formation B","Single Ship"], STATE.config)
+      +   fieldSelect("Target Mode", NS+"-mode", ["Ore Control","Capture Assist","Formation Hold","Transit Sync"], STATE.targetMode)
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Core Variables</div>'
+      +   fieldRange("Spin Rate (rpm)", NS+"-sr", 1, 60, 1, STATE.spinRate, STATE.spinRate)
+      +   fieldRange("Field Strength (T)", NS+"-fs", 0.01, 1.00, 0.01, STATE.fieldStrength, fmt(STATE.fieldStrength,2))
+      +   fieldRange("Formation Separation (m)", NS+"-sep", 10, 500, 1, STATE.formationSep, STATE.formationSep)
+      +   fieldRange("Power (kW)", NS+"-pw", 5, 200, 1, STATE.power, STATE.power)
+      +   fieldRange("Phase Offset (deg)", NS+"-po", 0, 360, 1, STATE.phaseOffset, STATE.phaseOffset)
+      +   fieldRange("Sync Gain", NS+"-sg", 0.1, 1.0, 0.01, STATE.syncGain, fmt(STATE.syncGain,2))
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Quick Actions</div>'
+      +   '<div class="'+NS+'-btnrow">'
+      +     btn("Variable Compound", "vca")
+      +     btn("Pattern Simplify", "ps")
+      +     btn("Large Optimise", "lso")
+      +     btn("Widen Search", "ws")
+      +   '</div>'
+      +   '<div class="'+NS+'-btnrow" style="margin-top:8px;">'
+      +     btn("Run & Log", "run")
+      +     btn("Export JSON", "export")
+      +   '</div>'
+      + '</div>'
+
+      + '<div class="'+NS+'-panel">'
+      +   '<div class="'+NS+'-ph">Instant Readout</div>'
+      +   statRow("ω", fmt(m.omega,2)+" rad/s", C.cyan)
+      +   statRow("Energy density", fmt(m.energyDensity,1)+" J/m³", C.blue)
+      +   statRow("Stability", fmt(m.formationStability,1)+"/100", m.formationStability > 75 ? C.green : m.formationStability > 55 ? C.amber : C.red)
+      +   statRow("Power margin", fmt(m.powerMargin,1)+"/100", m.powerMargin > 55 ? C.green : m.powerMargin > 35 ? C.amber : C.red)
+      +   statRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? C.green : m.safetyEnvelope > 55 ? C.amber : C.red)
+      + '</div>';
+  }
+
+  function fieldSelect(label, id, values, current) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<select class="'+NS+'-select" id="'+id+'">'
+      + values.map(function (v) {
+          return '<option value="'+esc(v)+'"'+(v === current ? ' selected' : '')+'>'+esc(v)+'</option>';
+        }).join("")
+      + '</select></div>';
+  }
+
+  function fieldRange(label, id, min, max, step, value, displayValue) {
+    return '<div class="'+NS+'-field">'
+      + '<label class="'+NS+'-label">'+label+'</label>'
+      + '<input class="'+NS+'-range" type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">'
+      + '<div class="'+NS+'-rv">'+esc(displayValue)+'</div>'
+      + '</div>';
+  }
+
+  function btn(label, action) {
+    return '<button class="'+NS+'-btn" data-action="'+action+'">'+label+'</button>';
+  }
+
+  function statRow(k, v, color) {
+    return '<div class="'+NS+'-row"><div class="'+NS+'-key">'+k+'</div><div class="'+NS+'-val" style="color:'+color+'">'+v+'</div></div>';
+  }
+
+  function tabsHTML() {
+    var tabs = [
+      ["field","RFS Field Sim"],
+      ["formation","EMFF Formation"],
+      ["power","Power Budget"],
+      ["exports","Exports & Sweep"],
+      ["connections","Connections"]
+    ];
+    return '<div class="'+NS+'-tabs">'
+      + tabs.map(function (t) {
+          return '<button class="'+NS+'-tab'+(STATE.tab === t[0] ? ' on' : '')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+        }).join("")
+      + '</div>';
+  }
+
+  function renderTab() {
+    var vp = mount.querySelector("#"+NS+"-viewport");
+    if (!vp) return;
+    if (STATE.tab === "field") vp.innerHTML = renderField();
+    if (STATE.tab === "formation") vp.innerHTML = renderFormation();
+    if (STATE.tab === "power") vp.innerHTML = renderPower();
+    if (STATE.tab === "exports") vp.innerHTML = renderExports();
+    if (STATE.tab === "connections") vp.innerHTML = renderConnections();
+
+    if (STATE.tab === "field") drawFieldCanvas();
+    if (STATE.tab === "formation") drawFormationCanvas();
+    if (STATE.tab === "power") drawPowerCanvas();
+  }
+
+  function renderField() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Field Strength", '<div class="'+NS+'-kpi">'+fmt(STATE.fieldStrength,2)+'</div><div class="'+NS+'-subk">T active rotating field</div>', "span-3")
+      + card("Spin Rate", '<div class="'+NS+'-kpi">'+STATE.spinRate+'</div><div class="'+NS+'-subk">rpm</div>', "span-3")
+      + card("Control Radius", '<div class="'+NS+'-kpi">'+fmt(m.controlRadius,1)+'</div><div class="'+NS+'-subk">m proxy field-control radius</div>', "span-3")
+      + card("Coupling Index", '<div class="'+NS+'-kpi">'+fmt(m.couplingIndex,1)+'</div><div class="'+NS+'-subk">field-to-object response proxy</div>', "span-3")
+      + card("RFS Field Simulation", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-field-canvas"></canvas><div class="'+NS+'-overlay">Rotating field nodes, vector spokes, and central control frame.</div></div>', "span-8")
+      + card("Field State",
+          statRow("Config", esc(STATE.config), C.mag)
+        + statRow("Target mode", esc(STATE.targetMode), C.cyan)
+        + statRow("Phase offset", STATE.phaseOffset+"°", C.amber)
+        + statRow("Sync gain", fmt(STATE.syncGain,2), C.blue)
+        + statRow("Extraction bias", fmt(m.extractionBias,1)+"/100", C.green)
+        + statRow("Thermal load", fmt(m.thermalLoad,1), C.red),
+        "span-4")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderFormation() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("EMFF Formation Layout", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-formation-canvas"></canvas><div class="'+NS+'-overlay">Formation nodes, shared control ring, and phase-offset relationship.</div></div>', "span-8")
+      + card("Formation Health",
+          statRow("Formation separation", STATE.formationSep+" m", C.cyan)
+        + statRow("Stability", fmt(m.formationStability,1)+"/100", m.formationStability > 75 ? C.green : m.formationStability > 55 ? C.amber : C.red)
+        + statRow("Safety envelope", fmt(m.safetyEnvelope,1)+"/100", m.safetyEnvelope > 75 ? C.green : m.safetyEnvelope > 55 ? C.amber : C.red)
+        + statRow("Handoff readiness", fmt(m.handoffReadiness,1)+"/100", m.handoffReadiness > 75 ? C.green : m.handoffReadiness > 55 ? C.amber : C.red),
+        "span-4")
+      + card("Formation Readout", formationTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderPower() {
+    var m = model();
+    return '<div class="'+NS+'-grid">'
+      + card("Power Envelope", '<div class="'+NS+'-canvaswrap"><canvas id="'+NS+'-power-canvas"></canvas><div class="'+NS+'-overlay">Relative budget: field generation, sync control, thermal overhead, reserve.</div></div>', "span-6")
+      + card("Power Readout",
+          statRow("Input power", STATE.power+" kW", C.cyan)
+        + statRow("Power margin", fmt(m.powerMargin,1)+"/100", m.powerMargin > 55 ? C.green : m.powerMargin > 35 ? C.amber : C.red)
+        + statRow("Thermal load", fmt(m.thermalLoad,1), C.red)
+        + statRow("Energy density", fmt(m.energyDensity,1)+" J/m³", C.blue),
+        "span-6")
+      + card("Budget Table", powerTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderExports() {
+    return '<div class="'+NS+'-grid">'
+      + card("Sweep Actions",
+          '<div style="margin-bottom:8px;">'
+        + '<span class="'+NS+'-chip">Variable Compound Analysis</span>'
+        + '<span class="'+NS+'-chip">Pattern Simplification</span>'
+        + '<span class="'+NS+'-chip">Large-Scale Optimisation</span>'
+        + '<span class="'+NS+'-chip">Widen Search</span>'
+        + '</div>'
+        + '<div class="'+NS+'-small">Current front-end exposes sweep triggers; dataspace should own heavy computation, validation, export, and replay logs.</div>',
+        "span-4")
+      + card("Exports",
+          '<table class="'+NS+'-table"><thead><tr><th>Item</th><th>Source</th><th>Date</th><th>Type</th><th>Action</th></tr></thead><tbody>'
+          + '<tr><td>field_config_payload.json</td><td>W3 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>publish</td><td>Ready</td></tr>'
+          + '<tr><td>formation_hold_payload.json</td><td>W3 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>handoff</td><td>Ready</td></tr>'
+          + '<tr><td>power_envelope_payload.json</td><td>W3 front-end run</td><td>'+esc(new Date().toISOString().slice(0,10))+' UTC</td><td>budget</td><td>Ready</td></tr>'
+          + '</tbody></table>',
+        "span-8")
+      + card("Recent Logs", logTableHTML(), "span-12")
+      + '</div>';
+  }
+
+  function renderConnections() {
+    return '<div class="'+NS+'-grid">'
+      + card("Consumes From",
+          '<div class="'+NS+'-small">W1 deposit — target physical assumptions<br>W5 GMAT — orbit / geometry state<br>W6 asset library — platform and system context</div>',
+        "span-6")
+      + card("Feeds Into",
+          '<div class="'+NS+'-small">W1 deposit — field power assumptions<br>W2 Luke II — EM config and hold envelope<br>W4 supply chain — operational energy constraints</div>',
+        "span-6")
+      + card("Operational Intent",
+          '<div class="'+NS+'-small">W3 should be the authoritative field-configuration workspace: rotating field state, EMFF formation logic, safety envelope, power demand, and downstream config payloads. The front-end previews these relationships while dataspace performs the deeper analysis.</div>',
+        "span-12")
+      + '</div>';
+  }
+
+  function card(title, body, span) {
+    return '<div class="'+NS+'-card '+(span || "span-3")+'"><div class="'+NS+'-ct">'+title+'</div>'+body+'</div>';
+  }
+
+  function logTableHTML() {
+    return '<table class="'+NS+'-table"><thead><tr><th>UTC</th><th>Type</th><th>Message</th></tr></thead><tbody>'
+      + STATE.logs.map(function (l) {
+          return '<tr><td>'+esc(l.t.replace("T"," ").replace("Z"," UTC"))+'</td><td>'+esc(l.type)+'</td><td>'+esc(l.msg)+'</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function formationTableHTML() {
+    var nodes = STATE.config === "Single Ship" ? 1 : 3;
+    return '<table class="'+NS+'-table"><thead><tr><th>Node</th><th>Offset</th><th>Field share</th><th>Status</th></tr></thead><tbody>'
+      + Array.from({length:nodes}).map(function (_, i) {
+          var offset = STATE.config === "Single Ship" ? 0 : (STATE.phaseOffset + i * 120) % 360;
+          var share = STATE.config === "Single Ship" ? 100 : 33.3;
+          return '<tr><td>'+(STATE.config === "Single Ship" ? "Control Core" : "Node "+(i+1))+'</td><td>'+fmt(offset,0)+'°</td><td>'+fmt(share,1)+'%</td><td style="color:'+C.green+'">Locked</td></tr>';
+        }).join("")
+      + '</tbody></table>';
+  }
+
+  function powerTableHTML() {
+    var fieldGen = STATE.power * 0.46;
+    var sync = STATE.power * 0.18;
+    var thermal = STATE.power * 0.21;
+    var reserve = STATE.power * 0.15;
+    var total = fieldGen + sync + thermal + reserve;
+    return '<table class="'+NS+'-table"><thead><tr><th>Component</th><th>kW</th><th>Share</th></tr></thead><tbody>'
+      + powerRow("Field Generation", fieldGen, total)
+      + powerRow("Sync Control", sync, total)
+      + powerRow("Thermal Overhead", thermal, total)
+      + powerRow("Reserve", reserve, total)
+      + '</tbody></table>';
+  }
+
+  function powerRow(name, value, total) {
+    var p = total > 0 ? (value / total) * 100 : 0;
+    return '<tr><td>'+name+'</td><td>'+fmt(value,1)+'</td><td><div class="'+NS+'-bar"><span style="width:'+p+'%"></span></div></td></tr>';
+  }
+
+  function bind() {
+    mount.querySelectorAll("."+NS+"-tab").forEach(function (el) {
+      el.addEventListener("click", function () {
+        STATE.tab = this.getAttribute("data-tab");
+        render();
+      });
+    });
+
+    [
+      [NS+"-cfg","config"],
+      [NS+"-mode","targetMode"]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("change", function () {
+          STATE[pair[1]] = this.value;
+          pushLog("config", pair[1] + " updated");
+          render();
+        });
+      }
+    });
+
+    [
+      [NS+"-sr","spinRate",1],
+      [NS+"-fs","fieldStrength",0.01],
+      [NS+"-sep","formationSep",1],
+      [NS+"-pw","power",1],
+      [NS+"-po","phaseOffset",1],
+      [NS+"-sg","syncGain",0.01]
+    ].forEach(function (pair) {
+      var el = mount.querySelector("#"+pair[0]);
+      if (el) {
+        el.addEventListener("input", function () {
+          STATE[pair[1]] = parseFloat(this.value);
+          render();
+        });
+      }
+    });
+
+    mount.querySelectorAll("."+NS+"-btn[data-action]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var a = this.getAttribute("data-action");
+        if (a === "run") {
+          var m = model();
+          pushLog("run", "W3 run logged | stability " + fmt(m.formationStability,1) + " | safety " + fmt(m.safetyEnvelope,1));
+          render();
+          return;
+        }
+        if (a === "export") {
+          var payload = {
+            config: STATE.config,
+            targetMode: STATE.targetMode,
+            spinRateRpm: STATE.spinRate,
+            fieldStrengthT: STATE.fieldStrength,
+            formationSeparationM: STATE.formationSep,
+            powerKw: STATE.power,
+            phaseOffsetDeg: STATE.phaseOffset,
+            syncGain: STATE.syncGain,
+            metrics: model(),
+            exportedUtc: new Date().toISOString()
+          };
+          var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "w3_field_config_payload.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          pushLog("export", "Field configuration payload exported");
+          render();
+          return;
+        }
+        STATE.selectedSweep = a;
+        pushLog("sweep", "Sweep triggered: " + a.toUpperCase());
+        render();
+      });
+    });
+  }
+
+  function drawFieldCanvas() {
+    var c = mount.querySelector("#"+NS+"-field-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W / 2, cy = H / 2;
+    var sepScale = Math.min(W,H) * 0.28 / Math.max(STATE.formationSep, 10);
+    var radius = STATE.formationSep * sepScale * 0.5;
+    var t = Date.now() / 1000;
+    var nodes = STATE.config === "Single Ship" ? 1 : 3;
+
+    for (var i = 0; i < nodes; i++) {
+      var base = nodes === 1 ? 0 : (i * Math.PI * 2 / 3);
+      var ang = base + t * STATE.spinRate * 0.08 + (STATE.phaseOffset * Math.PI / 180);
+      var x = cx + Math.cos(ang) * radius;
+      var y = cy + Math.sin(ang) * radius;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 9, 0, Math.PI * 2);
+      ctx.fillStyle = C.mag;
+      ctx.fill();
+
+      for (var j = 0; j < 4; j++) {
+        var la = ang + j * Math.PI / 2;
+        var lr = 18 + STATE.fieldStrength * 120;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(la) * lr, y + Math.sin(la) * lr);
+        ctx.strokeStyle = "rgba(255,51,102,.45)";
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+      }
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,51,102,.88)";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 24, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(255,51,102,.16)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function drawFormationCanvas() {
+    var c = mount.querySelector("#"+NS+"-formation-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var cx = W / 2, cy = H / 2;
+    var R = Math.min(W,H) * 0.24;
+    var nodes = STATE.config === "Single Ship" ? 1 : 3;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, R + 26, 0, Math.PI*2);
+    ctx.strokeStyle = "rgba(0,212,255,.18)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    for (var i = 0; i < nodes; i++) {
+      var a = nodes === 1 ? 0 : ((STATE.phaseOffset + i * 120) * Math.PI / 180);
+      var x = cx + Math.cos(a) * R;
+      var y = cy + Math.sin(a) * R;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, Math.PI*2);
+      ctx.fillStyle = i === 0 ? C.cyan : C.mag;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = "rgba(255,51,102,.35)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 12, 0, Math.PI*2);
+    ctx.fillStyle = C.green;
+    ctx.fill();
+  }
+
+  function drawPowerCanvas() {
+    var c = mount.querySelector("#"+NS+"-power-canvas");
+    if (!c) return;
+    var rect = c.parentElement.getBoundingClientRect();
+    var W = Math.max(320, Math.floor(rect.width));
+    var H = Math.max(260, Math.floor(rect.height));
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0a0e1a";
+    ctx.fillRect(0,0,W,H);
+
+    var parts = [
+      { name:"Field", v: STATE.power * 0.46, c: C.mag },
+      { name:"Sync", v: STATE.power * 0.18, c: C.cyan },
+      { name:"Thermal", v: STATE.power * 0.21, c: C.red },
+      { name:"Reserve", v: STATE.power * 0.15, c: C.green }
+    ];
+    var total = parts.reduce(function (s, p) { return s + p.v; }, 0);
+    var x = 50, y = H * 0.25, w = W - 100, h = 40;
+    var acc = 0;
+
+    parts.forEach(function (p) {
+      var pw = w * (p.v / Math.max(total,1));
+      ctx.fillStyle = p.c;
+      ctx.fillRect(x + acc, y, pw, h);
+      acc += pw;
+    });
+
+    var ly = y + 90;
+    parts.forEach(function (p, i) {
+      ctx.fillStyle = p.c;
+      ctx.fillRect(60, ly + i*28, 14, 14);
+      ctx.fillStyle = C.text;
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText(p.name + " — " + fmt(p.v,1) + " kW", 84, ly + 11 + i*28);
+    });
+  }
+
+  function tickUTC() {
+    var el = mount.querySelector("#"+NS+"-utc");
+    if (el) el.textContent = new Date().toUTCString().replace("GMT","UTC");
+  }
+
+  render();
+  setInterval(function () { tickUTC(); }, 1000);
+
+  window.W3App = window.W3App || {};
+  window.W3App.state = function () { return JSON.parse(JSON.stringify(STATE)); };
+  window.W3App.model = model;
+  window.W3App.rerender = render;
+})();
+</script>
