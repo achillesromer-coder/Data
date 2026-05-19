@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "status": "scaffold",
+  "rule": "Data owns repeatable /wn/data structured views. Operations owns the paired /operations/wn operator workspaces.",
+  "pairs": [
+    {"workspace": "/operations/w1", "dataspace": "/w1/data", "data_folder": "dataspaces/w1-deposit-analysis"},
+    {"workspace": "/operations/w2", "dataspace": "/w2/data", "data_folder": "dataspaces/w2-luke-catch-hold"},
+    {"workspace": "/operations/w3", "dataspace": "/w3/data", "data_folder": "dataspaces/w3-rfs-emff"},
+    {"workspace": "/operations/w4", "dataspace": "/w4/data", "data_folder": "dataspaces/w4-supply-chain-trajectory"},
+    {"workspace": "/operations/w5", "dataspace": "/w5/data", "data_folder": "dataspaces/w5-gmat-mpl"},
+    {"workspace": "/operations/w6", "dataspace": "/w6/data", "data_folder": "dataspaces/w6-asset-library"}
+  ]
+}
