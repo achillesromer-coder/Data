@@ -1,0 +1,36 @@
+{
+  "schema_name": "asteroid_catalogue_field_dictionary",
+  "version": "2026-07-05",
+  "source_workbook": "Asteroid_Strategic_Mapping_Base_withRocks",
+  "source_sheet": "Field Dictionary",
+  "raw_source_sheet": "Rocks ECSV Sample 200k",
+  "status": "schema_only_no_runtime_activation",
+  "fields": [
+    {"name": "sso_id", "type": "string", "unit": null, "required": true, "notes": "Raw object identifier; preserve exactly."},
+    {"name": "sso_number", "type": "integer_or_string", "unit": null, "required": false, "notes": "Source number; blank allowed."},
+    {"name": "sso_name", "type": "string", "unit": null, "required": false, "notes": "Preserve spelling and case."},
+    {"name": "sso_type", "type": "string", "unit": null, "required": true, "notes": "Raw SSO type."},
+    {"name": "sso_class", "type": "string", "unit": null, "required": true, "notes": "Dynamical/orbital class label."},
+    {"name": "orbital_elements.ref_epoch", "type": "number", "unit": "epoch", "required": false, "notes": "Record beside orbital values."},
+    {"name": "orbital_elements.semi_major_axis.value", "type": "number", "unit": "AU", "required": false, "notes": "Maps to semi-major axis."},
+    {"name": "orbital_elements.eccentricity.value", "type": "number", "unit": null, "required": false, "notes": "Unitless eccentricity."},
+    {"name": "orbital_elements.inclination.value", "type": "number", "unit": "degrees", "required": false, "notes": "Do not mix degrees and radians."},
+    {"name": "diameter.value", "type": "number", "unit": "km", "required": false, "notes": "Derived diameter_m indicates km-to-m conversion path."},
+    {"name": "density.value", "type": "number", "unit": "source_native", "required": false, "notes": "Unit and measured/estimated state must be verified."},
+    {"name": "albedo.value", "type": "number", "unit": "fraction", "required": false, "notes": "Expected range 0 to 1."},
+    {"name": "taxonomy.class", "type": "string", "unit": null, "required": false, "notes": "Operational proxy input only."},
+    {"name": "taxonomy.scheme", "type": "string", "unit": null, "required": false, "notes": "Keep source taxonomy scheme explicit."},
+    {"name": "taxonomy.complex", "type": "string", "unit": null, "required": false, "notes": "Broad taxonomy grouping."},
+    {"name": "diameter_m", "type": "number", "unit": "m", "required": false, "notes": "Derived convenience field."},
+    {"name": "volume_m3", "type": "number", "unit": "m3", "required": false, "notes": "Derived estimate depending on diameter and shape assumption."},
+    {"name": "size_bracket", "type": "string", "unit": null, "required": false, "notes": "Workbook-derived screening label."},
+    {"name": "density_kg_m3", "type": "number", "unit": "kg/m3", "required": false, "notes": "Normalized density field when populated."},
+    {"name": "density_category", "type": "string", "unit": null, "required": false, "notes": "Screening label only."}
+  ],
+  "guardrails": [
+    "Raw rows remain staging input.",
+    "Curated promotion requires evidence status and source ID.",
+    "Taxonomy, density, albedo, mass and volume outputs remain proxy/screening fields until reviewed.",
+    "This file is documentation/schema only and does not activate a runtime or backend."
+  ]
+}
