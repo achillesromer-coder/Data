@@ -1,0 +1,42 @@
+{
+  "schema_name": "mission1_target_library_fields",
+  "version": "review-state-2026-07-13",
+  "workbook": "Asteroid_Strategic_Mapping_Base_withRocks",
+  "sheet": "Mission 1 Target Library",
+  "status": "schema_only_no_runtime_activation",
+  "fields": [
+    {"name":"Object_ID","source":"Rocks ECSV Sample 200k","type":"text","required":true},
+    {"name":"Name","source":"Rocks ECSV Sample 200k","type":"text","required":true},
+    {"name":"Dynamical_Class","source":"Rocks ECSV Sample 200k","type":"text","required":true},
+    {"name":"a_AU","source":"Rocks ECSV Sample 200k","type":"number","unit":"AU","required":false},
+    {"name":"e","source":"Rocks ECSV Sample 200k","type":"number","required":false},
+    {"name":"i_deg","source":"Rocks ECSV Sample 200k","type":"number","unit":"deg","required":false},
+    {"name":"q_AU","source":"workbook derived","type":"number","unit":"AU","formula":"a_AU*(1-e)","required":false},
+    {"name":"Q_AU","source":"workbook derived","type":"number","unit":"AU","formula":"a_AU*(1+e)","required":false},
+    {"name":"Diameter_km","source":"Rocks ECSV Sample 200k","type":"number","unit":"km","required":false},
+    {"name":"Albedo","source":"Rocks ECSV Sample 200k","type":"number","required":false},
+    {"name":"Density_kg_m3","source":"Rocks ECSV Sample 200k / workbook normalization","type":"number","unit":"kg/m3","required":false},
+    {"name":"Taxonomy_Class","source":"Rocks ECSV Sample 200k","type":"text","required":false},
+    {"name":"Taxonomy_Complex","source":"Rocks ECSV Sample 200k","type":"text","required":false},
+    {"name":"Mission_Zone","source":"workbook derived","type":"text","required":true},
+    {"name":"Mission_1_Role","source":"workbook derived","type":"text","required":true},
+    {"name":"Window_June_2027","source":"workbook derived","type":"text","required":true},
+    {"name":"Window_Jan_2028","source":"workbook derived","type":"text","required":true},
+    {"name":"Window_Aug_2028","source":"workbook derived","type":"text","required":true},
+    {"name":"Mission_27_Hub_Role","source":"workbook derived","type":"text","required":true},
+    {"name":"Known_Fields","source":"workbook derived","type":"text","required":true},
+    {"name":"Missing_Fields","source":"workbook derived","type":"text","required":false},
+    {"name":"Evidence_Status","source":"workbook derived","type":"text","required":true},
+    {"name":"Source_Surface","source":"workbook derived","type":"text","required":true},
+    {"name":"Source_Row_Range","source":"workbook derived","type":"text","required":true},
+    {"name":"Review_Status","source":"workbook derived","type":"text","required":true},
+    {"name":"Rank_Score","source":"workbook derived","type":"number","required":true,"guardrail":"screening score only; not delta-v, feasibility, value, legality, or launch score"}
+  ],
+  "guardrails": [
+    "Review-state schema only",
+    "No runtime activation",
+    "No launch authorization",
+    "No external publication claim",
+    "External enrichment must pass source-gate review"
+  ]
+}
