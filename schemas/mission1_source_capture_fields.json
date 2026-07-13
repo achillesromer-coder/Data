@@ -1,0 +1,36 @@
+{
+  "schema_name": "mission1_source_capture_fields",
+  "version": "review-state-2026-07-14",
+  "workbook": "Asteroid_Strategic_Mapping_Base_withRocks",
+  "sheet": "Mission 1 Source Capture",
+  "status": "schema_only_ready_for_source_payload_capture",
+  "fields": [
+    {"name":"Capture_ID","type":"text","required":true,"description":"Stable source-capture row identifier."},
+    {"name":"Object_ID","type":"text","required":true,"description":"Workbook object identifier or source designation."},
+    {"name":"Name","type":"text","required":true,"description":"Human-readable body name."},
+    {"name":"Capture_Source","type":"text","required":true,"description":"Source authority or capture route, initially JPL SBDB."},
+    {"name":"Capture_Type","type":"text","required":true,"description":"Payload category such as object payload first or strategic tag-case source-gate."},
+    {"name":"Scenario_Window","type":"text","required":true,"description":"Scenario branch coverage, e.g. all three start windows."},
+    {"name":"Source_URL","type":"url","required":true,"description":"Source route URL used for capture."},
+    {"name":"Capture_Window_Duration","type":"text","required":true,"description":"Time window description for pre-pull, payload pull, and post-pull comparison."},
+    {"name":"Payload_Status","type":"text","required":true,"description":"Current payload capture state."},
+    {"name":"Captured_Fields","type":"text","required":true,"description":"Fields expected or captured from source payload."},
+    {"name":"Conflicting_Values","type":"text","required":false,"description":"Conflicting values found between source payload and workbook fields."},
+    {"name":"Workbook_Source_Range","type":"text","required":true,"description":"Workbook range used as current baseline."},
+    {"name":"Candidate_Range","type":"text","required":true,"description":"Candidate/source-gate row range."},
+    {"name":"Canon_Update_Policy","type":"text","required":true,"description":"Compare-first and conflict-log policy before canon update."},
+    {"name":"Cognigrex_Action","type":"text","required":true,"description":"Automated or review action routed to Cognigrex."},
+    {"name":"Appendix_Log_Range","type":"text","required":true,"description":"Appendix & Log row range for traceability."},
+    {"name":"Status","type":"text","required":true,"description":"Current row state."},
+    {"name":"Notes","type":"text","required":false,"description":"Operator or automation notes."},
+    {"name":"Date_Created","type":"date","required":true,"description":"Workbook row creation date."},
+    {"name":"Publish_Queue_Link","type":"text","required":false,"description":"Publish Review Queue link range."},
+    {"name":"Safety_Label","type":"text","required":true,"description":"Safety/context label for the object row."},
+    {"name":"Priority","type":"text","required":true,"description":"Capture priority."}
+  ],
+  "guardrails": [
+    "External payloads compare against workbook values before canon updates.",
+    "Conflicts are recorded in Conflicting_Values and Appendix & Log.",
+    "Schema supports data operations and review outputs only."
+  ]
+}
