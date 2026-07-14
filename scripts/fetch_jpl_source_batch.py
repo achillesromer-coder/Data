@@ -2,7 +2,7 @@
 """Fetch and normalize JPL SBDB payloads for the active M1-M3 pre-rank set.
 
 Public-data-only runner. It stores canonical raw JSON and a normalized summary.
-Repository files are rewritten only when the source payload changes.
+Repository files are rewritten only when source or normalized state changes.
 """
 
 from __future__ import annotations
@@ -27,9 +27,10 @@ OUTPUT_DIR = Path("data/jpl/sbdb/latest")
 SUMMARY_JSON = OUTPUT_DIR / "summary.json"
 SUMMARY_CSV = OUTPUT_DIR / "summary.csv"
 MANIFEST_JSON = OUTPUT_DIR / "manifest.json"
-USER_AGENT = "Romer-Industries-Cognigrex-JPL-Capture/1.0"
+USER_AGENT = "Romer-Industries-Cognigrex-JPL-Capture/1.1"
 TIMEOUT_SECONDS = 45
-MAX_RETRIES = 3
+MAX_RETRIES = 5
+REQUEST_DELAY_SECONDS = 1.5
 
 
 @dataclass(frozen=True)
@@ -51,6 +52,15 @@ def slugify(value: str) -> str:
 
 def canonical_json(payload: dict[str, Any]) -> str:
     return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+
+
+def result_from_payload(name: str, payload: dict[str, Any]) -> FetchResult:
+    signature = payload.get("signature")
+    if not isinstance(signature, dict) or not signature.get("version"):
+        raise ValueError("SBDB signature/version is missing")
+    text = canonical_json(payload)
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    return FetchResult(name, payload, text, digest)
 
 
 def fetch_object(name: str) -> FetchResult:
@@ -80,18 +90,26 @@ def fetch_object(name: str) -> FetchResult:
                 raise ValueError("SBDB payload is not a JSON object")
             if payload.get("code") or payload.get("message"):
                 raise ValueError(f"SBDB error payload: {payload.get('message') or payload.get('code')}")
-            signature = payload.get("signature")
-            if not isinstance(signature, dict) or not signature.get("version"):
-                raise ValueError("SBDB signature/version is missing")
-            text = canonical_json(payload)
-            digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
-            return FetchResult(name, payload, text, digest)
+            return result_from_payload(name, payload)
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError, json.JSONDecodeError) as exc:
             last_error = exc
             if attempt < MAX_RETRIES:
-                time.sleep(attempt * 2)
+                time.sleep(min(20, attempt * 3))
 
     raise RuntimeError(f"Failed to fetch {name}: {last_error}")
+
+
+def cached_object(name: str) -> FetchResult | None:
+    raw_path = OUTPUT_DIR / f"{slugify(name)}.json"
+    if not raw_path.exists():
+        return None
+    try:
+        payload = json.loads(raw_path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            return None
+        return result_from_payload(name, payload)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
 
 
 def list_to_map(items: Any, key_names: Iterable[str] = ("name",)) -> dict[str, dict[str, Any]]:
@@ -161,7 +179,7 @@ def close_approach_count(payload: dict[str, Any]) -> int:
     return 0
 
 
-def normalize(result: FetchResult, previous_manifest: dict[str, Any]) -> dict[str, Any]:
+def normalize(result: FetchResult, previous_manifest: dict[str, Any], refresh_status: str, refresh_error: str | None) -> dict[str, Any]:
     payload = result.payload
     obj = payload.get("object") if isinstance(payload.get("object"), dict) else {}
     orbit = payload.get("orbit") if isinstance(payload.get("orbit"), dict) else {}
@@ -217,6 +235,8 @@ def normalize(result: FetchResult, previous_manifest: dict[str, Any]) -> dict[st
         "close_approach_records": close_approach_count(payload),
         "orbit_invariant_status": invariant_status,
         "orbit_invariant_notes": invariant_notes,
+        "refresh_status": refresh_status,
+        "last_refresh_error": refresh_error,
         "signature_source": signature.get("source"),
         "signature_version": signature.get("version"),
         "source_url": f"{SBDB_ENDPOINT}?sstr={urllib.parse.quote(result.requested_name)}&phys-par=1&ca-data=1",
@@ -260,48 +280,53 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> bool:
 def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     previous_manifest = load_json(MANIFEST_JSON)
-    results: list[FetchResult] = []
-    errors: list[str] = []
-
-    for name in OBJECTS:
-        try:
-            results.append(fetch_object(name))
-        except Exception as exc:  # keep successful captures even if one object fails
-            errors.append(str(exc))
-
-    if not results:
-        print("No JPL payloads captured", file=sys.stderr)
-        for error in errors:
-            print(error, file=sys.stderr)
-        return 1
-
-    changed = False
     rows: list[dict[str, Any]] = []
+    errors: list[str] = []
+    changed = False
     manifest_objects: dict[str, Any] = {}
 
-    for result in results:
-        slug = slugify(result.requested_name)
-        raw_path = OUTPUT_DIR / f"{slug}.json"
-        changed |= write_if_changed(raw_path, result.canonical_json)
+    for index, name in enumerate(OBJECTS):
+        refresh_status = "CAPTURED_CURRENT"
+        refresh_error: str | None = None
         try:
-            row = normalize(result, previous_manifest)
+            result = fetch_object(name)
+            raw_path = OUTPUT_DIR / f"{slugify(name)}.json"
+            changed |= write_if_changed(raw_path, result.canonical_json)
+        except Exception as exc:
+            refresh_error = str(exc)
+            errors.append(refresh_error)
+            result = cached_object(name)
+            refresh_status = "RETAINED_VALIDATED_CACHE"
+            if result is None:
+                errors.append(f"No valid cached payload available for {name}")
+                continue
+
+        try:
+            row = normalize(result, previous_manifest, refresh_status, refresh_error)
         except ValueError as exc:
-            errors.append(f"{result.requested_name}: {exc}")
+            errors.append(f"{name}: {exc}")
             continue
+
         rows.append(row)
+        slug = slugify(name)
         manifest_objects[slug] = {
-            "requested_name": result.requested_name,
+            "requested_name": name,
             "sha256": result.sha256,
             "captured_at": row["captured_at"],
-            "raw_path": raw_path.as_posix(),
+            "raw_path": (OUTPUT_DIR / f"{slug}.json").as_posix(),
             "source_url": row["source_url"],
             "signature_version": row["signature_version"],
             "orbit_invariant_status": row["orbit_invariant_status"],
-            "status": "captured",
+            "refresh_status": refresh_status,
+            "last_refresh_error": refresh_error,
+            "status": "captured" if refresh_status == "CAPTURED_CURRENT" else "retained_validated_cache",
         }
 
+        if index < len(OBJECTS) - 1:
+            time.sleep(REQUEST_DELAY_SECONDS)
+
     if not rows:
-        print("JPL raw payloads were captured but all normalized rows failed validation", file=sys.stderr)
+        print("No current or cached JPL rows survived validation", file=sys.stderr)
         for error in errors:
             print(error, file=sys.stderr)
         return 1
@@ -309,7 +334,7 @@ def main() -> int:
     rows.sort(key=lambda item: OBJECTS.index(str(item["requested_name"])))
 
     manifest = {
-        "schema": "romer.jpl.sbdb.source-capture.v1.1",
+        "schema": "romer.jpl.sbdb.source-capture.v1.2",
         "endpoint": SBDB_ENDPOINT,
         "objects": manifest_objects,
         "errors": errors,
@@ -321,6 +346,7 @@ def main() -> int:
         "normalization_guardrails": [
             "Orbit elements are keyed by JPL element name, not case-folded labels.",
             "Perihelion q and aphelion Q/ad are validated using q < a < Q and a(1±e).",
+            "Transient upstream failures retain only previously captured raw payloads that still pass signature and orbit-invariant validation.",
         ],
     }
 
@@ -330,7 +356,7 @@ def main() -> int:
     changed |= write_csv(SUMMARY_CSV, rows)
     changed |= write_if_changed(MANIFEST_JSON, manifest_text)
 
-    print(json.dumps({"captured": len(rows), "errors": errors, "changed": changed}, indent=2))
+    print(json.dumps({"available": len(rows), "errors": errors, "changed": changed}, indent=2))
     return 0 if not errors else 2
 
 
