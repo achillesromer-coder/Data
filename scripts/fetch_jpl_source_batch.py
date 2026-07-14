@@ -10,7 +10,6 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
-import os
 import re
 import sys
 import time
@@ -95,7 +94,12 @@ def fetch_object(name: str) -> FetchResult:
     raise RuntimeError(f"Failed to fetch {name}: {last_error}")
 
 
-def list_to_map(items: Any, key_names: Iterable[str] = ("name", "label")) -> dict[str, dict[str, Any]]:
+def list_to_map(items: Any, key_names: Iterable[str] = ("name",)) -> dict[str, dict[str, Any]]:
+    """Index structured JPL lists by stable field names.
+
+    Labels are intentionally excluded by default. JPL uses case-sensitive q/Q labels
+    for perihelion/aphelion, so lower-casing labels would create a destructive collision.
+    """
     result: dict[str, dict[str, Any]] = {}
     if not isinstance(items, list):
         return result
@@ -117,6 +121,35 @@ def value_from(mapping: dict[str, dict[str, Any]], *names: str) -> Any:
     return None
 
 
+def as_float(value: Any) -> float | None:
+    if value is None or value == "":
+        return None
+    try:
+        return float(str(value).strip())
+    except ValueError:
+        return None
+
+
+def validate_orbit_invariants(e_value: Any, a_value: Any, q_value: Any, ad_value: Any) -> tuple[str, str]:
+    e = as_float(e_value)
+    a = as_float(a_value)
+    q = as_float(q_value)
+    ad = as_float(ad_value)
+    if None in (e, a, q, ad):
+        return "NOT_CHECKED", "One or more e/a/q/Q values are unavailable."
+    if not 0 <= e < 1 or not q < a < ad:
+        raise ValueError(f"Orbit invariant failure: expected q < a < Q with 0 <= e < 1; got e={e}, q={q}, a={a}, Q={ad}")
+    expected_q = a * (1 - e)
+    expected_ad = a * (1 + e)
+    tolerance = max(0.01, a * 0.015)
+    if abs(q - expected_q) > tolerance or abs(ad - expected_ad) > tolerance:
+        raise ValueError(
+            "Orbit invariant failure: q/Q do not match a(1-e)/a(1+e) within tolerance; "
+            f"got q={q}, Q={ad}, expected q={expected_q:.6g}, Q={expected_ad:.6g}"
+        )
+    return "PASS", f"q/a/Q ordering and a(1±e) checks passed within {tolerance:.4g} au tolerance."
+
+
 def close_approach_count(payload: dict[str, Any]) -> int:
     data = payload.get("ca_data")
     if isinstance(data, list):
@@ -134,8 +167,17 @@ def normalize(result: FetchResult, previous_manifest: dict[str, Any]) -> dict[st
     orbit = payload.get("orbit") if isinstance(payload.get("orbit"), dict) else {}
     signature = payload.get("signature") if isinstance(payload.get("signature"), dict) else {}
     orbit_class = obj.get("orbit_class") if isinstance(obj.get("orbit_class"), dict) else {}
-    elements = list_to_map(orbit.get("elements"))
-    physical = list_to_map(payload.get("phys_par"))
+    elements = list_to_map(orbit.get("elements"), key_names=("name",))
+    physical = list_to_map(payload.get("phys_par"), key_names=("name",))
+
+    eccentricity = value_from(elements, "e")
+    semimajor_axis = value_from(elements, "a")
+    perihelion = value_from(elements, "q")
+    inclination = value_from(elements, "i")
+    aphelion = value_from(elements, "ad")
+    invariant_status, invariant_notes = validate_orbit_invariants(
+        eccentricity, semimajor_axis, perihelion, aphelion
+    )
 
     previous = previous_manifest.get("objects", {}).get(slugify(result.requested_name), {})
     captured_at = previous.get("captured_at") if previous.get("sha256") == result.sha256 else utc_now()
@@ -159,20 +201,22 @@ def normalize(result: FetchResult, previous_manifest: dict[str, Any]) -> dict[st
         "last_observation": orbit.get("last_obs"),
         "observations_used": orbit.get("n_obs_used"),
         "data_arc_days": orbit.get("data_arc"),
-        "eccentricity": value_from(elements, "e", "eccentricity"),
-        "semimajor_axis_au": value_from(elements, "a", "semi-major axis"),
-        "perihelion_au": value_from(elements, "q", "perihelion distance"),
-        "inclination_deg": value_from(elements, "i", "inclination"),
-        "aphelion_au": value_from(elements, "ad", "aphelion distance"),
+        "eccentricity": eccentricity,
+        "semimajor_axis_au": semimajor_axis,
+        "perihelion_au": perihelion,
+        "inclination_deg": inclination,
+        "aphelion_au": aphelion,
         "moid_au": orbit.get("moid") or value_from(elements, "moid"),
-        "absolute_magnitude_h": value_from(physical, "h", "absolute magnitude"),
+        "absolute_magnitude_h": value_from(physical, "h"),
         "diameter_km": value_from(physical, "diameter"),
         "albedo": value_from(physical, "albedo"),
         "density_g_cm3": value_from(physical, "density"),
-        "rotation_period_h": value_from(physical, "rot_per", "rotation period"),
+        "rotation_period_h": value_from(physical, "rot_per"),
         "spectral_type_b": value_from(physical, "spec_b"),
         "spectral_type_t": value_from(physical, "spec_t"),
         "close_approach_records": close_approach_count(payload),
+        "orbit_invariant_status": invariant_status,
+        "orbit_invariant_notes": invariant_notes,
         "signature_source": signature.get("source"),
         "signature_version": signature.get("version"),
         "source_url": f"{SBDB_ENDPOINT}?sstr={urllib.parse.quote(result.requested_name)}&phys-par=1&ca-data=1",
@@ -239,7 +283,11 @@ def main() -> int:
         slug = slugify(result.requested_name)
         raw_path = OUTPUT_DIR / f"{slug}.json"
         changed |= write_if_changed(raw_path, result.canonical_json)
-        row = normalize(result, previous_manifest)
+        try:
+            row = normalize(result, previous_manifest)
+        except ValueError as exc:
+            errors.append(f"{result.requested_name}: {exc}")
+            continue
         rows.append(row)
         manifest_objects[slug] = {
             "requested_name": result.requested_name,
@@ -248,13 +296,20 @@ def main() -> int:
             "raw_path": raw_path.as_posix(),
             "source_url": row["source_url"],
             "signature_version": row["signature_version"],
+            "orbit_invariant_status": row["orbit_invariant_status"],
             "status": "captured",
         }
+
+    if not rows:
+        print("JPL raw payloads were captured but all normalized rows failed validation", file=sys.stderr)
+        for error in errors:
+            print(error, file=sys.stderr)
+        return 1
 
     rows.sort(key=lambda item: OBJECTS.index(str(item["requested_name"])))
 
     manifest = {
-        "schema": "romer.jpl.sbdb.source-capture.v1",
+        "schema": "romer.jpl.sbdb.source-capture.v1.1",
         "endpoint": SBDB_ENDPOINT,
         "objects": manifest_objects,
         "errors": errors,
@@ -263,6 +318,10 @@ def main() -> int:
             "mark_iv": "Post-mission successor/next model of Mark III; not current capacity input",
             "capacity_basis": "Active Mark III/capture-capable units x 1 m3",
         },
+        "normalization_guardrails": [
+            "Orbit elements are keyed by JPL element name, not case-folded labels.",
+            "Perihelion q and aphelion Q/ad are validated using q < a < Q and a(1±e).",
+        ],
     }
 
     summary_text = json.dumps(rows, ensure_ascii=False, indent=2, sort_keys=False) + "\n"
@@ -271,7 +330,7 @@ def main() -> int:
     changed |= write_csv(SUMMARY_CSV, rows)
     changed |= write_if_changed(MANIFEST_JSON, manifest_text)
 
-    print(json.dumps({"captured": len(results), "errors": errors, "changed": changed}, indent=2))
+    print(json.dumps({"captured": len(rows), "errors": errors, "changed": changed}, indent=2))
     return 0 if not errors else 2
 
 
