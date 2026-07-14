@@ -1,0 +1,52 @@
+{
+  "schema_name": "cluster_neighbour_matrix_fields",
+  "version": "2026-07-14",
+  "primary_workbook": "Asteroid_Strategic_Mapping_Base_withRocks",
+  "primary_sheet": "Cluster Neighbour Matrix",
+  "purpose": "Bounded orbital-element analogue graph for active M1-M3 branches.",
+  "fields": [
+    {"name": "Neighbour_ID", "type": "string"},
+    {"name": "Anchor", "type": "string"},
+    {"name": "Candidate", "type": "string"},
+    {"name": "Candidate_Class", "type": "string"},
+    {"name": "PHA", "type": "boolean_string"},
+    {"name": "Analogue_Rank", "type": "integer"},
+    {"name": "Normalized_Orbit_Distance", "type": "number"},
+    {"name": "Delta_a_AU", "type": "number"},
+    {"name": "Delta_e", "type": "number"},
+    {"name": "Delta_i_deg", "type": "number"},
+    {"name": "Delta_q_AU", "type": "number"},
+    {"name": "Delta_Q_AU", "type": "number"},
+    {"name": "Diameter_km", "type": "number_or_blank"},
+    {"name": "Taxonomy", "type": "string_or_blank"},
+    {"name": "Evidence_Status", "type": "string"},
+    {"name": "Review_Status", "type": "string"},
+    {"name": "Source_Surface", "type": "string"},
+    {"name": "Source_Range", "type": "string"},
+    {"name": "M1_3m3_Interface_Context", "type": "string"},
+    {"name": "M2_7m3_Interface_Context", "type": "string"},
+    {"name": "M3_11m3_Interface_Context", "type": "string"},
+    {"name": "Window_Evidence", "type": "string"},
+    {"name": "Status", "type": "string"},
+    {"name": "Next_Action", "type": "string"},
+    {"name": "Interpretation_Limit", "type": "string"}
+  ],
+  "distance_model": {
+    "features": ["a", "e", "i", "q", "Q"],
+    "scaling": "interquartile-range robust scaling across the active NEA catalogue subset",
+    "weights": {"a": 1.0, "e": 1.0, "i": 0.7, "q": 0.8, "Q": 0.8},
+    "same_subclass_preference": 0.25,
+    "selection": "top three non-anchor candidates per active branch"
+  },
+  "guardrails": [
+    "Orbital analogue distance is not instantaneous spatial proximity.",
+    "Do not infer transfer cost, launch suitability, route suitability, mining feasibility or final target rank.",
+    "Do not compare asteroid whole-body volume directly with 3/7/11 m3 interface capacity.",
+    "Repeated candidates under multiple anchors are graph edges, not duplicate objects.",
+    "Source and window enrichment must pass the canonical JPL signature, invariant, coverage and cache validations."
+  ],
+  "current_hardware_canon": {
+    "current_to_date": ["Mark III", "Mark V"],
+    "post_mission_successor": ["Mark IV"]
+  }
+}
