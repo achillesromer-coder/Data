@@ -1,0 +1,55 @@
+{
+  "schema": "romer.jpl.neighbour.bootstrap.manifest.v1",
+  "captured_at": "2026-07-14",
+  "capture_mode": "direct bootstrap using the same validated public JPL source and Horizons logic",
+  "reason": "The first default-branch workflow output had not appeared after PR #4 promotion; execution continued without treating an absent workflow result as success.",
+  "source": {
+    "endpoint": "https://ssd-api.jpl.nasa.gov/sbdb.api",
+    "requested_candidates": 16,
+    "captured_candidates": 16,
+    "orbit_invariant_pass": 16,
+    "errors": []
+  },
+  "windows": {
+    "endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+    "objects": 16,
+    "comparison_windows": [
+      "2027-06-01/2027-07-01",
+      "2028-01-01/2028-02-01",
+      "2028-08-01/2028-09-01"
+    ],
+    "normalized_window_rows": 48,
+    "errors": []
+  },
+  "candidate_set": [
+    "Likho",
+    "Ninkasi",
+    "Pocahontas",
+    "Duende",
+    "Agni",
+    "Kamo`oalewa",
+    "Vishnu",
+    "Cerberus",
+    "Minos",
+    "Golevka",
+    "Lugh",
+    "Mithra",
+    "Vinciguerra",
+    "Pan",
+    "Ptah",
+    "Toro"
+  ],
+  "raw_bundle": {
+    "drive_file_name": "JPL_Neighbour_Bootstrap_2026-07-14.zip",
+    "drive_url": "https://drive.google.com/file/d/17cpJaZ0h2ZQXMj0BYQUJSJNZjbtESnKl/view",
+    "contents": "Raw SBDB and Horizons JSON payloads plus normalized JSON/CSV manifests and summaries."
+  },
+  "ingestion_state": "Captured and preserved; workbook field-by-field comparison remains active.",
+  "scheduled_workflow_state": "Installed on main; first canonical neighbour output commit not yet observed at bootstrap close.",
+  "interpretation_limit": "Orbital source and descriptive Earth-relative range/time evidence only; not present proximity, transfer cost, launch, route, mining or target feasibility.",
+  "operating_canon": {
+    "current_hardware": ["Mark III", "Mark V"],
+    "mark_iv": "Post-mission successor/next model of Mark III; not current input.",
+    "capacity": "M1/M2/M3 interface allocation is 3/7/11 m3; not whole-body asteroid fit."
+  }
+}
