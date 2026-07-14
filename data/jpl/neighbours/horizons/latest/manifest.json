@@ -1,0 +1,335 @@
+{
+  "endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+  "errors": [],
+  "interpretation_limit": "Descriptive Earth-relative range/time comparison only; not launch, delta-v, route, mining or target feasibility.",
+  "objects": {
+    "agni": {
+      "captured_at": "2026-07-14T09:18:55+00:00",
+      "designation": "398188",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/agni.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Agni",
+      "sha256": "d04f3259350cb4c6ecb76335177d358d42a1ab4e68c79955a1409f67f8952626",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27398188%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "cerberus": {
+      "captured_at": "2026-07-14T09:19:03+00:00",
+      "designation": "1865",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/cerberus.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Cerberus",
+      "sha256": "90cfb358a19552b941382ea931a9ed0839b02f3dd82b4ade1b17345a183651cf",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%271865%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "duende": {
+      "captured_at": "2026-07-14T09:18:53+00:00",
+      "designation": "367943",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/duende.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Duende",
+      "sha256": "33bfa57c35a4109f7e94bd28393eb0286651716dea8aa18fa308187a1a8fe6e0",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27367943%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "golevka": {
+      "captured_at": "2026-07-14T09:19:08+00:00",
+      "designation": "6489",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/golevka.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Golevka",
+      "sha256": "48b09591090bed696b4fd9778eda1f781b9c03d3486b49f4f0eb8ee2cb65f7a5",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%276489%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "kamo-oalewa": {
+      "captured_at": "2026-07-14T09:18:58+00:00",
+      "designation": "469219",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/kamo-oalewa.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Kamo`oalewa",
+      "sha256": "0082a505f08eb5ae0c5bdbb04a7449ee2896f45adfe389b4d9d9fab8edb7234a",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27469219%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "likho": {
+      "captured_at": "2026-07-14T09:18:46+00:00",
+      "designation": "785648",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/likho.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Likho",
+      "sha256": "0182f34bfcd64dc60838dd56959905f1b3b42bb65c2f8b8a4eef5114f4ba2f68",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27785648%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "lugh": {
+      "captured_at": "2026-07-14T09:19:10+00:00",
+      "designation": "217628",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/lugh.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Lugh",
+      "sha256": "54934d01dc069bf3c96b615d542b8d3107c90cb24f22d82a0d87653f48bfbac5",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27217628%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "minos": {
+      "captured_at": "2026-07-14T09:19:05+00:00",
+      "designation": "6239",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/minos.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Minos",
+      "sha256": "d4db24cd21fc4dff111df051f8b33dc03aed9a9fc2f4888b6d32cb9a69f3f024",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%276239%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "mithra": {
+      "captured_at": "2026-07-14T09:19:12+00:00",
+      "designation": "4486",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/mithra.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Mithra",
+      "sha256": "06911a3d7ffb0db69f7026f00a0c467591f458ffa43d51af141a0ed878aae774",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%274486%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "ninkasi": {
+      "captured_at": "2026-07-14T09:18:48+00:00",
+      "designation": "4947",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/ninkasi.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Ninkasi",
+      "sha256": "0945233e616d70260e5121a459510f4442ae5e1bc34f1f47aeb54bc6d0abc2ad",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%274947%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "pan": {
+      "captured_at": "2026-07-14T09:19:18+00:00",
+      "designation": "4450",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/pan.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Pan",
+      "sha256": "79283bae085ac435f04572cc1b334bfe911663213816c5fe2851e63696727fac",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%274450%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "pocahontas": {
+      "captured_at": "2026-07-14T09:18:51+00:00",
+      "designation": "4487",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/pocahontas.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Pocahontas",
+      "sha256": "86027d624495c56d4c44cc93eb1991d0f3700b2a1519f75cc8c4e83e3ed62f15",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%274487%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "ptah": {
+      "captured_at": "2026-07-14T09:19:20+00:00",
+      "designation": "5011",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/ptah.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Ptah",
+      "sha256": "a2989fb55316639dbe096bb8bbe0c73888f2523e31318347c6e7891b6396807f",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%275011%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "toro": {
+      "captured_at": "2026-07-14T09:19:22+00:00",
+      "designation": "1685",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/toro.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Toro",
+      "sha256": "017808a212ebc122299e5daf69da712d5b425be1a8347b9e9defe2d0eef5973c",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%271685%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "vinciguerra": {
+      "captured_at": "2026-07-14T09:19:15+00:00",
+      "designation": "154991",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/vinciguerra.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Vinciguerra",
+      "sha256": "de2603acf024a2c8bdf433ffb87810759a289e95ab05c952d1170c5540c9a89a",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27154991%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    },
+    "vishnu": {
+      "captured_at": "2026-07-14T09:19:00+00:00",
+      "designation": "4034",
+      "full_span_sample_count": 459,
+      "last_refresh_error": null,
+      "raw_path": "data/jpl/neighbours/horizons/latest/vishnu.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Vishnu",
+      "sha256": "05c0707b0c0e281546d3d1d6a2ffb267b82d6bfcf782de13a402011d47e9b3ff",
+      "signature_version": "1.2",
+      "source_url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%274034%3B%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27500%40399%27&START_TIME=%272027-06-01%27&STOP_TIME=%272028-09-01%27&STEP_SIZE=%271+d%27&TIME_TYPE=%27TDB%27&OUT_UNITS=%27AU-D%27&REF_SYSTEM=%27ICRF%27&REF_PLANE=%27ECLIPTIC%27&VEC_TABLE=%276%27&VEC_CORR=%27NONE%27&CSV_FORMAT=%27YES%27&VEC_LABELS=%27YES%27",
+      "status": "captured",
+      "window_sample_counts": {
+        "August 2028": 31,
+        "January 2028": 31,
+        "June 2027": 30
+      }
+    }
+  },
+  "operating_state": {
+    "capacity_basis": "Active Mark III/capture-capable units x 1 m3",
+    "current_hardware": [
+      "Mark III",
+      "Mark V"
+    ],
+    "mark_iv": "Post-mission successor/next model of Mark III; not current input"
+  },
+  "query_span": {
+    "start": "2027-06-01",
+    "step": "1 day",
+    "stop": "2028-09-01"
+  },
+  "schema": "romer.jpl.horizons.comparative-windows.v1",
+  "validation": [
+    "JSON signature/version required.",
+    "Earth (399) centre required.",
+    "Expected small-body designation required in result header.",
+    "At least 400 ordered daily samples required across the full query span.",
+    "At least 28 samples required per month-wide comparison window.",
+    "All ranges must be positive.",
+    "Transient upstream failures may use only cached raw payloads that pass all validations."
+  ],
+  "windows": [
+    {
+      "label": "June 2027",
+      "start": "2027-06-01",
+      "stop_exclusive": "2027-07-01"
+    },
+    {
+      "label": "January 2028",
+      "start": "2028-01-01",
+      "stop_exclusive": "2028-02-01"
+    },
+    {
+      "label": "August 2028",
+      "start": "2028-08-01",
+      "stop_exclusive": "2028-09-01"
+    }
+  ]
+}

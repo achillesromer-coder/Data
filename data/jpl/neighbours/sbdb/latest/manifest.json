@@ -1,0 +1,212 @@
+{
+  "endpoint": "https://ssd-api.jpl.nasa.gov/sbdb.api",
+  "errors": [],
+  "normalization_guardrails": [
+    "Orbit elements are keyed by JPL element name, not case-folded labels.",
+    "Perihelion q and aphelion Q/ad are validated using q < a < Q and a(1±e).",
+    "Transient upstream failures retain only previously captured raw payloads that still pass signature and orbit-invariant validation."
+  ],
+  "objects": {
+    "agni": {
+      "captured_at": "2026-07-14T09:17:35+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/agni.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Agni",
+      "sha256": "747550c729e2cbc3314e01b2e2b7f3002dc0d0a7863681862d7410f11f3807aa",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Agni&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "cerberus": {
+      "captured_at": "2026-07-14T09:17:40+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/cerberus.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Cerberus",
+      "sha256": "64e4daafc7006665be512c7f3d9570bd0fd4ab5ecdd8e7571c04b5454d76d018",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Cerberus&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "duende": {
+      "captured_at": "2026-07-14T09:17:34+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/duende.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Duende",
+      "sha256": "cebf45dfdb6c730c6f6ecdbd688db164a9a7433568f5cdeff4984addb300e2bc",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Duende&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "golevka": {
+      "captured_at": "2026-07-14T09:17:47+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/golevka.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Golevka",
+      "sha256": "522ea24993305e68c50e3bf9ec44e13b37446d1af51b1afbf2a20b8a2cab5ddc",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Golevka&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "kamo-oalewa": {
+      "captured_at": "2026-07-14T09:17:37+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/kamo-oalewa.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Kamo`oalewa",
+      "sha256": "ac64a979e3eb2b05f48e124737ac7650facd0006368fb5770dc6ff5d8bb9bd3e",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Kamo%60oalewa&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "likho": {
+      "captured_at": "2026-07-14T09:17:26+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/likho.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Likho",
+      "sha256": "cf027decd944deb92386912b9c09b68f5d0905a8c560e4b9cedf01840982a7d0",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Likho&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "lugh": {
+      "captured_at": "2026-07-14T09:17:57+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/lugh.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Lugh",
+      "sha256": "f91a503b7e107ac64cdbcaf31750a1b5e7095db4fbd730cf8a7227a3f850bbf3",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Lugh&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "minos": {
+      "captured_at": "2026-07-14T09:17:42+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/minos.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Minos",
+      "sha256": "94d39966b4346c8c583e88494d3b298cc31f7f2b349c3d8aedb532db5c0b0d53",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Minos&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "mithra": {
+      "captured_at": "2026-07-14T09:18:02+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/mithra.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Mithra",
+      "sha256": "9143a93a11c211ab40d2dddba67890ae92a8b3c304e0bd1d365b965447f349cf",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Mithra&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "ninkasi": {
+      "captured_at": "2026-07-14T09:17:31+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/ninkasi.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Ninkasi",
+      "sha256": "13150ad86701e4fdc118e79cd1f0218de806d2d41aa033fa3e47df7ff443c42f",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Ninkasi&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "pan": {
+      "captured_at": "2026-07-14T09:18:24+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/pan.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Pan",
+      "sha256": "8c0ac40290ac187f5144d4eb34d254c7ee1b889108b4f5f04541cfbdc8962ee8",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Pan&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "pocahontas": {
+      "captured_at": "2026-07-14T09:17:32+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/pocahontas.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Pocahontas",
+      "sha256": "2d318af8729161e79265ab38775b3073368938b83b4ae39bab266baf0c55db0f",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Pocahontas&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "ptah": {
+      "captured_at": "2026-07-14T09:18:25+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/ptah.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Ptah",
+      "sha256": "2d7ddad8285a25ccd93332a9bc6084f610b875644a2c852cb3ece5f1ad09e4bf",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Ptah&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "toro": {
+      "captured_at": "2026-07-14T09:18:45+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/toro.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Toro",
+      "sha256": "e3afa14adda335ec85c47f8efbc4f74a467d386eb907dbaeb73b2c6afd57ac4e",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Toro&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "vinciguerra": {
+      "captured_at": "2026-07-14T09:18:22+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/vinciguerra.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Vinciguerra",
+      "sha256": "4379ead0727e16213c452251fb29cd3de0c64a7ecff8d802937780b19c6b50ec",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Vinciguerra&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "vishnu": {
+      "captured_at": "2026-07-14T09:17:39+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/neighbours/sbdb/latest/vishnu.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Vishnu",
+      "sha256": "2d966c695edad91250184248af5e3b43396bee3260f842594dffa488f8325903",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Vishnu&phys-par=1&ca-data=1",
+      "status": "captured"
+    }
+  },
+  "operating_state": {
+    "capacity_basis": "Active Mark III/capture-capable units x 1 m3",
+    "current_hardware": [
+      "Mark III",
+      "Mark V"
+    ],
+    "mark_iv": "Post-mission successor/next model of Mark III; not current capacity input"
+  },
+  "schema": "romer.jpl.sbdb.source-capture.v1.2"
+}
