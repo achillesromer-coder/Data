@@ -1,4 +1,4 @@
-name: JPL SBDB Source Capture
+name: JPL Source Capture and Comparative Windows
 
 on:
   workflow_dispatch:
@@ -10,19 +10,20 @@ on:
     paths:
       - .github/workflows/jpl-sbdb-source-capture.yml
       - scripts/fetch_jpl_source_batch.py
+      - scripts/fetch_jpl_horizons_windows.py
 
 permissions:
   contents: write
 
 concurrency:
-  group: jpl-sbdb-source-capture-${{ github.ref }}
+  group: jpl-source-capture-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   capture:
-    name: Capture JPL SBDB priority objects
+    name: Capture JPL priority sources and comparative windows
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -47,15 +48,26 @@ jobs:
             exit "$code"
           fi
 
-      - name: Commit changed source snapshots
+      - name: Fetch and normalize JPL Horizons comparative windows
+        shell: bash
+        run: |
+          set +e
+          python scripts/fetch_jpl_horizons_windows.py
+          code=$?
+          set -e
+          if [ "$code" -gt 2 ]; then
+            exit "$code"
+          fi
+
+      - name: Commit changed JPL source snapshots
         shell: bash
         run: |
           git config user.name "cognigrex-source-capture"
           git config user.email "actions@users.noreply.github.com"
-          git add data/jpl/sbdb/latest
+          git add data/jpl/sbdb/latest data/jpl/horizons/latest
           if git diff --cached --quiet; then
-            echo "No JPL payload changes detected."
+            echo "No JPL source changes detected."
             exit 0
           fi
-          git commit -m "Refresh JPL SBDB priority source snapshots"
+          git commit -m "Refresh JPL source snapshots and comparative windows"
           git push origin "HEAD:${GITHUB_REF_NAME}"
