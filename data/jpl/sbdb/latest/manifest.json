@@ -1,0 +1,92 @@
+{
+  "endpoint": "https://ssd-api.jpl.nasa.gov/sbdb.api",
+  "errors": [],
+  "normalization_guardrails": [
+    "Orbit elements are keyed by JPL element name, not case-folded labels.",
+    "Perihelion q and aphelion Q/ad are validated using q < a < Q and a(1±e).",
+    "Transient upstream failures retain only previously captured raw payloads that still pass signature and orbit-invariant validation."
+  ],
+  "objects": {
+    "anteros": {
+      "captured_at": "2026-07-14T08:06:12+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/sbdb/latest/anteros.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Anteros",
+      "sha256": "6424ac07d907269019d21df0e7d40153fe893c1787c16fb4f91d2c09f08a2706",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Anteros&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "apollo": {
+      "captured_at": "2026-07-14T08:10:53+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/sbdb/latest/apollo.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Apollo",
+      "sha256": "5f919608b6e5831367585dc96f64a5369120f39c9242a326e7befb3136ae553c",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Apollo&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "apophis": {
+      "captured_at": "2026-07-14T08:06:12+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/sbdb/latest/apophis.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Apophis",
+      "sha256": "9c19d3bfa66843450b13b18b065a420ed80bb066d5badafd60c8d536c7d0831b",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Apophis&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "castalia": {
+      "captured_at": "2026-07-14T08:06:12+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/sbdb/latest/castalia.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Castalia",
+      "sha256": "5fc4170e7c0ff255300e8e8727a850394d7c42668c354de947ff269e8853cc88",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Castalia&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "eros": {
+      "captured_at": "2026-07-14T08:10:55+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/sbdb/latest/eros.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Eros",
+      "sha256": "da3a8448c1d9d6cb7264ff72e905a622c6efe291177b8bb5150c8d2b5a1e6b7c",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Eros&phys-par=1&ca-data=1",
+      "status": "captured"
+    },
+    "toutatis": {
+      "captured_at": "2026-07-14T08:10:47+00:00",
+      "last_refresh_error": null,
+      "orbit_invariant_status": "PASS",
+      "raw_path": "data/jpl/sbdb/latest/toutatis.json",
+      "refresh_status": "CAPTURED_CURRENT",
+      "requested_name": "Toutatis",
+      "sha256": "4fa8e7df96c695e0e3f10798b21e8cbf1427fafff3d156ab228215191e5d599c",
+      "signature_version": "1.3",
+      "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Toutatis&phys-par=1&ca-data=1",
+      "status": "captured"
+    }
+  },
+  "operating_state": {
+    "capacity_basis": "Active Mark III/capture-capable units x 1 m3",
+    "current_hardware": [
+      "Mark III",
+      "Mark V"
+    ],
+    "mark_iv": "Post-mission successor/next model of Mark III; not current capacity input"
+  },
+  "schema": "romer.jpl.sbdb.source-capture.v1.2"
+}
