@@ -11,6 +11,8 @@ on:
       - .github/workflows/jpl-sbdb-source-capture.yml
       - scripts/fetch_jpl_source_batch.py
       - scripts/fetch_jpl_horizons_windows.py
+      - scripts/fetch_jpl_neighbour_batch.py
+      - scripts/fetch_jpl_neighbour_horizons.py
 
 permissions:
   contents: write
@@ -21,9 +23,9 @@ concurrency:
 
 jobs:
   capture:
-    name: Capture JPL priority sources and comparative windows
+    name: Capture JPL priority and neighbour comparison data
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
 
     steps:
       - name: Check out repository
@@ -37,7 +39,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Fetch and normalize JPL SBDB payloads
+      - name: Fetch and normalize priority SBDB payloads
         shell: bash
         run: |
           set +e
@@ -48,11 +50,33 @@ jobs:
             exit "$code"
           fi
 
-      - name: Fetch and normalize JPL Horizons comparative windows
+      - name: Fetch and normalize priority Horizons comparative windows
         shell: bash
         run: |
           set +e
           python scripts/fetch_jpl_horizons_windows.py
+          code=$?
+          set -e
+          if [ "$code" -gt 2 ]; then
+            exit "$code"
+          fi
+
+      - name: Fetch and normalize bounded neighbour SBDB payloads
+        shell: bash
+        run: |
+          set +e
+          python scripts/fetch_jpl_neighbour_batch.py
+          code=$?
+          set -e
+          if [ "$code" -gt 2 ]; then
+            exit "$code"
+          fi
+
+      - name: Fetch and normalize bounded neighbour Horizons windows
+        shell: bash
+        run: |
+          set +e
+          python scripts/fetch_jpl_neighbour_horizons.py
           code=$?
           set -e
           if [ "$code" -gt 2 ]; then
@@ -64,10 +88,10 @@ jobs:
         run: |
           git config user.name "cognigrex-source-capture"
           git config user.email "actions@users.noreply.github.com"
-          git add data/jpl/sbdb/latest data/jpl/horizons/latest
+          git add data/jpl/sbdb/latest data/jpl/horizons/latest data/jpl/neighbours/sbdb/latest data/jpl/neighbours/horizons/latest
           if git diff --cached --quiet; then
             echo "No JPL source changes detected."
             exit 0
           fi
-          git commit -m "Refresh JPL source snapshots and comparative windows"
+          git commit -m "Refresh JPL priority and neighbour comparison data"
           git push origin "HEAD:${GITHUB_REF_NAME}"
