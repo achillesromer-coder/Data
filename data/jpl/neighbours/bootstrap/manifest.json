@@ -3,6 +3,7 @@
   "captured_at": "2026-07-14",
   "capture_mode": "direct bootstrap using the same validated public JPL source and Horizons logic",
   "reason": "The first default-branch workflow output had not appeared after PR #4 promotion; execution continued without treating an absent workflow result as success.",
+  "historical_status": "SUPERSEDED_BY_CANONICAL_MAIN_OUTPUT",
   "source": {
     "endpoint": "https://ssd-api.jpl.nasa.gov/sbdb.api",
     "requested_candidates": 16,
@@ -41,11 +42,23 @@
   ],
   "raw_bundle": {
     "drive_file_name": "JPL_Neighbour_Bootstrap_2026-07-14.zip",
-    "drive_url": "https://drive.google.com/file/d/17cpJaZ0h2ZQXMj0BYQUJSJNZjbtESnKl/view",
-    "contents": "Raw SBDB and Horizons JSON payloads plus normalized JSON/CSV manifests and summaries."
+    "drive_url": null,
+    "availability": "UNAVAILABLE_NOT_FOUND",
+    "note": "The previously recorded Drive identifier returned not found and must not be cited or used as evidence."
   },
-  "ingestion_state": "Captured and preserved; workbook field-by-field comparison remains active.",
-  "scheduled_workflow_state": "Installed on main; first canonical neighbour output commit not yet observed at bootstrap close.",
+  "canonical_supersession": {
+    "commit": "db1ec4064ffe4b800a897cec251001f8380ede0b",
+    "sbdb_manifest": "data/jpl/neighbours/sbdb/latest/manifest.json",
+    "sbdb_summary": "data/jpl/neighbours/sbdb/latest/summary.csv",
+    "horizons_manifest": "data/jpl/neighbours/horizons/latest/manifest.json",
+    "horizons_summary": "data/jpl/neighbours/horizons/latest/summary.csv",
+    "source_candidates": 16,
+    "orbit_invariant_pass": 16,
+    "window_rows": 48,
+    "manifest_errors": 0
+  },
+  "ingestion_state": "Canonical main output reconciled into both workbooks; bootstrap retained as historical execution evidence only.",
+  "scheduled_workflow_state": "COMPLETE_AND_AUTHORITATIVE",
   "interpretation_limit": "Orbital source and descriptive Earth-relative range/time evidence only; not present proximity, transfer cost, launch, route, mining or target feasibility.",
   "operating_canon": {
     "current_hardware": ["Mark III", "Mark V"],
