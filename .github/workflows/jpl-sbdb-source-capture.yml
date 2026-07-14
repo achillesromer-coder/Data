@@ -1,0 +1,61 @@
+name: JPL SBDB Source Capture
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * *"
+  push:
+    branches:
+      - ops/jpl-source-capture
+    paths:
+      - .github/workflows/jpl-sbdb-source-capture.yml
+      - scripts/fetch_jpl_source_batch.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jpl-sbdb-source-capture-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    name: Capture JPL SBDB priority objects
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch and normalize JPL SBDB payloads
+        shell: bash
+        run: |
+          set +e
+          python scripts/fetch_jpl_source_batch.py
+          code=$?
+          set -e
+          if [ "$code" -gt 2 ]; then
+            exit "$code"
+          fi
+
+      - name: Commit changed source snapshots
+        shell: bash
+        run: |
+          git config user.name "cognigrex-source-capture"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/jpl/sbdb/latest
+          if git diff --cached --quiet; then
+            echo "No JPL payload changes detected."
+            exit 0
+          fi
+          git commit -m "Refresh JPL SBDB priority source snapshots"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
