@@ -1,0 +1,46 @@
+{
+  "schema_name": "m1_m3_operational_detail_fields",
+  "version": "2026-07-14",
+  "source_workbook": "Type1_Asteroid_Operating_Workbook",
+  "surfaces": [
+    "Mission 1 Detail",
+    "Mission 2 Detail",
+    "Mission 3 Detail",
+    "Cluster Sequence",
+    "Pre-Operational Expansion",
+    "Open Build Tasks",
+    "Readiness Gates"
+  ],
+  "fields": [
+    {"name": "Phase_ID", "type": "string", "required": true, "description": "Stable mission row identifier such as M1-001."},
+    {"name": "Mission", "type": "string", "required": true, "description": "Mission label such as M1, M2, or M3."},
+    {"name": "Mission_Shorthand", "type": "string", "required": true, "description": "Compact branch shorthand such as 1.6.27.Ero."},
+    {"name": "Start_Window", "type": "string", "required": false, "description": "Comparative branch window or selected branch label."},
+    {"name": "Primary_Target", "type": "string", "required": false, "description": "Candidate body, cluster, or pending selected target."},
+    {"name": "Target_Role", "type": "string", "required": false, "description": "Candidate branch role, support role, tag-case role, or consolidation role."},
+    {"name": "Capacity_m3", "type": "number_or_string", "required": true, "description": "Planning capacity in cubic metres or loop capacity range."},
+    {"name": "Unit_Count", "type": "number_or_string", "required": true, "description": "Planning unit count or loop count range."},
+    {"name": "Added_Units", "type": "number_or_string", "required": true, "description": "Additional units relative to M1 base."},
+    {"name": "Source_Status", "type": "string", "required": true, "description": "Source-backed, route-ready, payload pending, or awaiting ranking state."},
+    {"name": "Cluster_Status", "type": "string", "required": true, "description": "Cluster/neighbour comparison state."},
+    {"name": "Operations_Status", "type": "string", "required": true, "description": "Operations planning state."},
+    {"name": "LS_Cognigrex_Action", "type": "string", "required": false, "description": "Action for LS/Cognigrex to perform or queue."},
+    {"name": "Asteroid_Workbook_Source", "type": "string", "required": false, "description": "Exact source workbook surface or range reference."},
+    {"name": "Required_Input", "type": "string", "required": false, "description": "Required upstream data before closure."},
+    {"name": "Output_Target", "type": "string", "required": false, "description": "Operations workbook output surface."},
+    {"name": "Owner", "type": "string", "required": false, "description": "Agent or floor owner."},
+    {"name": "Status", "type": "enum", "allowed_values": ["OPEN", "IN PROGRESS", "ACTIVE", "QUEUED", "COMPLETE", "HOLD"], "required": true},
+    {"name": "Priority", "type": "enum", "allowed_values": ["P0", "P1", "P2", "P3"], "required": false},
+    {"name": "Next_Action", "type": "string", "required": false, "description": "Next concrete action."},
+    {"name": "Dependency", "type": "string", "required": false, "description": "Upstream dependency or blocking input."},
+    {"name": "Review_Surface", "type": "string", "required": false, "description": "Readiness gate, QA, or publish queue reference."},
+    {"name": "Git_Surface", "type": "string", "required": false, "description": "Schema/doc/scaffold reference in Git."},
+    {"name": "Notes", "type": "string", "required": false, "description": "Human-readable guardrails or context."}
+  ],
+  "guardrails": [
+    "Do not store plaintext secrets in workbook or Git.",
+    "Do not infer final target selection from branch rows alone.",
+    "Do not infer trajectory, delta-v, window suitability or operational execution from source identity alone.",
+    "Keep asteroid database logic in the asteroid workbook and operations sequencing in the operations workbook."
+  ]
+}
