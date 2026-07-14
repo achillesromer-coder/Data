@@ -1,0 +1,32 @@
+{
+  "schema_name": "capacity_model_unit_count_fields",
+  "version": "2026-07-14",
+  "purpose": "Corrected operations workbook capacity schema: capacity is driven by active Mark III / capture-capable unit count, not mission index.",
+  "primary_workbook": "Type1_Asteroid_Operating_Workbook",
+  "primary_sheet": "Mining Capacity Model",
+  "fields": [
+    {"name": "Mission", "type": "integer", "description": "Mission number."},
+    {"name": "Mission_Code", "type": "string", "description": "Mission shorthand such as M1, M2, M3."},
+    {"name": "Phase", "type": "string", "description": "Phase/operational grouping."},
+    {"name": "New_MarkIII_or_Capture_Units", "type": "string_or_integer", "description": "New Mark III or capture-capable units introduced in the mission. M1 may include active plus QA/spare split."},
+    {"name": "New_MarkV_Tag_Companions", "type": "integer", "description": "Mark V tag/diagnostic companions introduced under the current serial plan."},
+    {"name": "Cumulative_MarkIII_Serials", "type": "integer", "description": "Cumulative Mark III serial/build count carried by the operating plan."},
+    {"name": "Active_Capture_Units", "type": "integer", "description": "Active Mark III/capture-capable units used for capacity modelling."},
+    {"name": "Capacity_m3", "type": "number", "description": "Active capture units multiplied by 1 m3 interface volume."},
+    {"name": "Tag_Capacity_Asteroids", "type": "integer", "description": "Tagging capacity derived from active capture units and Mark V companion logic."},
+    {"name": "PhaseII_Batch_Envelope", "type": "string", "description": "Separate source-backed 3/5/7-unit batch envelope reference; not the sole capacity value."},
+    {"name": "Batch_Interface_m3", "type": "number", "description": "Interface capacity associated with the documented batch envelope where applicable."},
+    {"name": "Redundancy_Logic", "type": "string", "description": "Redundancy or fallback logic for the fleet state."},
+    {"name": "Planning_Status", "type": "enum", "allowed_values": ["DETAILED", "SCAFFOLDED", "ROLL-UP", "DEFERRED"]},
+    {"name": "Primary_Use", "type": "string", "description": "Role of the mission row in the operations workbook."},
+    {"name": "Source_Basis", "type": "string", "description": "Document or memory basis for the row."},
+    {"name": "Workbook_Route", "type": "string", "description": "Downstream workbook surfaces that consume the row."},
+    {"name": "Cognigrex_Action", "type": "string", "description": "Expected Cognigrex/LS analysis action."},
+    {"name": "Notes", "type": "string", "description": "Operational notes and drift-prevention guardrails."}
+  ],
+  "guardrails": [
+    "Do not compute capacity from mission index.",
+    "Do not collapse Phase II 3/5/7 batch envelope into total active fleet count.",
+    "Do not promote Mark IV capacity without direct source evidence or explicit user override row."
+  ]
+}
