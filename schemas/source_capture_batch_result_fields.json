@@ -1,0 +1,36 @@
+{
+  "schema_name": "source_capture_batch_result_fields",
+  "version": "2026-07-14",
+  "source_workbook": "Asteroid_Strategic_Mapping_Base_withRocks",
+  "primary_sheet": "Mission 1 Source Capture",
+  "purpose": "Represent source-capture batch results, including payload-ready, captured, pending, compared, and conflict states.",
+  "fields": [
+    {"name": "capture_id", "type": "string", "required": true},
+    {"name": "object_id", "type": "string", "required": true},
+    {"name": "name", "type": "string", "required": true},
+    {"name": "capture_source", "type": "string", "required": true},
+    {"name": "source_url", "type": "string", "required": true},
+    {"name": "capture_window_duration", "type": "string", "required": true},
+    {"name": "payload_status", "type": "enum", "allowed": ["ROUTE READY / PAYLOAD PENDING", "SNAPSHOT CAPTURED / SBDB API v1.3", "SOURCE SNAPSHOT COMPLETE / ORBIT VERIFIED", "PAYLOAD FAILED", "CONFLICT HOLD"]},
+    {"name": "captured_fields", "type": "string", "required": false},
+    {"name": "conflicting_values", "type": "string", "required": false},
+    {"name": "workbook_source_range", "type": "string", "required": true},
+    {"name": "candidate_range", "type": "string", "required": true},
+    {"name": "canon_update_policy", "type": "string", "required": true},
+    {"name": "cognigrex_action", "type": "string", "required": true},
+    {"name": "appendix_log_range", "type": "string", "required": true},
+    {"name": "status", "type": "string", "required": true},
+    {"name": "notes", "type": "string", "required": false},
+    {"name": "date_created", "type": "date_or_string", "required": true},
+    {"name": "publish_queue_link", "type": "string", "required": false},
+    {"name": "safety_label", "type": "string", "required": false},
+    {"name": "priority", "type": "enum", "allowed": ["Low", "Normal", "High"]}
+  ],
+  "guardrails": [
+    "Do not store plaintext credentials.",
+    "Do not silently overwrite workbook physical proxy fields from a partial source payload.",
+    "Treat route-ready rows as not captured until payload evidence is recorded.",
+    "Log conflicts in Appendix & Log before canon update.",
+    "Do not infer trajectory, path, delta-v, mining feasibility or window suitability from object/orbit capture alone."
+  ]
+}
