@@ -1,7 +1,7 @@
 {
   "schema_name": "capacity_model_unit_count_fields",
-  "version": "2026-07-14",
-  "purpose": "Corrected operations workbook capacity schema: capacity is driven by active Mark III / capture-capable unit count, not mission index.",
+  "version": "2026-07-14.2",
+  "purpose": "Corrected operations workbook capacity schema: capacity is driven by active Mark III / capture-capable unit count, not mission index. Current/to-date hardware is Mark III + Mark V only; Mark IV is post-mission successor lineage, not current capacity input.",
   "primary_workbook": "Type1_Asteroid_Operating_Workbook",
   "primary_sheet": "Mining Capacity Model",
   "fields": [
@@ -19,14 +19,22 @@
     {"name": "Redundancy_Logic", "type": "string", "description": "Redundancy or fallback logic for the fleet state."},
     {"name": "Planning_Status", "type": "enum", "allowed_values": ["DETAILED", "SCAFFOLDED", "ROLL-UP", "DEFERRED"]},
     {"name": "Primary_Use", "type": "string", "description": "Role of the mission row in the operations workbook."},
-    {"name": "Source_Basis", "type": "string", "description": "Document or memory basis for the row."},
+    {"name": "Source_Basis", "type": "string", "description": "Document, user correction, or memory basis for the row."},
     {"name": "Workbook_Route", "type": "string", "description": "Downstream workbook surfaces that consume the row."},
     {"name": "Cognigrex_Action", "type": "string", "description": "Expected Cognigrex/LS analysis action."},
     {"name": "Notes", "type": "string", "description": "Operational notes and drift-prevention guardrails."}
   ],
+  "current_hardware_canon": {
+    "current_to_date": ["Mark III", "Mark V"],
+    "post_mission_successor_lineage": ["Mark IV"],
+    "facility_or_logistics_not_mark_unit": ["Luke IV"]
+  },
   "guardrails": [
     "Do not compute capacity from mission index.",
     "Do not collapse Phase II 3/5/7 batch envelope into total active fleet count.",
-    "Do not promote Mark IV capacity without direct source evidence or explicit user override row."
+    "Do not use Mark IV as current capacity-bearing hardware; Mark IV is post-mission successor lineage of Mark III.",
+    "Do not conflate Luke IV with Mark IV.",
+    "Do not promote rough historical/OCR Mark I-IV language as current canon without reconciliation.",
+    "Use explicit state labels: To-date, Planned, Post-mission, Phase III, Future."
   ]
 }
