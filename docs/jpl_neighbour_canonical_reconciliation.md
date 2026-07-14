@@ -1,6 +1,6 @@
 # JPL Neighbour Canonical Reconciliation
 
-Date: 2026-07-14
+Date: 2026-07-15
 
 ## Canonical state
 
@@ -76,14 +76,23 @@ Asteroid_Strategic_Mapping_Base_withRocks
 Cluster Neighbour Matrix!A1:Y21
 Cluster Review Pack
 Cluster Source Capture
+Cluster Enrichment Queue
+Task Roadmap
 ```
 
 Operations workbook:
 
 ```text
 Type1_Asteroid_Operating_Workbook
+Mission 1 Detail
+Mission 2 Detail
+Mission 3 Detail
 Cluster Sequence!A14:AB43
 Cluster Sequence!A45:S55
+Cluster Sequence!A57:S67
+Cluster Sequence!A69:R79
+Readiness Gates
+LS Cognigrex Handoff
 ```
 
 The operations surface contains:
@@ -91,6 +100,9 @@ The operations surface contains:
 - 18 canonical edge rows;
 - six branch evidence summaries;
 - eight first-loop comparative arrangements;
+- eight categorical evidence-sensitivity rows;
+- eight qualitative perturbation results;
+- stable M1/M2/M3 detail scaffolds with selection deferred;
 - candidate and anchor classification/evidence states;
 - exact canonical Git dependencies;
 - M1/M2/M3 interface-allocation states of 3/7/11 m3;
@@ -111,6 +123,41 @@ FLC-008 high-PHA negative-control comparator
 ```
 
 These rows are comparative evidence arrangements. They are not trajectories, launch plans, ranked recommendations or selected sequences.
+
+## Cognigrex stable-freeze
+
+The two workbooks are stable for later Cognigrex continuation under:
+
+```text
+Freeze ID: CGX-FREEZE-001
+Freeze date: 2026-07-15
+Selection state: none
+Stable completion gate: Operations Readiness Gate RG-009
+Future restart gate: Operations Readiness Gate RG-010
+```
+
+The freeze is complete because:
+
+- canonical source and window evidence is registered;
+- material candidate and anchor comparisons are resolved and traceable;
+- all current comparison and sensitivity surfaces are populated;
+- M1/M2/M3 pages are stable deferred-selection scaffolds;
+- stale payload-pending, window-pending and conflict-hold operating states have been removed;
+- historical roadmap rows are complete, superseded or deferred;
+- remaining physical gaps are explicit and non-blocking;
+- future Cognigrex read and reviewed-return surfaces are identified.
+
+## Deferred evidence backlog
+
+The following remains valid future work but does not block the stable freeze:
+
+- density and composition enrichment for anchors and neighbour candidates where primary values are absent;
+- selected albedo, diameter and taxonomy confirmation where current evidence is incomplete;
+- optional curated Asteroid Master promotion under a separate reviewed catalogue objective;
+- rerunning evidence tests after a material source or rule change;
+- future public release review.
+
+Unknown values must remain unknown until source-backed. Deferred enrichment must not introduce inferred physical values or selection claims.
 
 ## Interpretation limits
 
