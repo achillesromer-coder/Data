@@ -8,6 +8,7 @@ The current production-capable lane captures and normalises public JPL Small-Bod
 
 - Source capture scripts: `scripts/`
 - Versioned machine outputs: `data/jpl/`
+- Normalized handoff contract: `schemas/jpl_normalized_handoff_contract.json`
 - Methodology and evidence limits: `docs/`
 - Scheduled capture workflow: `.github/workflows/jpl-sbdb-source-capture.yml`
 - Repository validation workflow: `.github/workflows/data-integrity.yml`
@@ -24,10 +25,11 @@ The current production-capable lane captures and normalises public JPL Small-Bod
 ## Local verification
 
 ```bash
+python -m unittest discover -s tests -v
 python scripts/validate_repository_data.py
 ```
 
-The validator checks JSON readability, manifest path resolution, SHA-256 consistency where declared, and CSV structural readability without editing any source file.
+The validator checks JSON readability, manifest path resolution, SHA-256 consistency where declared, CSV structural readability, normalized JSON/CSV parity, unique row identities, manifest completeness, and required evidence guardrails without editing any source file.
 
 ## Branch model
 
