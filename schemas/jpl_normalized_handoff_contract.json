@@ -1,0 +1,130 @@
+{
+  "families": {
+    "romer.jpl.horizons.comparative-windows.v1": {
+      "identity_fields": [
+        "requested_name",
+        "window"
+      ],
+      "manifest_object_match_fields": [
+        "designation",
+        "sha256"
+      ],
+      "manifest_object_required_fields": [
+        "requested_name",
+        "designation",
+        "sha256",
+        "raw_path",
+        "signature_version",
+        "refresh_status",
+        "status",
+        "window_sample_counts"
+      ],
+      "manifest_row_equal_fields": [
+        "interpretation_limit"
+      ],
+      "non_empty_fields": [
+        "requested_name",
+        "designation",
+        "window",
+        "window_start",
+        "window_stop_exclusive",
+        "sample_count",
+        "source_center",
+        "source_ephemeris_type",
+        "signature_version",
+        "source_url",
+        "sha256",
+        "captured_at",
+        "refresh_status",
+        "interpretation_limit"
+      ],
+      "required_fields": [
+        "requested_name",
+        "designation",
+        "window",
+        "window_start",
+        "window_stop_exclusive",
+        "sample_count",
+        "minimum_earth_relative_range_au",
+        "maximum_earth_relative_range_au",
+        "source_center",
+        "source_ephemeris_type",
+        "source_units",
+        "signature_source",
+        "signature_version",
+        "source_url",
+        "sha256",
+        "captured_at",
+        "refresh_status",
+        "interpretation_limit",
+        "current_hardware_canon",
+        "mark_iv_state"
+      ],
+      "required_values": {
+        "current_hardware_canon": "Mark III + Mark V only",
+        "source_center": "Earth (399), geocentric 500@399",
+        "source_ephemeris_type": "VECTORS"
+      },
+      "row_mode": "one_row_per_object_per_window"
+    },
+    "romer.jpl.sbdb.source-capture.v1.2": {
+      "identity_fields": [
+        "requested_name"
+      ],
+      "manifest_object_match_fields": [
+        "sha256"
+      ],
+      "manifest_object_required_fields": [
+        "requested_name",
+        "sha256",
+        "raw_path",
+        "signature_version",
+        "refresh_status",
+        "status"
+      ],
+      "manifest_row_equal_fields": [],
+      "non_empty_fields": [
+        "requested_name",
+        "designation",
+        "spkid",
+        "orbit_class_code",
+        "epoch_jd",
+        "signature_version",
+        "source_url",
+        "sha256",
+        "captured_at",
+        "refresh_status",
+        "orbit_invariant_status"
+      ],
+      "required_fields": [
+        "requested_name",
+        "designation",
+        "spkid",
+        "neo",
+        "pha",
+        "orbit_class_code",
+        "epoch_jd",
+        "eccentricity",
+        "semimajor_axis_au",
+        "perihelion_au",
+        "aphelion_au",
+        "orbit_invariant_status",
+        "orbit_invariant_notes",
+        "signature_source",
+        "signature_version",
+        "source_url",
+        "sha256",
+        "captured_at",
+        "refresh_status",
+        "current_hardware_canon",
+        "mark_iv_state"
+      ],
+      "required_values": {
+        "current_hardware_canon": "Mark III + Mark V only",
+        "orbit_invariant_status": "PASS"
+      },
+      "row_mode": "one_row_per_object"
+    }
+  },
+  "schema": "romer.data.jpl.normalized-handoff-contract.v1"
+}
