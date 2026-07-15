@@ -147,6 +147,31 @@ The freeze is complete because:
 - remaining physical gaps are explicit and non-blocking;
 - future Cognigrex read and reviewed-return surfaces are identified.
 
+## Post-freeze repository reconciliation
+
+The repository was tidied and advanced without changing the frozen workbook decision state:
+
+```text
+Current Data main head: 767399423c0b180a2bab66ed932a9577c43f5fd3
+Latest scheduled source refresh: c4d30c78eb4e9393a747c333cc0f19fa7b8d858c
+Stable-freeze documentation commit: 608379df998156eebeb7c78c1eff87bd386ce41e
+Open pull requests after reconciliation: 0
+```
+
+The scheduled refresh regenerated current SBDB and Horizons payloads, manifests and hashes. It advanced orbit-solution metadata for Anteros, Agni, Vishnu and Toro while retaining the canonical physical, classification, hardware, capacity and no-selection states. Regenerated window data remains compare-first input and does not silently overwrite the frozen workbook comparison layer.
+
+Data pull request #5 was reviewed and merged as the governed repository-integrity layer. It added:
+
+- `.github/workflows/data-integrity.yml`;
+- `scripts/validate_repository_data.py`;
+- `tests/test_validate_repository_data.py`;
+- `schemas/jpl_normalized_handoff_contract.json`;
+- the repository operational contract in `README.md`.
+
+The merged validation layer is read-only with respect to evidence files. It detects malformed JSON/CSV, manifest-path or SHA drift, duplicate identities, normalized JSON/CSV mismatch, incomplete lanes and missing interpretation guardrails. It does not rewrite source payloads or mutate Google workbooks.
+
+The two obsolete May-era draft PRs were closed as superseded provenance. Their branches and commit history were not deleted.
+
 ## Deferred evidence backlog
 
 The following remains valid future work but does not block the stable freeze:
