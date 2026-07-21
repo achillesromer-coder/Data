@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-21",
+  "status": "CONTROLLED_INTERNAL",
+  "authority": {
+    "source_truth": "LinkDrive/DataIndex plus owner-authored POC lineage",
+    "what_canon": "Digital Twin Suite",
+    "how_canon": "Cognigrex",
+    "routing": "Neo to CORE and owning Twins",
+    "governance": "Achilles",
+    "independent_reasoning": "Oracle",
+    "boundaries": [
+      "Raphael Equations remain independent personal IP",
+      "N^3 / GeoMatrices remains separate",
+      "MPL is Maximum Probable Loss and is not the N^3 repository collision"
+    ]
+  },
+  "observation_register": [
+    {
+      "record_id": "OBS-001",
+      "system": "RFS_EMFF_COMBINED_ANALOGUE",
+      "description": "Metal particles flowed through the remainder of the medium and could be traced as pushed or pulled along the desired path.",
+      "evidence_status": "OBSERVED_QUALITATIVE",
+      "instrumented": false,
+      "parameters_recorded": false,
+      "prohibited_inferences": [
+        "extraction_rate",
+        "purity",
+        "enrichment",
+        "force",
+        "optimal_frequency",
+        "throughput",
+        "energy_efficiency",
+        "equipment_safety"
+      ]
+    }
+  ],
+  "parameter_classes": {
+    "rfs_drive": ["frequency_hz", "displacement_amplitude_m", "duration_s", "waveform", "duty_cycle"],
+    "board_and_medium": ["board_geometry", "boundary_conditions", "medium_identity", "medium_bulk_density_kg_m3", "moisture_percent", "temperature_c"],
+    "particle": ["material", "composition", "particle_size_distribution_m", "particle_density_kg_m3", "target_mass_fraction", "magnetic_susceptibility", "conductivity_s_m"],
+    "emff_source": ["coil_turns", "coil_length_m", "coil_diameter_m", "current_a", "voltage_v", "pulse_duration_s", "field_t", "field_gradient_t_per_m", "grad_b2_t2_per_m", "particle_distance_m"],
+    "outputs": ["path_coordinates", "direction", "velocity_m_s", "transported_mass_kg", "recovery_fraction", "repeatability_fraction"]
+  },
+  "required_status_values": [
+    "OBSERVED_QUALITATIVE",
+    "SOURCE_GAP",
+    "CALCULATED_SCREENING",
+    "MODELLED_SCREENING",
+    "PROPOSED",
+    "EMPIRICALLY_VERIFIED",
+    "REJECTED",
+    "HELD"
+  ],
+  "equation_register": [
+    {"id": "EQ-001", "relation": "omega=2*pi*f", "status": "ACCEPTED_DEFINITION"},
+    {"id": "EQ-002", "relation": "a_peak=(2*pi*f)^2*A", "status": "ACCEPTED_WITH_SINUSOIDAL_ASSUMPTION"},
+    {"id": "EQ-003", "relation": "V=4*pi*r^3/3; m=rho*V", "status": "ACCEPTED_WITH_SHAPE_UNCERTAINTY"},
+    {"id": "EQ-004", "relation": "F_inertial=m*a", "status": "SCREENING_ONLY"},
+    {"id": "EQ-005", "relation": "B~=mu0*mu_r*(N/l)*I", "status": "SCREENING_ONLY_LONG_SOLENOID"},
+    {"id": "EQ-006", "relation": "F_mag~=(chi*V/(2*mu0))*grad(B^2)", "status": "SCREENING_ONLY_LINEAR_SUSCEPTIBILITY"},
+    {"id": "EQ-007", "relation": "F_drag=6*pi*eta*r*v", "status": "SCREENING_ONLY_NEWTONIAN_LOW_RE"},
+    {"id": "EQ-008", "relation": "delta=sqrt(2/(omega*mu*sigma))", "status": "ACCEPTED_CONDUCTOR_SCREENING"}
+  ],
+  "test_register": [
+    {"id": "T-001", "lane": "1", "name": "POC and analogue provenance capture", "status": "IN_PROGRESS"},
+    {"id": "T-002", "lane": "1-3", "name": "Instrumented cymatic frequency sweep", "status": "PLANNED"},
+    {"id": "T-003", "lane": "1-3", "name": "Amplitude and duration sweep", "status": "BLOCKED_SOURCE_GAP"},
+    {"id": "T-004", "lane": "1-3", "name": "EMFF field-gradient direction test", "status": "PLANNED"},
+    {"id": "T-005", "lane": "3-4", "name": "Equation dimensional audit", "status": "PASS_INITIAL"},
+    {"id": "T-006", "lane": "4", "name": "Independent reasoning audit", "status": "OPEN"},
+    {"id": "T-007", "lane": "4", "name": "Legacy LightSpeed RFS theory audit", "status": "INITIAL_FAIL"},
+    {"id": "T-008", "lane": "4", "name": "Safe validator unit tests", "status": "PASS", "result": "7/7 local tests passed"},
+    {"id": "T-009", "lane": "5", "name": "Neo return packet", "status": "OPEN"},
+    {"id": "T-010", "lane": "5", "name": "Twin ingestion mapping", "status": "ACTIVE"},
+    {"id": "T-011", "lane": "6", "name": "Collaborator and Mission 1 hold check", "status": "PASS"},
+    {"id": "T-012", "lane": "7", "name": "Slack retention manifest", "status": "IN_PROGRESS"}
+  ],
+  "test_receipt": {
+    "validator_sha256": "d4bd038ad0c682bc9530dfda4a4fb05990c91cbe77e526fc72471ad43f1a3e09",
+    "tests_sha256": "a628538cd436bf6f2f1eca64878c63017198a95bcaac891434e3bb6137e62d00",
+    "tests_run": 7,
+    "tests_passed": 7,
+    "external_dependencies": false
+  },
+  "routing_manifest": [
+    {"data_class": "overarching_physics", "destination": "Data/library/physics/rfs_emff and Cognigrex library"},
+    {"data_class": "specialised_parameters_and_results", "destination": "RFS & EMFF Twin"},
+    {"data_class": "coil_field_thermal_detail", "destination": "Free Flow Solenoid Stack Twin"},
+    {"data_class": "hardware_interfaces", "destination": "Mark I / Mark III / Mark V Twin surfaces"},
+    {"data_class": "accepted_proof_packet", "destination": "Neo to CORE and owning Twins"},
+    {"data_class": "code_and_executable_tests", "destination": "LightSpeed review branch"},
+    {"data_class": "archive_and_delete_controls", "destination": "Operations/CORE and Slack retention manifest"}
+  ],
+  "promotion_rule": {
+    "controlled_canon": "empirical_verified OR (math_pass AND independent_reasoning_pass)",
+    "physical_capability_claim": "instrumented AND raw_logs_attached AND controls_passed AND repeat_count>=2"
+  },
+  "held": {
+    "collaborators": true,
+    "mission_1_population": true
+  }
+}
