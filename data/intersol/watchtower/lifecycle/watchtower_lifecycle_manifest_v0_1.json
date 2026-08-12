@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "asset_id": "WT-001",
   "state": "P_INFINITY_FOUNDATION_ACTIVE",
   "records": [
@@ -135,6 +135,25 @@
       "rollback_target": "WT-LC-BOD-001",
       "receipt": "Data PR #7 OT sensor architecture files",
       "notes": "Requirement architecture only; no hardware/network endpoints selected."
+    },
+    {
+      "record_id": "WT-LC-LS-001",
+      "record_class": "DERIVED_EXPORT",
+      "artifact_or_state_id": "LightSpeed Watch Tower source-twin viewer contract",
+      "version": "PR-35-v0.1",
+      "sha256_or_immutable_id": "83482ab878d0c122f2befaeae9310b3237d49c96",
+      "parents": ["WT-LC-SRC-001", "WT-LC-GLB-001", "WT-LC-SEM-001", "WT-LC-OT-001"],
+      "geometry_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+      "semantic_map_version": null,
+      "status": "REVIEW_GATED",
+      "revalidation_trigger": ["source_FCStd_hash_changes", "source_GLB_hash_changes", "semantic_object_or_edge_mapping_changes", "publication_or_security_classification_change", "viewer_contract_changes", "dependency_security_state_changes"],
+      "cadence_days": null,
+      "revalidation_method": "Re-run Watch Tower unit tests, complete LightSpeed test/typecheck/build pipeline, verify source/GLB hashes and viewer-mode blockers, then reconcile security/dependency state before any release decision.",
+      "decision_owner": "LightSpeed / DataIndex / Cyber / Infrastructure",
+      "security_class": "RESTRICTED_TECHNICAL",
+      "rollback_target": "WT-LC-GLB-001",
+      "receipt": "LightSpeed PR #35; head 83482ab878d0c122f2befaeae9310b3237d49c96; watchtowerTwin 8/8 tests; full Vitest 21/21; tsc passed; vite build passed; routing workflow passed",
+      "notes": "Code scaffold is validated but draft/review-gated. Internal-source mode only. Semantic/public modes remain blocked. CI dependency install reported one high-severity npm vulnerability; no dependency mutation was performed in this scoped PR and release remains separately security-gated."
     }
   ],
   "global_revalidation_triggers": [
@@ -149,7 +168,8 @@
     "as_built_geometry_diff",
     "inspection_condition_failure",
     "incident_or_near_miss",
-    "publication_or_security_classification_change"
+    "publication_or_security_classification_change",
+    "viewer_contract_or_dependency_security_change"
   ],
   "cadence_policy": "NO_GENERIC_PERIODIC_CADENCE_INVENTED. Populate cadence only from applicable engineering, manufacturer, regulatory, owner-reviewed or validated operational basis; event-driven triggers always remain active.",
   "rollback_policy": "Archive-before-delete. Preserve prior accepted source/hash, semantic map, model inputs/outputs and release manifests. A rollback restores the last accepted state; it does not erase later evidence or incident records."
