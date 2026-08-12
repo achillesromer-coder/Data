@@ -1,0 +1,44 @@
+{
+  "schema_name": "intersol_watchtower_curved_roof_geometry_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "purpose": "Versioned geometry contract for reconciling the source-planar Watch Tower wing roof substrate faces with the owner-current shallow-curved Solar Hull roof intent, without altering source FCStd evidence.",
+  "source_geometry": {
+    "fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "roof_surface_extract": "watchtower_roof_surface_extract_v0_1.json",
+    "coordinate_state": "LOCAL_CAD_NOT_GEODETIC"
+  },
+  "fields": [
+    {"name":"Roof_Geometry_ID","type":"string","required":true},
+    {"name":"Base_Surface_Key","type":"string","required":true},
+    {"name":"Source_Feature","type":"string","required":true},
+    {"name":"Source_Surface_Type","type":"enum","allowed_values":["PLANE","BSPLINE","OTHER"],"required":true},
+    {"name":"Source_Z_m","type":"number","required":true},
+    {"name":"Source_Area_m2","type":"number","required":true},
+    {"name":"Source_Boundary_Edge_Lengths_m","type":"array_number","required":true},
+    {"name":"Semantic_Left_Right","type":"string_or_null","required":true},
+    {"name":"Treatment_Mode","type":"enum","allowed_values":["UNDECIDED","OVERLAY_ABOVE_SOURCE_SUBSTRATE","CAD_REVISION_REPLACES_OR_MODIFIES_SOURCE_FACE"],"required":true},
+    {"name":"Curve_Axis","type":"enum_or_null","allowed_values":["LONG_EDGE_33M","SHORT_EDGE_13_282760569M","CUSTOM_AXIS",null],"required":true},
+    {"name":"Curve_Representation","type":"enum_or_null","allowed_values":["CIRCULAR_ARC","PARABOLIC_ARC","BSPLINE","OTHER",null],"required":true},
+    {"name":"Rise_m","type":"number_or_null","required":true},
+    {"name":"Radius_m","type":"number_or_null","required":true},
+    {"name":"Arc_Length_m","type":"number_or_null","required":true},
+    {"name":"Control_Points_Local_m","type":"array_vector3_or_null","required":true},
+    {"name":"Edge_Offset_m","type":"number_or_null","required":true},
+    {"name":"Drainage_Fall_or_Path_Ref","type":"string_or_null","required":true},
+    {"name":"Structural_Substrate_Ref","type":"string_or_null","required":true},
+    {"name":"Solar_Hull_Config_Ref","type":"string_or_null","required":true},
+    {"name":"Evidence_State","type":"enum","allowed_values":["SOURCE_PLANAR_LOCKED","OWNER_DECISION_PENDING","PARAMETRIC_CANDIDATE","CAD_REVISION_PENDING","REVIEWED_GEOMETRY","SUPERSEDED"],"required":true},
+    {"name":"Owner_Decision_Receipt","type":"string_or_null","required":true},
+    {"name":"Derived_Geometry_SHA256","type":"string_or_null","required":true},
+    {"name":"Next_Action","type":"string","required":true}
+  ],
+  "validation_rules": [
+    "The source FCStd and roof-surface extraction remain immutable evidence even if a later curved-roof CAD revision is accepted.",
+    "Treatment_Mode must remain UNDECIDED until an explicit owner decision exists.",
+    "Curve axis, representation, rise, radius, arc length and control points remain null until attributable owner/CAD/engineering evidence defines them.",
+    "A visual render cannot be used to reverse-engineer a quantitative curvature radius or rise.",
+    "A derived curved geometry must carry its own version/hash and must reference the exact source surface and source FCStd SHA.",
+    "Drainage, structural substrate and Solar Hull material qualification remain separate evidence gates."
+  ]
+}
