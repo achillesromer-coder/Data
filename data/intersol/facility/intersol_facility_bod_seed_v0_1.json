@@ -1,0 +1,67 @@
+{
+  "schema_version":"0.1.0",
+  "seed_id":"INTERSOL-FACILITY-BOD-SEED-001",
+  "canonical_control":"Google Drive Type 1 Romer Cognigrex / 116_INFRA_FINALIZATION_MATRIX_v0_1",
+  "state":"SCHEMA_READY_SITE_AND_CURRENT_PROGRAMME_OPEN",
+  "site_context":{"authorised_site":null,"jurisdiction":null,"survey_ref":null,"geotech_ref":null,"planning_ref":null,"environment_ref":null,"cultural_heritage_ref":null,"launch_facility_licence_ref":null},
+  "shared_states":["NORMAL","PRE_LAUNCH","LAUNCH_LOCKOUT","ABORT","POST_EVENT_INSPECTION"],
+  "assemblies":[
+    {
+      "assembly_id":"WT-001",
+      "family":"Watch Tower / Mission Base-Control Tower",
+      "source_state":"SOURCE_LOCKED_GEOMETRY_WITH_OPTIMISATION_ACTIVE",
+      "source_refs":["SRC-068","SRC-071","SRC-072","SRC-073","SRC-076","SRC-077"],
+      "required_inputs":["promoted semantic map","Pareto-selected A/C/cable/roof derived geometry","materials/sections/connections","foundation/geotech","occupancy","site wind/environment","launch hazard basis","glazing/fire/MEP/security/ecology evidence"],
+      "analysis_cases":["self-weight/dead load","occupancy/live load","wind/global dynamics","nominal cable equilibrium","weather slack","N-1 cable loss","maintenance isolated edge","bare T0","mature wet living state","storm windage","roof water/drainage","glazing thermal/pressure","lightning/power loss","fire/smoke/egress","launch-malfunction pressure/debris/thermal","sensor/OT degradation","source/export parity"],
+      "innovation_overlays":["shallow-curved Solar Hull/Paint overlay","living roof/canopy","weather-responsive cable states","COIN evidence receipts"],
+      "promotion_gate":"discipline-reviewed numerical basis plus site/classification/applicability and owner acceptance",
+      "public_claim_state":"BLOCKED"
+    },
+    {
+      "assembly_id":"INF-WH-001",
+      "family":"Repair / integration warehouse",
+      "source_state":"HISTORICAL_FUNCTION_AND_DIMENSIONAL_LINEAGE_ONLY",
+      "source_refs":["SRC-075","SRC-077"],
+      "required_inputs":["current mission/vehicle/service model","throughput","bay and door clearances","crane/equipment duty","dangerous-goods inventory if any","occupancy/classification","site/geotech","fire/egress","power/water/data demand"],
+      "analysis_cases":["workflow/throughput","crane/equipment reactions","structural gravity/wind/seismic as applicable","fire/smoke/egress","dangerous-goods separation if applicable","vehicle swept path","maintenance isolation","power loss","launch-lockout compatibility","post-event inspection"],
+      "innovation_overlays":["adaptable service skins","Solar energy surfaces","condition sensors","evidence-linked asset tracking"],
+      "promotion_gate":"current warehouse design basis; historical dimensions used only as comparator unless re-adopted with engineering evidence",
+      "public_claim_state":"CONCEPT_ONLY"
+    },
+    {
+      "assembly_id":"INF-LOG-001",
+      "family":"Roads / conveyors / material handling",
+      "source_state":"HISTORICAL_TO_CURRENT_RECONCILIATION_REQUIRED",
+      "source_refs":["SRC-075","SRC-077"],
+      "required_inputs":["current design vehicles","axle/wheel loads","turning envelope","grades and clearance","pavement/subgrade","conveyor or handling duty","emergency/bypass route","site drainage"],
+      "analysis_cases":["swept path","pavement strength/fatigue","barrier/edge interfaces","conveyor reliability/throughput","power loss/manual bypass","emergency access","launch lockout","flood/drainage","maintenance staging"],
+      "innovation_overlays":["smart telemetry","modular material-handling concepts","future low-speed autonomy only where separately lawful/validated"],
+      "promotion_gate":"current vehicle/logistics requirements plus civil/equipment/WHS review",
+      "public_claim_state":"CONCEPT_ONLY"
+    },
+    {
+      "assembly_id":"INF-WATER-001",
+      "family":"Retention / emergency / percolation water system",
+      "source_state":"ARCHITECTURE_BACKED_SITE_VALUES_PENDING",
+      "source_refs":["SRC-075","SRC-076","SRC-077"],
+      "required_inputs":["site catchment","rainfall design basis","soil/infiltration","groundwater","water-quality sources","first-flush contaminants","mosquito/vector risk","overflow destination","irrigation demand","fire/emergency interface","maintenance access"],
+      "analysis_cases":["normal rainfall/runoff","design storm/overflow","first-flush isolation","pump/power loss","blocked outlet","storage low/high","irrigation failure","water-quality upset","fire/emergency drawdown if approved","post-event inspection"],
+      "innovation_overlays":["Second Cycle monitoring/recirculation","Eco-Grex hydration","sensor/COIN measurement receipts"],
+      "promotion_gate":"site hydrology/hydraulics/water-quality and authority review",
+      "public_claim_state":"PUBLIC_SAFE_HYDROLOGY_ONLY_NO_WEATHER_CONTROL"
+    },
+    {
+      "assembly_id":"INF-LAUNCH-001",
+      "family":"Launch / landing / launch-tower infrastructure",
+      "source_state":"HISTORICAL_FUNCTION_ONLY_CURRENT_SITE_VEHICLE_LICENCE_OPEN",
+      "source_refs":["SRC-075"],
+      "required_inputs":["authorised site","current launch/landing vehicle interfaces","mission profile","hazard analysis","plume/pressure/debris/thermal environment","exclusion zones","tanks/propellants if applicable","emergency response","security/defence/environment requirements","licensing basis"],
+      "analysis_cases":["normal operations","pre-launch","launch lockout","nominal launch","abort","vehicle/ground-system malfunction","pressure/debris/thermal bounding cases","fire/emergency","loss of power/communications","post-event inspection and return-to-service"],
+      "innovation_overlays":["digital twin","condition sensors","evidence receipts","advanced surfaces only outside critical certified function until qualified"],
+      "promotion_gate":"current Australian launch-facility/site/vehicle/hazard/licensing and multidiscipline engineering basis",
+      "public_claim_state":"BLOCKED"
+    }
+  ],
+  "global_promotion_rule":"No numerical design value, compliance state, operational capability or public performance claim is promoted without attributable current inputs, units/uncertainty, applicable authority/standard basis, decision owner, professional review where required and versioned receipt.",
+  "economic_state":"DISABLED"
+}
