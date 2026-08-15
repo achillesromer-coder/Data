@@ -1,17 +1,22 @@
 {
   "schema_version": "v0.1",
-  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 127_ROOM_INPUT_REQUIREMENTS_v0_1",
-  "record_count": 10,
-  "purpose": "Define current evidence inputs required before room counts, areas, fixture quantities, chamber geometry or technical targets may be populated.",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 127_ROOM_INPUT_REQUIREMENTS_v0_1 A1:R21",
+  "drive_is_authoritative": true,
+  "control_refs": {"source_ids":["SRC-081","SRC-092"],"task_id":"TASK-075","build_id":"BUILD-031","artifact_id":"ART-029"},
+  "record_count": 20,
+  "key_ids": "RIR-001..RIR-020",
+  "purpose": "Define current evidence inputs required before room counts, areas, fixture quantities, chamber geometry, plant capacity, technical targets or site-dependent layouts may be populated.",
   "core_rules": [
-    "Keep unavailable site/programme/process/classification inputs null.",
-    "Do not back-solve current design from historical dimensions, headcounts, dates or branded vehicle assumptions.",
+    "Keep unavailable site, programme, occupancy, process, equipment and classification inputs null.",
+    "Do not back-solve current design from historical dimensions, headcounts, dates, renders or branded vehicle assumptions.",
     "Current sanitary/amenities/restroom function is owner-current semantics; archive wording remains provenance only.",
-    "Emergency wash placement is hazard/SDS/layout triggered.",
-    "Acoustic chamber geometry follows selected test methods/equipment and verified vibration/noise context.",
-    "Sensory/biofield-labelled work is research-only and requires measurable variables, controls, ethics/privacy and no clinical claim."
+    "Emergency wash placement is hazard/SDS/task/layout/water triggered.",
+    "Acoustic chamber geometry follows selected test methods/equipment and verified vibration/HVAC/noise context.",
+    "Sensory/biofield-labelled work is research-only and requires measurable variables, controls, ethics/privacy and no clinical claim.",
+    "Clean integration, NDT, battery R&D, plant, OT, water, waste and muster requirements remain explicit input-gated functions."
   ],
-  "key_ids": ["RIR-001","RIR-002","RIR-003","RIR-004","RIR-005","RIR-006","RIR-007","RIR-008","RIR-009","RIR-010"],
+  "numeric_fields_policy": "NULL_UNTIL_CURRENT_ATTRIBUTABLE_REVIEWED_INPUT_EXISTS",
   "promotion_dependency": "Current attributable inputs plus relevant discipline/certifier acceptance",
-  "historical_firewall": "Sheet 120 / intersol_historical_comparator_v0_1.json remains comparator-only until explicit re-adoption receipt."
+  "historical_firewall": "Sheet 120 remains comparator-only until explicit re-adoption receipt.",
+  "no_go": ["no unsupported numeric room values","no inferred cleanroom/radiation/battery/plant/emergency-wash state","no smart replacement of physical safety/access/isolation/hygiene/emergency function"]
 }
