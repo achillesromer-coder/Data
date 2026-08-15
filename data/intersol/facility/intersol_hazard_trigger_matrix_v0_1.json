@@ -1,10 +1,13 @@
 {
   "schema_version": "v0.1",
-  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 128_HAZARD_TRIGGER_MATRIX_v0_1",
-  "record_count": 8,
-  "purpose": "Bind change/event triggers to reanalysis, physical controls, manual fail-safe and evidence receipts.",
-  "domains": ["chemical exposure","fire/thermal","noise/vibration","fatigue/human performance","biosecurity/living systems","OT/cyber","access/egress","research/participant safety"],
-  "governing_rule": "Smart sensing/automation may assist detection, evidence and bounded control but never replaces required physical safety, isolation, access, emergency equipment or manual fallback.",
-  "key_ids": ["HTM-001","HTM-002","HTM-003","HTM-004","HTM-005","HTM-006","HTM-007","HTM-008"],
-  "site_activation": "Actual inventories, processes, equipment, layouts, system boundaries and operational conditions remain required before project-specific controls are selected."
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 128_HAZARD_TRIGGER_MATRIX_v0_1 A1:R25",
+  "drive_is_authoritative": true,
+  "control_refs": {"source_ids":["SRC-083","SRC-084","SRC-085","SRC-086","SRC-087","SRC-090","SRC-091","SRC-092"],"task_id":"TASK-076","build_id":"BUILD-032","artifact_id":"ART-030"},
+  "record_count": 24,
+  "key_ids": "HZ-001..HZ-024",
+  "purpose": "Bind credible hazard families to evidence triggers, physical baseline controls, facility response, emergency/fail-safe state, bounded smart role, prohibited defaults and reanalysis triggers.",
+  "families": ["corrosive/splash","flammable/combustible","airborne toxic/irritant","pressure","cryogenic/extreme temperature","electrical","battery thermal/gas/fire","machinery","lifting","vehicle/pedestrian","noise","vibration","laser/optical/UV","conditional ionising radiation","biological/biosecurity","cleanliness","fire/egress","ergonomics/fatigue","security/public interface","water cross-connection","launch external hazards","living-system interference","active acoustic/sensory R&D interference","OT/sensor failure/spoof/stale data"],
+  "governing_rule": "Conditional hazards are not silently asserted. Smart sensing/automation may assist detection, evidence and bounded control but never replaces required physical safety, isolation, access, emergency equipment, human safety authority or manual fallback.",
+  "blocked_states": {"HZ-014":"DORMANT unless an ionising-radiation method/source is actually introduced","HZ-021":"BLOCKED until authorised site/operator/vehicle/activity hazard basis exists"},
+  "no_go": ["no invented blast/ballistic/exclusion values","no generic hazardous-area or radiation classification","no welfare shower substituted for emergency wash","no preferred frequency/harmonic used as exposure justification","no AI/sensor override of hard safety controls"]
 }
