@@ -1,18 +1,26 @@
 {
   "schema_version": "v0.1",
-  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 131_REQUIREMENTS_TRACEABILITY_v0_1",
-  "record_count": 8,
-  "purpose": "Trace archive/owner requirements through current interpretation, programme object, required inputs, hazard control, BOD/design object, acceptance gate and longitudinal learning.",
-  "requirements": [
-    "R&D facilities retained without inheriting archive dimensions/placement",
-    "current sanitary/amenities/restroom semantic lock with archive wording preserved",
-    "trigger-based emergency eyewash/safety shower",
-    "dedicated acoustic measurement and reverberation/material chambers",
-    "biofield-labelled work retained only as measurable research terminology with health claims blocked",
-    "adaptive lighting/timing only after safe conventional baseline",
-    "cross-analysis over time with explicit rollback and supersession",
-    "historical base retained as comparator only until explicit re-adoption"
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 131_REQUIREMENTS_TRACEABILITY_v0_1 A1:R26",
+  "drive_is_authoritative": true,
+  "control_refs": {"source_ids":["SRC-080","SRC-081","SRC-083","SRC-084","SRC-085","SRC-086","SRC-087","SRC-088","SRC-089","SRC-090","SRC-091","SRC-092"],"task_id":"TASK-079","build_id":"BUILD-035","artifact_id":"ART-033"},
+  "record_count": 25,
+  "key_ids": "RQT-001..RQT-025",
+  "purpose": "Trace high-value owner/source requirements through authority layer, implementation, verification, validation context, blocker, prohibited inference, supersession, evidence receipt and public-claim state.",
+  "locked_boundaries": [
+    "historical comparator firewall",
+    "sanitary/amenities/restroom current semantic lock with archive wording preserved",
+    "trigger-based emergency wash",
+    "measured acoustic R&D chamber verification",
+    "biofield terminology retained only as bounded research label with health claims blocked",
+    "conventional lighting/safety baseline before adaptive layers",
+    "human launch/safety authority",
+    "smart/manual fail-safe requirement",
+    "Watch Tower exactly two A/C tower node elevations as owner topology; derived engineering coordinates/edges validation-gated",
+    "Solar Hull/Free Flow as separately qualified R&D overlays",
+    "Eco-Grex exclusion from critical operational envelopes",
+    "privacy-minimised sensor architecture",
+    "null-safe numeric BOD rule and P-infinity evidence/rollback chain"
   ],
-  "supersession_rule": "Historical origin and failed/previous evidence are never overwritten; current interpretation or re-adoption creates a new attributable record.",
-  "key_ids": ["RTM-001","RTM-002","RTM-003","RTM-004","RTM-005","RTM-006","RTM-007","RTM-008"]
+  "supersession_rule": "Historical origin and failed/previous evidence are never overwritten; current interpretation, re-adoption or accepted engineering revision creates a new attributable record.",
+  "authority_rule": "Owner design intent, historical evidence, derived architecture and engineering/compliance evidence remain distinct layers."
 }
