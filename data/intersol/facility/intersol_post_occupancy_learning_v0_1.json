@@ -1,0 +1,10 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 130_POST_OCCUPANCY_LEARNING_v0_1",
+  "record_count": 8,
+  "purpose": "Define auditable longitudinal learning loops for amenities, mission human factors, acoustics, sensory R&D, lighting, IEQ/energy, Eco-Grex and P-infinity configuration assurance.",
+  "privacy_rule": "Prefer anonymous/aggregate environmental, maintenance and operational evidence; personal/biometric data requires a justified use, governance and minimisation.",
+  "learning_rule": "Positive, neutral, negative and failed findings remain part of the evidence record; no cherry-picking.",
+  "timing_rule": "P30/P90/P365 are optional internal learning checkpoints only; event-driven reanalysis remains primary and no statutory interval is inferred.",
+  "key_ids": ["POL-001","POL-002","POL-003","POL-004","POL-005","POL-006","POL-007","POL-008"]
+}
