@@ -1,0 +1,10 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 129_COMMISSIONING_ACCEPTANCE_v0_1",
+  "record_count": 8,
+  "purpose": "Define baseline-first commissioning, acceptance, smart/R&D promotion gates and rollback responses.",
+  "acceptance_objects": ["occupied building core","sanitary/access amenities","emergency wash","mission control acoustics/lighting","acoustic measurement chamber","reverberation/material chamber","sensory/biofield R&D chamber","adaptive environment controls"],
+  "core_rule": "A failed conventional/reference baseline cannot be hidden or compensated for by automation or experimental features.",
+  "rollback_rule": "Every promoted smart/R&D layer must have a tested route back to the last accepted safe/reference configuration.",
+  "key_ids": ["CAX-001","CAX-002","CAX-003","CAX-004","CAX-005","CAX-006","CAX-007","CAX-008"]
+}
