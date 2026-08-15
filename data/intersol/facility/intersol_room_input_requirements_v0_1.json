@@ -1,0 +1,17 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 127_ROOM_INPUT_REQUIREMENTS_v0_1",
+  "record_count": 10,
+  "purpose": "Define current evidence inputs required before room counts, areas, fixture quantities, chamber geometry or technical targets may be populated.",
+  "core_rules": [
+    "Keep unavailable site/programme/process/classification inputs null.",
+    "Do not back-solve current design from historical dimensions, headcounts, dates or branded vehicle assumptions.",
+    "Current sanitary/amenities/restroom function is owner-current semantics; archive wording remains provenance only.",
+    "Emergency wash placement is hazard/SDS/layout triggered.",
+    "Acoustic chamber geometry follows selected test methods/equipment and verified vibration/noise context.",
+    "Sensory/biofield-labelled work is research-only and requires measurable variables, controls, ethics/privacy and no clinical claim."
+  ],
+  "key_ids": ["RIR-001","RIR-002","RIR-003","RIR-004","RIR-005","RIR-006","RIR-007","RIR-008","RIR-009","RIR-010"],
+  "promotion_dependency": "Current attributable inputs plus relevant discipline/certifier acceptance",
+  "historical_firewall": "Sheet 120 / intersol_historical_comparator_v0_1.json remains comparator-only until explicit re-adoption receipt."
+}
