@@ -80,13 +80,13 @@
       "status": "captured"
     },
     "lugh": {
-      "captured_at": "2026-08-08T05:11:23+00:00",
+      "captured_at": "2026-08-15T04:50:06+00:00",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/lugh.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Lugh",
-      "sha256": "9b3a4cd7934f56f2bffe0a0b26d7eaf3263b9987aadbe29d87eddb74492b6294",
+      "sha256": "a5e130fc50ce1275342708f8696affdc3d796b1d9aaad4f9a634d6497f2fda99",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Lugh&phys-par=1&ca-data=1",
       "status": "captured"
