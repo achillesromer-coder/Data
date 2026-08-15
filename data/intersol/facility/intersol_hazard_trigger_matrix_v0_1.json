@@ -1,0 +1,10 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 128_HAZARD_TRIGGER_MATRIX_v0_1",
+  "record_count": 8,
+  "purpose": "Bind change/event triggers to reanalysis, physical controls, manual fail-safe and evidence receipts.",
+  "domains": ["chemical exposure","fire/thermal","noise/vibration","fatigue/human performance","biosecurity/living systems","OT/cyber","access/egress","research/participant safety"],
+  "governing_rule": "Smart sensing/automation may assist detection, evidence and bounded control but never replaces required physical safety, isolation, access, emergency equipment or manual fallback.",
+  "key_ids": ["HTM-001","HTM-002","HTM-003","HTM-004","HTM-005","HTM-006","HTM-007","HTM-008"],
+  "site_activation": "Actual inventories, processes, equipment, layouts, system boundaries and operational conditions remain required before project-specific controls are selected."
+}
