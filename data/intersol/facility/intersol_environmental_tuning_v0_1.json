@@ -1,0 +1,32 @@
+{
+  "version": "0.1.0",
+  "id": "INTERSOL-ENVIRONMENT-TUNING-001",
+  "authority": "Google Drive Type 1 Romer Cognigrex / 123_ENV_ACOUSTIC_LIGHT_v0_1",
+  "authority_rule": "Drive is canonical; Git stores the execution manifest and claim boundaries.",
+  "control_count": 18,
+  "fields": ["Env_ID","Domain","Space_or_Zone","Baseline_Objective","Measured_Variables","Control_Modes","Smart_or_R&D_Overlay","Hard_Constraints","Control_or_Comparator","Evidence_Basis","Evidence_State","Instrumentation","Acceptance_or_Review","Reanalysis_Trigger","Fail_Safe","COIN_Record","Design_Notes","Status"],
+  "source_refs": ["SRC-084","SRC-088","SRC-089","SRC-090"],
+  "key_controls": {
+    "task_lighting": "EAL-001",
+    "integrative_circadian_lighting": "EAL-002",
+    "exterior_obtrusive_light_ecology": "EAL-003",
+    "mission_control_acoustics": "EAL-004",
+    "quiet_sleep_acoustics": "EAL-005",
+    "acoustic_measurement_chamber": "EAL-006",
+    "reverberation_material_chamber": "EAL-007",
+    "sensory_biofield_r_and_d": "EAL-008",
+    "thermal_iaq": "EAL-009",
+    "process_ventilation": "EAL-010",
+    "vibration": "EAL-011",
+    "biophilic_nature": "EAL-012",
+    "temporal_operating_modes": "EAL-015",
+    "post_occupancy_learning": "EAL-016",
+    "energy_demand": "EAL-017",
+    "ecological_acoustic_light": "EAL-018"
+  },
+  "temporal_modes": ["DAY","NIGHT","SHIFT_CHANGE","PRE_LAUNCH","LAUNCH_LOCKOUT","POST_EVENT","MAINTENANCE","QUIET_RESEARCH","SLEEP"],
+  "research_rule": "Any biofield-labelled work is a controlled sensory/environment research programme. Independently measurable light, sound, vibration, thermal, airflow, IAQ and biophilic variables may be tested; no unverified field, therapeutic or clinical effect is assumed.",
+  "promotion_rule": "Adaptive or active features are introduced only after a conventional commissioned baseline exists, and must have manual override, measurable acceptance criteria and rollback.",
+  "hard_constraints": ["alarms and critical communications","task visibility","fire/egress","process ventilation","fatigue policy","privacy","ecological/site constraints","safe exposure limits"],
+  "current_state": "DRIVE_POPULATED / GIT_MANIFESTED / NUMERIC_ROOM_TARGETS_AND_R&D_PROTOCOLS_OPEN"
+}
