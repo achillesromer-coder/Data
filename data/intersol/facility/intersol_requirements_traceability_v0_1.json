@@ -1,0 +1,18 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 131_REQUIREMENTS_TRACEABILITY_v0_1",
+  "record_count": 8,
+  "purpose": "Trace archive/owner requirements through current interpretation, programme object, required inputs, hazard control, BOD/design object, acceptance gate and longitudinal learning.",
+  "requirements": [
+    "R&D facilities retained without inheriting archive dimensions/placement",
+    "current sanitary/amenities/restroom semantic lock with archive wording preserved",
+    "trigger-based emergency eyewash/safety shower",
+    "dedicated acoustic measurement and reverberation/material chambers",
+    "biofield-labelled work retained only as measurable research terminology with health claims blocked",
+    "adaptive lighting/timing only after safe conventional baseline",
+    "cross-analysis over time with explicit rollback and supersession",
+    "historical base retained as comparator only until explicit re-adoption"
+  ],
+  "supersession_rule": "Historical origin and failed/previous evidence are never overwritten; current interpretation or re-adoption creates a new attributable record.",
+  "key_ids": ["RTM-001","RTM-002","RTM-003","RTM-004","RTM-005","RTM-006","RTM-007","RTM-008"]
+}
