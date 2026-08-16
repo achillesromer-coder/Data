@@ -1,0 +1,24 @@
+{
+  "version":"0.1.0",
+  "canonical_drive_sheet":"144_NEXT_VOICE_QUEUE_v0_1",
+  "source_id":"SRC-093",
+  "mode":"ASK_ONE_AT_A_TIME",
+  "queue":[
+    {"id":"VQ-001","domain":"FREE_FLOW_SCALE_GATES","question":"For Phase-1 Free Flow, should ~1 m3 be the maximum planned validation scale until a formal scale-gate review, or may Cognigrex propose larger test articles automatically if evidence supports them?"},
+    {"id":"VQ-002","domain":"FREE_FLOW_CASING","question":"Should the external polymer casing be deliberately removable/replaceable as a service shell around the electroplated internal casing?"},
+    {"id":"VQ-003","domain":"FREE_FLOW_FORM_FACTOR","question":"Should early scale tests keep one common geometric family while varying dimensions, or deliberately test multiple topology families in parallel?"},
+    {"id":"VQ-004","domain":"WAREHOUSE_GROUND_HANDLING","question":"Should chain-hill/magnetic-assist transport be the preferred architecture to qualify, or an R&D option alongside conventional transporter/tow fallback?"},
+    {"id":"VQ-005","domain":"WAREHOUSE_CLEAN_MODULES","question":"Should reconfigurable clean modules use a repeatable standard module width/height across sites, with custom openings only where payload envelopes require them?"},
+    {"id":"VQ-006","domain":"RND_PHASE1_CORE","question":"Which Römer R&D lanes are mandatory internal Phase-1 capabilities?"},
+    {"id":"VQ-007","domain":"FEDERATED_RND","question":"Should each external university/lab collaboration have a named Römer internal counterpart responsible for bringing methods/knowledge back into the corpus?"},
+    {"id":"VQ-008","domain":"TEMP_HOUSING","question":"Should the two-person temporary studio module be a repeatable national deployment unit that later converts to office/lab/support use?"},
+    {"id":"VQ-009","domain":"WATCH_TOWER_SEMANTICS","question":"For rotated/flipped deployments, should semantic IDs remain stable and carry a transform matrix rather than renaming physical members?"},
+    {"id":"VQ-010","domain":"WATCH_TOWER_COURTYARD","question":"Should courtyard-facing be the default design package with reversed courtyard as a tested mirror/flip variant rather than a separate design?"},
+    {"id":"VQ-011","domain":"PARTNER_INTERFACES","question":"Should rocket manufacture, launch operations and mission-control support remain modular service interfaces so providers can change without redesigning the facility?"},
+    {"id":"VQ-012","domain":"COGNIGREX_PRIORITY","question":"When two tasks have similar information gain, should dependency unlock/safety outrank commercial speed, or should commercial urgency be an equal first-order factor?"},
+    {"id":"VQ-013","domain":"COGNIGREX_AUTONOMY","question":"May agents automatically execute low-risk digital analyses after proposing them, or should all new tasks wait for agent-review approval before execution?"},
+    {"id":"VQ-014","domain":"COGNIGREX_OUTPUTS","question":"Should every completed test sweep automatically produce both a technical synthesis and a shorter owner/operator decision brief?"},
+    {"id":"VQ-015","domain":"COGNIGREX_REANALYSIS","question":"Should material new evidence automatically reopen previously closed low-priority known-unknowns when their expected value rises?"}
+  ],
+  "resume_rule":"At the next voice/conversation session, ask VQ-001 only, capture the answer, update the canonical decision/queue state, then advance to exactly one next unanswered question."
+}
