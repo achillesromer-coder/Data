@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "canonical_source": "Type 1 Romer Cognigrex / 145_MODULAR_SHELL_INTERFACE_v0_1",
+  "architecture": {
+    "primary_substrate": "reinforced_concrete_shell",
+    "primary_rule": "Primary structure, waterproofing, egress, fire/electrical isolation and other accepted life-safety functions must remain independently safe without detachable or motorised R&D modules.",
+    "module_families": ["solar_hull","living_systems","scientific_instrumentation","thermal_underlay","acoustic_surface","lighting_surface","future_test_module"],
+    "module_states": ["OPEN","PARTIAL","CLOSED","STORM_STOW","MAINTENANCE","ISOLATED"],
+    "anchor_interfaces": ["MECHANICAL","POWER","DATA","SELECTED_WATER","SELECTED_DRAINAGE"],
+    "interface_rules": [
+      "Mechanical anchor capacity/location is engineering-derived.",
+      "Wet-service anchors are selected only where justified and must be isolatable.",
+      "Motorised panels require safe state, local/manual override and failure isolation.",
+      "Moving modules must not be the sole accepted weatherproofing or life-safety layer.",
+      "Removal of a module leaves capped safe services and accepted circulation/weather state.",
+      "Each module and anchor assembly receives persistent Asset_ID/configuration lineage."
+    ]
+  },
+  "free_flow_terrestrial": {
+    "external_casing": "removable_replaceable_insulating_polymer",
+    "internal_casing": "separate electroplated experimental internal carrier per existing Free Flow R&D concept",
+    "scale_family": "bench through approximately 1 m3 Phase-1; larger tests require evidence-triggered proposal and review",
+    "states": ["TEST","CHARGE","DISCHARGE","ISOLATED","MAINTENANCE","FAULT"]
+  },
+  "temporary_module_lifecycle": {
+    "allowed_second_life": ["staff_support","landscape_support","utilities_oversight","community_support","other_low_hazard_operational_use"],
+    "not_automatic": ["higher_hazard_lab","wet_chemistry_lab","battery_fault_test_cell","cleanroom_with_higher_classification"],
+    "upgrade_rule": "Higher-spec use requires new fit-out, classification, hazard review and acceptance."
+  },
+  "evidence_gates": ["structural","wind","waterproofing","fire","electrical","hydraulic","access","security","actuator_fail_safe","materials_SDS","thermal","dielectric"],
+  "state": "OWNER_CURRENT_ARCHITECTURE / NUMERICAL_AND_RATED_VALUES_OPEN"
+}
