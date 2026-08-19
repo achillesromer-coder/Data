@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "authority": "Google Drive Type 1 Romer Cognigrex / sheet 142",
   "date": "2026-08-20",
   "decision_ids": ["OD-034","OD-035","OD-036","OD-037","OD-038","OD-039"],
@@ -11,6 +11,7 @@
     "temporary_module_second_life": "Temporary studios may become low-hazard community/operations/support spaces; laboratory conversion requires a separate higher-spec fit-out/classification/acceptance path.",
     "dual_sweep_output": "Every materially complete sweep returns both technical synthesis and concise owner/operator decision brief from the same immutable evidence set."
   },
+  "linked_machine_contracts": ["data/intersol/facility/modular_shell_interface_contract_v0_1.json"],
   "hard_boundaries": [
     "No blast/glazing rating inferred from owner intent.",
     "No motorised module may become sole life-safety or sole weatherproofing layer without independent accepted baseline.",
