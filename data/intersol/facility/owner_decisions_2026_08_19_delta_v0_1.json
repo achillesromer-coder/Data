@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1.0",
+  "decision_delta_id": "OD-DELTA-2026-08-19",
+  "canonical_drive": {
+    "spreadsheet": "Type 1 Romer Cognigrex",
+    "sheet": "142_OWNER_DECISIONS_VOICE_2026_08_16",
+    "decision_ids": ["OD-023","OD-024","OD-025","OD-026","OD-027","OD-028","OD-029","OD-030","OD-031","OD-032","OD-033"]
+  },
+  "decisions": {
+    "persistent_asset_identity": "Every persistent physical asset gets a stable Asset_ID; low-value consumables may use batch/lot identity.",
+    "watchtower_ac": "Keep source-lock baseline, analyse alternative A/C face exclusions, and require owner/professional promotion rather than automatic rebinding.",
+    "watchtower_robustness": "Display symmetric and asymmetric candidates side-by-side; test cable loss x1/x2/x3 and physically-defined tower-damage sensitivity before selection.",
+    "watchtower_roof": "Preserve planar FCStd substrate and use separately versioned shallow-curved Solar Hull/envelope overlay; retain wider analysis range without render-derived geometry.",
+    "resilience_energy_fuel": "Add below-grade refuge/service volumes; evaluate central/distributed/hybrid Free Flow storage including Chain-Hill/service-corridor growth; fuel-energy separation is analysis/QRA output with secondary manual approval.",
+    "federated_nodes": "Physical infrastructure follows Cognigrex architecture: autonomous node identity and minimum-safe function with mutual support, isolation, degraded and reunification states.",
+    "aviation": "Retain as long-horizon earmarked reserve/interface; do not harden current block geometry around unconfirmed aviation requirements.",
+    "ecogrex": "No fixed owner-selected ecological intensity. Eco-X/Eco-Grex collaboratively governs ecological integration from site/custodial/biosecurity/fire/water evidence and infrastructure constraints.",
+    "sensory_acoustic": "Remove biofield as a required chamber/programme label; optimise measurable internal facades/surfaces/environment interactions. Pilot acoustic ecology early and expand longitudinal cross-domain baselines.",
+    "web4": "COIN remains provenance/authority/evidence first; non-financial NFT/twin representations carry no implied title/IP/revenue/certification/mission rights. EMC2/LightSpeed Coin economic architecture may be prepared and backbenched but activation remains disabled until separate gates close.",
+    "pilot_ladder": "Use multiple outcome-led pilots: interplanetary supply-chain/Australian-sovereignty flagship, SEQLD Eco-Grex deployment, modular DIY outreach, and terrestrial Solar Hull/Free Flow R&D. Success in one pilot should inform/unlock the next rather than enforce a single rigid phase chain."
+  },
+  "watchtower_analysis_requirements": {
+    "height_family": {"A_zeta_preferred":[0.30,0.45],"C_zeta_preferred":[0.65,0.80],"state":"owner_family_confirmed_final_values_open"},
+    "face_selection":"hybrid_source_baseline_plus_better_found_candidates",
+    "candidate_promotion":"side_by_side_owner_and_professional_approval",
+    "cable_loss_required_counts":[1,2,3],
+    "tower_damage":"required_physically_defined_sensitivity_percentages_unset",
+    "symmetry":"seed_and_design_preference_not_automatic_winner"
+  },
+  "guardrails": [
+    "Owner decisions are not structural, regulatory, fire, electrical, ecological or launch-safety proof.",
+    "No fifth Watch Tower A/C anchor or automatic cable-edge promotion is created.",
+    "Tower-damage percentage requires a physically defined damaged region/mechanism; percentage alone is not a valid model.",
+    "Eco-X authority supersedes the provisional fixed HIGH ecological-integration default.",
+    "No therapeutic, clinical, healing-frequency or human-energy-field claim is created by environmental/acoustic/facade R&D.",
+    "No economic-token mint/transfer/custody/public activation is authorised."
+  ]
+}
