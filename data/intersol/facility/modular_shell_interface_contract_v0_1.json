@@ -1,9 +1,10 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "canonical_source": "Type 1 Romer Cognigrex / 145_MODULAR_SHELL_INTERFACE_v0_1",
   "architecture": {
     "primary_substrate": "reinforced_concrete_shell",
     "primary_rule": "Primary structure, waterproofing, egress, fire/electrical isolation and other accepted life-safety functions must remain independently safe without detachable or motorised R&D modules.",
+    "experimental_strategy": "Hybrid/staged: begin from a stable common structural/service substrate; compare interchangeable geometry/topology families when information gain justifies widening the design space.",
     "module_families": ["solar_hull","living_systems","scientific_instrumentation","thermal_underlay","acoustic_surface","lighting_surface","future_test_module"],
     "module_states": ["OPEN","PARTIAL","CLOSED","STORM_STOW","MAINTENANCE","ISOLATED"],
     "anchor_interfaces": ["MECHANICAL","POWER","DATA","SELECTED_WATER","SELECTED_DRAINAGE"],
@@ -12,6 +13,7 @@
       "Wet-service anchors are selected only where justified and must be isolatable.",
       "Motorised panels require safe state, local/manual override and failure isolation.",
       "Moving modules must not be the sole accepted weatherproofing or life-safety layer.",
+      "Inter-panel/cornice weather closure is separately qualified from actuation.",
       "Removal of a module leaves capped safe services and accepted circulation/weather state.",
       "Each module and anchor assembly receives persistent Asset_ID/configuration lineage."
     ]
@@ -20,6 +22,7 @@
     "external_casing": "removable_replaceable_insulating_polymer",
     "internal_casing": "separate electroplated experimental internal carrier per existing Free Flow R&D concept",
     "scale_family": "bench through approximately 1 m3 Phase-1; larger tests require evidence-triggered proposal and review",
+    "topology_strategy": "Hybrid/staged: preserve a common testbed/interface baseline while allowing alternative geometry families to be proposed and compared when results justify them.",
     "states": ["TEST","CHARGE","DISCHARGE","ISOLATED","MAINTENANCE","FAULT"]
   },
   "temporary_module_lifecycle": {
