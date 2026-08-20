@@ -1,0 +1,37 @@
+{
+  "schema": "intersol_publish_handoff_v0_1",
+  "canonical_authority": "Google Drive: Type 1 Romer Cognigrex",
+  "canonical_surfaces": ["154_INTERSOL_MASTER_READOUT_v0_1", "155_INTERSOL_2D_PARAMETRIC_BLUEPRINT_v0_1", "156_INTERSOL_COLLAPSED_CROSSWALK_v0_1", "157_INTERSOL_EXPORT_MANIFEST_v0_1", "158_INTERSOL_DERIVATION_LEDGER_v0_1", "159_INTERSOL_PUBLISH_HANDOFF_v0_1"],
+  "active_work": {
+    "task": "TASK-099",
+    "build": "BUILD-050",
+    "continuity_task": "TASK-100",
+    "continuity_build": "BUILD-051"
+  },
+  "first_publish": {
+    "state": "PREP_NOT_RELEASED",
+    "release_authority": "Achilles",
+    "review_consumer": "Athene/Go",
+    "publication_surface": "Web",
+    "exclusions": [
+      "restricted OT/security detail",
+      "personal or site-sensitive data",
+      "unqualified structural/fire/electrical/blast/ballistic ratings",
+      "unsupported Solar Hull or Free Flow performance claims",
+      "economic token activation claims"
+    ]
+  },
+  "platform_roles": {
+    "drive": "durable canon/source/workbooks",
+    "git": "operational routing/schema/code mirror",
+    "desktop_neo": "orchestration/persistence",
+    "go": "operator review/control",
+    "web": "front-facing publication",
+    "cognigrex": "bounded cross-analysis"
+  },
+  "neo_rule": "Neo automation state is under update. Re-read current Neo/automation controls before any routing assumption. No stale slot/scheduler assumption may be inherited.",
+  "chat_continuity_rule": "Material owner decisions and architecture deltas must be persisted to Drive/Git handoff surfaces before conversation context is treated as disposable.",
+  "document_shift_rule": "Preserve stable IDs, receipts and authority mappings when files move, rename or split; update export/handoff manifests before downstream routing.",
+  "publication_rule": "Automation may prepare, validate and route inputs but may not self-authorize public release.",
+  "generated_at": "2026-08-20T22:38:00+10:00"
+}

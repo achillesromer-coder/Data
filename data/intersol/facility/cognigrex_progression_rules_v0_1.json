@@ -1,0 +1,43 @@
+{
+  "version":"0.1.1",
+  "canonical_drive_sheet":"143_COGNIGREX_PROGRESSION_RULES_v0_1",
+  "source_id":"SRC-093",
+  "canonical_rule_count":12,
+  "rules":[
+    {"id":"CPR-001","name":"continuous_cross_domain_scan","summary":"Relevant domain/Z-stack agents cross-reference new evidence automatically; synthesis remains evidence-labelled."},
+    {"id":"CPR-002","name":"known_unknown_registration","summary":"Unresolved required variables receive stable IDs, dependencies, resolution methods and falsifiable next steps; closure requires evidence or a supersession receipt."},
+    {"id":"CPR-003","name":"autonomous_research_proposal","summary":"New patterns/unknowns generate agent-reviewed research proposals with completed/current-task comparison, expected information gain and preliminary H/M/L priority; proposals are not validation."},
+    {"id":"CPR-004","name":"information_yield_first","summary":"Prefer material knowledge/operational improvement and dependency unlock over micro-refinement, subject to safety/acceptance exceptions; low-yield tasks remain indexed."},
+    {"id":"CPR-005","name":"raw_test_preservation","summary":"Write immutable/raw test record before synthesis; preserve original inputs, code/config, environment, outputs, errors, timestamps and receipts where available; corrections append and never silently replace source evidence."},
+    {"id":"CPR-006","name":"outcome_classification","summary":"Classify analysis-stage results as VALID_POSITIVE, VALID_NULL, VALID_NEGATIVE, OUTLIER, INCONCLUSIVE, INVALID_HARNESS, INVALID_INPUT, MODEL_LIMITATION or SUPERSEDED; physical null/negative results must remain distinct from code/test failure."},
+    {"id":"CPR-007","name":"sweep_synthesis","summary":"Completed bounded sweeps produce hypothesis/null/expectation/observed/outlier/limits/reasoning/next-step synthesis referencing all underlying test IDs; statistical method must match the data and assumptions and must not force normal/bell-curve treatment where inappropriate."},
+    {"id":"CPR-008","name":"technology_centric_twin","summary":"One canonical twin/workbook per technology family; configurations/tests are versioned rows/receipts and may carry asset/test IDs without creating parallel masters; separate masters require a materially different technology/authority boundary."},
+    {"id":"CPR-009","name":"cross_domain_equation_abstraction","summary":"Candidate common equations require explicit variable/unit/domain/invariant/failure-condition mappings and falsifiable predictions; analogy alone is insufficient and originating discipline equations/mappings remain preserved."},
+    {"id":"CPR-010","name":"evidence_triggered_reanalysis","summary":"Material new evidence automatically identifies downstream conclusions/tasks for reanalysis while retaining prior conclusions and supersession lineage; stale values must not propagate silently."},
+    {"id":"CPR-011","name":"research_engineering_boundary","summary":"Novel R&D layers remain separate from certified/conventional baseline and cannot bypass physical, professional or regulatory validation; safety/compliance gates outrank novelty and information gain."},
+    {"id":"CPR-012","name":"partner_proposal_firewall","summary":"Named external organisations remain PROPOSED / EARMARKED / CANDIDATE until attributable agreements or authority evidence exist; planning shorthand must not become a public claim."}
+  ],
+  "priority_features":["expected_information_gain","uncertainty_reduction","dependency_unlock","safety_impact","operational_leverage","cost","risk","duplication","distance_from_established_knowns"],
+  "priority_feature_provenance":"CPR-003/004 plus owner-current OD-021/OD-022; distance_from_established_knowns is owner-current doctrine from OD-021.",
+  "owner_control":"Owner may override task priority, depth and order and may challenge classifications/syntheses; provenance, raw evidence and prior states remain immutable/append-only rather than silently overwritten.",
+  "evidence_invariants":[
+    "Inference never becomes fact without evidence/validation.",
+    "Known-unknown closure points to a source, test, calculation or supersession receipt.",
+    "Raw records remain distinct from interpretation and synthesis.",
+    "Invalid harness/input/model limitation is not a physical null or concept falsification.",
+    "Statistical treatment must match data and assumptions.",
+    "Cross-domain analogy requires falsifiable predictions before promotion.",
+    "New evidence triggers material downstream reanalysis without erasing superseded conclusions.",
+    "R&D performance remains separate from certified conventional baseline and professional/regulatory acceptance.",
+    "External partner participation is not current fact without attributable authority evidence."
+  ],
+  "no_go":[
+    "Do not promote agent inference to fact without evidence.",
+    "Do not classify code/test-harness failure as physical null.",
+    "Do not delete negative, null, outlier, failed or superseded results.",
+    "Do not force normal/bell-curve analysis where inappropriate.",
+    "Do not let novelty override safety/compliance gates.",
+    "Do not silently propagate stale values.",
+    "Do not present proposed partners as committed participants without evidence."
+  ]
+}

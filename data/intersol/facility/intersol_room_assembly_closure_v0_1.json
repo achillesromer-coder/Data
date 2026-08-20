@@ -1,0 +1,55 @@
+{
+  "version": "v0.1",
+  "date": "2026-08-20",
+  "canonical_authority": "Google Drive: Type 1 Romer Cognigrex",
+  "drive_sheets": [
+    "149_INTERSOL_COMPONENT_ASSEMBLY_REGISTER_v0_1",
+    "150_INTERSOL_PENETRATION_SEAL_SERVICE_v0_1",
+    "151_INTERSOL_ROOM_ASSEMBLY_ASSIGNMENT_v0_1",
+    "152_INTERSOL_SPECIFICATION_GAP_REGISTER_v0_1"
+  ],
+  "task": "TASK-096",
+  "build": "BUILD-047",
+  "scope": {
+    "spaces": "ISP-001..048",
+    "assembly_families": "ICA-001..047",
+    "purpose": "Map baseline structure, partitions, linings, floors, ceilings, openings, electrical/data, hydraulic/gas, HVAC/exhaust, fire/life-safety, special assemblies, penetration/seal rules and maintenance access to each programmed InterSol space; route unresolved numerical/product/rating choices to explicit evidence gates."
+  },
+  "closure_rules": [
+    "No room may reach design freeze with an undefined boundary, service, fire/life-safety or maintainability state.",
+    "No numerical structural, electrical, hydraulic, HVAC, fire, blast, ballistic, product or fastener value may be inferred without evidence/professional design.",
+    "H40 and L30 remain interface families, not allowable-load ratings.",
+    "All critical penetrations, joints, valves, dampers, traps, junctions and service interfaces must remain inspectable or have a defined removable access assembly.",
+    "Rated barriers use complete tested penetration systems; unknown penetration state is prohibited.",
+    "Experimental Solar Hull, living, acoustic, lighting or human-factors overlays remain secondary to the baseline safe structure/envelope/services.",
+    "Gas remains conditional and is not populated without a process inventory and hazard basis.",
+    "Free Flow test enclosures and operational storage are separate qualification families."
+  ],
+  "specification_gap_families": [
+    "concrete/reinforcement",
+    "mechanical fasteners/anchors",
+    "waterproofing/membranes",
+    "sealants/gaskets",
+    "internal linings/finishes",
+    "protective glazing/doors",
+    "electrical distribution",
+    "OT/data",
+    "potable water/plumbing",
+    "gas/process gas",
+    "HVAC/process exhaust",
+    "fire compartmentation/firestops",
+    "below-grade refuge systems",
+    "responsive roof actuators/cornices/moving seals",
+    "Free Flow enclosure/storage hardware",
+    "room assembly completeness"
+  ],
+  "state": "architecture and assembly families defined; room mapping complete at baseline; deterministic cross-check and evidence-gated numerical/product closure next",
+  "prohibited_claims": [
+    "construction-ready",
+    "IFC-ready",
+    "site-bound",
+    "as-built",
+    "protective rating verified",
+    "performance verified"
+  ]
+}

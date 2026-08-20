@@ -1,0 +1,30 @@
+{
+  "version": "0.1.0",
+  "id": "INTERSOL-STANDARDS-APPLICABILITY-001",
+  "authority": "Google Drive Type 1 Romer Cognigrex / 126_INTERSOL_STANDARDS_APPLICABILITY_v0_1",
+  "authority_rule": "Official source currency and technical relevance do not establish InterSol legal/project applicability or compliance.",
+  "record_count": 17,
+  "source_refs": ["SRC-083","SRC-084","SRC-085","SRC-086","SRC-087","SRC-088","SRC-089","SRC-090"],
+  "candidate_source_families": {
+    "building_and_sanitary": ["IS-STD-NCC-001","IS-STD-SAN-001"],
+    "accessibility": ["IS-STD-ACCESS-001"],
+    "laboratory_and_emergency_wash": ["IS-STD-LAB-001","IS-STD-EW-001","IS-STD-WHS-CHEM-001","IS-STD-FIRSTAID-001"],
+    "lighting": ["IS-STD-LIGHT-001","IS-STD-CIE-001","IS-STD-CIE-WP-001","IS-STD-OBTRUSIVE-001"],
+    "indoor_environment": ["IS-STD-IEQ-001"],
+    "noise": ["IS-STD-NOISE-001"],
+    "electrical": ["IS-STD-ELEC-001"],
+    "fire_egress": ["IS-STD-FIRE-001"],
+    "ot_cyber": ["IS-STD-CYBER-001"],
+    "human_research_biofield_claim_boundary": ["IS-STD-HUMANR-001"]
+  },
+  "current_source_notes": [
+    "Queensland project NCC edition/application depends on approval timing, classification and transition provisions.",
+    "AS 2982:2026 and AS 4775:2026 are current source records for laboratory design and emergency wash respectively, but actual application remains process/hazard dependent.",
+    "AS/NZS 1680.1 is retained as a candidate Australian workplace-lighting source and is listed pending revision; recheck before design freeze.",
+    "CIE integrative/workplace/obtrusive-light documents are design/research references unless separately adopted into the project basis.",
+    "ISO 16813:2024 is used as an integrated-design methodology reference, not an Australian compliance claim.",
+    "NCCIH evidence is used only to enforce a research/claim boundary around biofield-labelled work."
+  ],
+  "applicability_inputs": ["authorised site","approval date","building/use classification","occupancy","process/equipment","hazard/chemical inventory","current standards/referenced-documents set","discipline/certifier decision"],
+  "current_state": "DRIVE_POPULATED / GIT_MANIFESTED / PROJECT_APPLICABILITY_AND_COMPLIANCE_HELD"
+}

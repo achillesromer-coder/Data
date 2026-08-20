@@ -1,0 +1,34 @@
+{
+  "version":"0.1.1",
+  "register_id":"INTERSOL-HIST-COMPARATOR-001",
+  "canonical_control":"Google Drive Type 1 Romer Cognigrex / 120_INTERSOL_HIST_COMPARATOR_v0_1",
+  "authority":"HISTORICAL_OWNER_LINEAGE_NOT_CURRENT_ENGINEERING",
+  "sources":["Inter-Sol Development (April 2022)","Warehouse specs to date (2022-era)","Inter-Sol Summarised v.1","Inter-sol - Costing","Römer Industries - 2023","SRC-075"],
+  "comparators":[
+    {"id":"HST-001","bod":"IFM-005","item":"warehouse envelope","historical":{"length_m":250,"width_m":40,"raised_m":3,"height_m":{"centre":22,"east":20,"west":24}},"current_use":"spatial/clearance comparator only"},
+    {"id":"HST-002","bod":"IFM-005","item":"warehouse garage doors","historical":{"door_width_m":16,"door_height_m":15,"centre_gap_m":6,"north_count":2,"south_count":2},"current_use":"door/flow comparator; current design vehicle and fire/egress required"},
+    {"id":"HST-003","bod":"IFM-005|IFM-009","item":"west-wall common area/offices","historical":{"length_m":75,"width_m":7,"height_m":2.5,"raised_m":3},"current_use":"occupancy/programme comparator only"},
+    {"id":"HST-004","bod":"IFM-007","item":"Falcon9-compatible roads","historical":{"count":2,"length_m":750,"width_m":15,"raised_m":3,"incline":"none"},"current_use":"route/width comparator; historical vehicle assumption"},
+    {"id":"HST-005","bod":"IFM-007","item":"Starship-compatible road","historical":{"length_m":750,"width_m":16,"level_m":{"start":3,"end":4}},"current_use":"geometry/grade comparator; historical vehicle assumption"},
+    {"id":"HST-006","bod":"IFM-007","item":"Super Heavy-compatible road","historical":{"length_m":750,"width_m":16,"level_m":{"start":4,"end":3}},"current_use":"geometry/grade comparator; historical vehicle assumption"},
+    {"id":"HST-007","bod":"IFM-006|IFM-007","item":"Falcon9 landing pads","historical":{"count":2,"diameter_m":75,"central_crane":true,"embedded_cogged_relay":true,"reinforced_foundation":true},"current_use":"pad/material-handling topology comparator only"},
+    {"id":"HST-008","bod":"IFM-005|IFM-006|IFM-007","item":"launch/landing topology","historical":{"landing_pads":3,"operational_towers":2,"workflow":"single line of work through repair house","north":"two Falcon-comparable landing sites adjacent to Starship launch pad","south":"Falcon-comparable launch site adjacent to Superheavy landing pad"},"current_use":"functional/masterplan topology comparator"},
+    {"id":"HST-009","bod":"IFM-002|IFM-003|IFM-004|IFM-014|IFM-017","item":"mission base/control tower","historical":{"initial":"offset warehouse rooms monitor/track/command","later":"dedicated mission-control base and air-control tower","relative_location":"west side","visibility":"all landing pads, both launch pads, remote airstrip if implemented","base_function":"condense personnel/foot traffic for safety/security"},"current_use":"functional/LOS lineage; west-side orientation awaits actual site datum"},
+    {"id":"HST-010","bod":"IFM-001|IFM-008","item":"water infrastructure sequencing","historical":{"phase":1,"elements":["percolation dams","retention dams","emergency dams"]},"current_use":"water-first sequencing precedent; no historical sizing adoption"},
+    {"id":"HST-011","bod":"IFM-010","item":"eco-rehabilitation sequencing","historical":{"phase":2,"parallel_with":["landing pads","tower base/tanks","warehouse completion"]},"current_use":"ecology-integrated staging precedent; current Eco-Grex governance supersedes generic programme"},
+    {"id":"HST-012","bod":"IFM-009|IFM-017","item":"airstrip/research-community expansion","historical":{"airstrip":"initial remote then cargo/heavy-vehicle-horizontal-launch compatible concept","air_control":true,"mission_control":true,"community":["scientific research centre","living quarters","community hub"]},"current_use":"long-horizon function comparator only"},
+    {"id":"HST-013","bod":"IFM-005|IFM-007","item":"repair-house workflow","historical":{"layout":"antiparallel assembly-line concept","functions":["simultaneous repair flows","salvage/reuse of recoverable parts","close pad proximity","repair/stacking turnaround"]},"current_use":"candidate workflow principle; current programme/WHS/QA required"},
+    {"id":"HST-014","bod":"PROGRAMME","item":"early schedule snapshot","historical":{"stage1":"30/06/2022","stage2":"04/06/2024","stage3":"30/06/2026","stage4":"04/06/2028"},"current_use":"phasing provenance only; dates superseded"},
+    {"id":"HST-015","bod":"PROGRAMME","item":"2023 schedule snapshot","historical":{"stage1":"30/06/2024","stage2":"04/06/2025","stage3":"30/06/2027","stage4":"04/06/2028"},"current_use":"schedule lineage only; conflicts with other historical snapshots"},
+    {"id":"HST-016","bod":"PROGRAMME","item":"later costing schedule snapshot","historical":{"stage1":"30/06/2024","stage2":"04/06/2026","stage3":"30/06/2028","stage4":"04/06/2030"},"current_use":"schedule lineage only; current programme must be rebuilt"},
+    {"id":"HST-017","bod":"COST_MODEL","item":"Inter-sol Initial total","historical":{"raw_value":193073250,"currency":"NOT_RELIABLY_ESTABLISHED_BY_THIS_REGISTER"},"current_use":"historical order-of-magnitude provenance only; not current CAPEX/budget"},
+    {"id":"HST-018","bod":"IFM-005|IFM-006|IFM-007|IFM-008","item":"historical cost concentration","historical":{"repair_house":42500000,"chain_drive_conveyor":26200000,"conveyor_bed":900000,"landing_pads":4780000,"launch_pad":112240000,"reticulation_retention_dams":1230000,"currency":"SOURCE_CURRENCY_UNSPECIFIED_HERE"},"current_use":"relative cost-weight comparator only; fresh QTO/rates/escalation/risk required"}
+  ],
+  "conflict_rules":[
+    "Conflicting historical dates are preserved as separate snapshots, not reconciled into a synthetic schedule.",
+    "Vehicle-branded dimensions are not current vehicle-interface requirements.",
+    "Historical cost values are not current CAPEX, budgets, quotes or approvals.",
+    "Historical relative placement such as west-side mission control is not a geodetic/site coordinate.",
+    "A historical value may enter a current BOD only through an explicit re-adoption decision with current evidence and review."
+  ]
+}

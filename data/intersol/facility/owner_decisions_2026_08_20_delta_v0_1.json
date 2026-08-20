@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1.1",
+  "authority": "Google Drive Type 1 Romer Cognigrex / sheet 142",
+  "date": "2026-08-20",
+  "decision_ids": ["OD-034","OD-035","OD-036","OD-037","OD-038","OD-039"],
+  "summary": {
+    "free_flow_modular_casing": "Removable/replaceable external insulating casing; technology-centric twin remains stable while test articles/configurations evolve.",
+    "modular_shell_architecture": "Durable reinforced-concrete primary shell with engineered mechanical/service anchors; detachable or justified motorised secondary roof/façade/test modules; primary shell remains safe and functional without R&D modules.",
+    "standard_module_kit": "Repeatable clean/support module and service interfaces across sites, with payload/process-specific customisation only where required.",
+    "phase1_internal_rd_core": "Solar Hull/Paint, Free Flow Battery/Capacitor, capsule/integration systems and controls/OT as mandatory internal core, with specialist lanes under hybrid capability-growth model.",
+    "temporary_module_second_life": "Temporary studios may become low-hazard community/operations/support spaces; laboratory conversion requires a separate higher-spec fit-out/classification/acceptance path.",
+    "dual_sweep_output": "Every materially complete sweep returns both technical synthesis and concise owner/operator decision brief from the same immutable evidence set."
+  },
+  "linked_machine_contracts": ["data/intersol/facility/modular_shell_interface_contract_v0_1.json"],
+  "hard_boundaries": [
+    "No blast/glazing rating inferred from owner intent.",
+    "No motorised module may become sole life-safety or sole weatherproofing layer without independent accepted baseline.",
+    "No Free Flow safety/performance claim from material intent or modularity.",
+    "No higher-hazard laboratory use by relabelling temporary accommodation.",
+    "No summary may suppress null/negative/outlier/invalid-harness evidence."
+  ],
+  "linked_drive": ["142_OWNER_DECISIONS_VOICE_2026_08_16","143_COGNIGREX_PROGRESSION_RULES_v0_1","144_NEXT_VOICE_QUEUE_v0_1","145_MODULAR_SHELL_INTERFACE_v0_1"],
+  "state": "REVIEW_GATED / DRIVE_CANONICAL"
+}

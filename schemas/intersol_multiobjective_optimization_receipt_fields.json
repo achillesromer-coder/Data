@@ -1,0 +1,38 @@
+{
+  "schema_name":"intersol_multiobjective_optimization_receipt_fields",
+  "version":"0.1.0",
+  "purpose":"Audit contract for bounded multi-objective candidate generation, hard-constraint filtering, stress-test evaluation and Pareto promotion across InterSol assemblies. A receipt is analysis provenance, not engineering certification.",
+  "fields":[
+    {"name":"Receipt_ID","type":"string","required":true},
+    {"name":"Asset_or_Assembly_ID","type":"string","required":true},
+    {"name":"Source_Geometry_or_Config_Hash","type":"string_or_null","required":true},
+    {"name":"Semantic_Map_Version","type":"string_or_null","required":true},
+    {"name":"Candidate_ID","type":"string","required":true},
+    {"name":"Candidate_Parameters","type":"object","required":true},
+    {"name":"Input_Evidence_Refs","type":"array","required":true},
+    {"name":"Analysis_Model_Ref","type":"string_or_null","required":true},
+    {"name":"Units_Basis","type":"object","required":true},
+    {"name":"Hard_Constraint_Results","type":"array","required":true},
+    {"name":"Stress_Case_Results","type":"array","required":true},
+    {"name":"Objective_Metrics","type":"object","required":true},
+    {"name":"Uncertainty_or_Sensitivity","type":"object_or_null","required":true},
+    {"name":"Dominance_State","type":"enum","allowed_values":["NOT_EVALUATED","HARD_FAIL","DOMINATED","PARETO_CANDIDATE","PARETO_SELECTED_FOR_REVIEW"],"required":true},
+    {"name":"Engineering_Review_State","type":"enum","allowed_values":["NOT_APPLICABLE_YET","PENDING","REVIEWED_ACCEPTABLE","REVIEWED_REJECTED"],"required":true},
+    {"name":"Owner_Preference_State","type":"enum","allowed_values":["NOT_APPLIED","PENDING","PREFERRED_AFTER_TECHNICAL_ADMISSIBILITY","REJECTED"],"required":true},
+    {"name":"Promotion_State","type":"enum","allowed_values":["CANDIDATE_ONLY","REVIEW_QUEUE","PROMOTED_DERIVED_DESIGN","REJECTED","SUPERSEDED"],"required":true},
+    {"name":"Decision_Owner","type":"string_or_null","required":true},
+    {"name":"Professional_Reviewer","type":"string_or_null","required":true},
+    {"name":"Revalidation_Triggers","type":"array","required":true},
+    {"name":"Receipt_Hash","type":"string_or_null","required":true},
+    {"name":"Notes","type":"string","required":true}
+  ],
+  "validation_rules":[
+    "A candidate with any failed hard safety/compliance constraint cannot be PARETO_CANDIDATE or promoted.",
+    "Owner/aesthetic weights may only be applied after technical admissibility; they cannot convert HARD_FAIL into an acceptable state.",
+    "Unknown or unavailable engineering inputs remain null/unknown and must not be replaced with guessed values.",
+    "Every numerical metric must carry a units basis, evidence/model source and current geometry/configuration identity.",
+    "Stress-test outputs are provisional until the relevant discipline model and inputs are professionally reviewed.",
+    "Promotion of a derived design does not create construction approval, certification, licence or operational authority.",
+    "Any source geometry/configuration, applicable-standard, site/hazard or material change triggers revalidation."
+  ]
+}

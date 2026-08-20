@@ -1,0 +1,14 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 129_COMMISSIONING_ACCEPTANCE_v0_1 A1:R26",
+  "drive_is_authoritative": true,
+  "control_refs": {"source_ids":["SRC-083","SRC-087","SRC-091","SRC-092"],"task_id":"TASK-077","build_id":"BUILD-033","artifact_id":"ART-031"},
+  "record_count": 25,
+  "key_ids": "CA-001..CA-025",
+  "purpose": "Define foundation-first commissioning and acceptance contracts across conventional occupied/technical baselines, mission/control, smart systems and isolated R&D layers.",
+  "coverage": ["source/configuration control","access/egress","sanitary amenities","first aid/emergency wash","HVAC/IEQ/process exhaust","electrical/UPS/isolation","fire","OT/cyber","mission human factors","Watch Tower","operations acoustics","acoustic R&D chambers","sensory R&D","lighting","industrial/lifting/flow","clean integration","chemical/dirty utility","battery R&D","water","public route","quiet/residency","Eco-Grex","waste","site traffic/muster/emergency"],
+  "core_rule": "A conventional/reference baseline must be accepted before a smart/adaptive/R&D overlay can be promoted.",
+  "rollback_rule": "Every promoted layer has a tested safe/degraded/manual route back to the last accepted configuration.",
+  "claim_boundary": "These are acceptance contracts only; no unbuilt or unscoped system is represented as commissioned or compliant.",
+  "project_values": "Remain null/open until accepted BODs, installed systems and discipline-defined criteria exist."
+}

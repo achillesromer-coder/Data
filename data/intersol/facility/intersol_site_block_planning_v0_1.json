@@ -1,0 +1,16 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 132_SITE_BLOCK_PLANNING_v0_1 A1:R25",
+  "drive_is_authoritative": true,
+  "control_refs": {"source_ids":["SRC-080","SRC-082","SRC-083","SRC-091","SRC-092"],"task_id":"TASK-080","build_id":"BUILD-036","artifact_id":"ART-034"},
+  "record_count": 24,
+  "key_ids": "BP-001..BP-024",
+  "purpose": "Define site-neutral zone, network and interface constraints before any current site coordinates, separations or building footprints are selected.",
+  "coverage": ["public arrival","secure operations","Watch Tower interface","dry R&D","wet/chemical R&D","acoustic R&D suite","industrial repair/fabrication","receiving/quarantine","clean integration","battery/energy R&D","plant/service spine","amenity distribution","quiet/wellbeing","sleep/residency","vehicle/logistics","pedestrian/accessibility","emergency/muster","water/stormwater/ecology hydrology","Eco-Grex living landscape","exterior night lighting","launch/return hazard envelope","future aviation interface","T1-25 service reserve","phasing/independent shutdown"],
+  "dominant_open_gate": "Authorised site/operator/vehicle/activity hazard and safety case for launch/return external hazards.",
+  "geometry_policy": "No current coordinates, separation distances, road dimensions, pad relationships, dam sizes or accommodation placement are promoted from archive material.",
+  "required_site_inputs": ["authorised boundary and survey/topography","geotechnical/hydrology/flood/water data","utilities and access","occupancy/building classification","current vehicles/equipment/process flows","launch/return QRA and emergency basis","ecology/cultural/First Nations/biosecurity inputs"],
+  "historical_firewall": "Historical west-side tower relationship, roads, pads, water-first staging, airstrip and community functions remain bounded comparators only.",
+  "resilience_rule": "Zones should be commissionable, isolatable, maintainable and closable without unnecessarily disabling the last accepted safe operations core.",
+  "no_go": ["no arbitrary launch exclusion radius","no old-plan placement inheritance","no public/restricted or pedestrian/vehicle conflict hidden by smart sensing","no living-system obstruction of critical safety/maintenance envelopes"]
+}

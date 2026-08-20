@@ -1,0 +1,37 @@
+{
+  "version": "0.1.0",
+  "id": "INTERSOL-ADJACENCY-FLOW-001",
+  "authority": "Google Drive Type 1 Romer Cognigrex / 124_ADJACENCY_FLOW_MATRIX_v0_1",
+  "authority_rule": "Drive is canonical; this manifest exposes the layout-control contract to Git-based agents.",
+  "relationship_count": 30,
+  "fields": ["Flow_ID","From_Zone","To_Zone","Flow_Type","Preferred_Relationship","Reason","Primary_Control","Contamination_or_Hazard_Control","Security_Control","Accessibility_Control","Emergency_Control","Smart_Overlay","Evidence_State","Sizing_or_Distance_State","Review_Owner","Reanalysis_Trigger","Notes","Status"],
+  "source_refs": ["SRC-075","SRC-080","SRC-081","SRC-087"],
+  "historical_seed": "The historic single-line repair-house workflow remains a candidate functional principle. Historic road, pad, warehouse and placement dimensions do not define current layout.",
+  "relationship_families": [
+    "public-to-restricted transitions",
+    "mission-control-to-briefing/comms/emergency coordination",
+    "laboratory-to-food/hazard/emergency-wash separation",
+    "acoustic/sensory R&D isolation",
+    "receiving/quarantine/repair/fabrication/clean-integration material flow",
+    "dirty utility/waste downstream flow",
+    "PPE/change and sanitary distribution",
+    "first-aid reachability",
+    "residency/rest separation from industrial/launch/plant noise and hazards",
+    "public evidence views without restricted access",
+    "plant/service separation from quiet/metrology/acoustic spaces",
+    "potable/emergency-wash separation from experimental reuse water",
+    "heavy-vehicle/pedestrian segregation",
+    "launch-hazard separation",
+    "Eco-Grex exclusion from egress/security/cables/critical maintenance"
+  ],
+  "numeric_distance_state": "UNSET_PENDING_SITE_GEOMETRY_CURRENT_VEHICLES_PROCESSES_HAZARD_BASIS",
+  "invariants": [
+    "Emergency egress cannot depend on digital credentials.",
+    "Food/rest spaces do not form a contamination route.",
+    "Clean integration has controlled transfer and a separate dirty/waste return path.",
+    "Heavy-vehicle movement is segregated from pedestrian/public paths according to actual risk.",
+    "No launch/public/residency separation distance is guessed before QRA/licensing/site evidence.",
+    "Living systems cannot obstruct egress, security sightlines, cable access or maintenance."
+  ],
+  "current_state": "DRIVE_POPULATED / GIT_MANIFESTED / GEOMETRIC_LAYOUT_OPTIMISATION_AWAITS_SITE"
+}

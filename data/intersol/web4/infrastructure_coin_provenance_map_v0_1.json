@@ -1,0 +1,36 @@
+{
+  "version":"0.1.0",
+  "map_id":"INTERSOL-COIN-PROVENANCE-001",
+  "canonical_control":"Google Drive Type 1 Romer Cognigrex / 119_WEB4_INFRA_PROVENANCE_v0_1",
+  "operating_default":"COIN_FIRST_NON_MONETARY",
+  "coin_definition":"Cognigrex Operations Integrity Network",
+  "object_mappings":[
+    {"class":"PHYSICAL_ASSET","id_pattern":"INF-*","authority":"approved source/as-built/asset register","coin_events":["IDN","OBS","EVD","TSK","GOV","RUN","REC"],"public_anchor":"optional redacted integrity digest","nft":"optional non-financial provenance certificate","economic":"DISABLED"},
+    {"class":"ASSEMBLY","id_pattern":"ASM-*","authority":"accepted BOM/drawing/configuration","coin_events":["EVD","TSK","GOV","RUN","REC"],"public_anchor":"optional configuration digest","nft":"optional non-financial edition object","economic":"DISABLED"},
+    {"class":"WATCH_TOWER","id_pattern":"WT-001","authority":"SRC-068 plus promoted semantic/engineering revisions","coin_events":["OBS","EVD","TSK","GOV","RUN","REC"],"public_anchor":"only after publication gate","nft":"optional non-financial twin/art certificate","economic":"DISABLED"},
+    {"class":"SOLAR_HULL_TEST","id_pattern":"SH-COUPON-*|SH-ASM-*","authority":"physical coupon/assembly raw evidence","coin_events":["OBS","EVD","TSK","RUN","REC"],"public_anchor":"optional after IP redaction","nft":"optional R&D provenance object","economic":"DISABLED"},
+    {"class":"ECO_SITE","id_pattern":"ECO-INTERSOL-*","authority":"site baseline/approved plan/monitoring","coin_events":["OBS","EVD","TSK","GOV","REC"],"public_anchor":"optional public-benefit integrity digest","nft":"optional Eco-X provenance object","economic":"DISABLED"},
+    {"class":"INSPECTION_RECEIPT","id_pattern":"REC-INF-*","authority":"authorised inspection/test record","coin_events":["IDN","ACL","EVD","GOV","REC"],"public_anchor":"optional redacted receipt digest","nft":null,"economic":"DISABLED"},
+    {"class":"SENSOR_OBSERVATION","id_pattern":"OBS-INF-*","authority":"calibrated instrument plus accepted pipeline","coin_events":["IDN","ACL","OBS","EVD"],"public_anchor":"aggregated/redacted only","nft":null,"economic":"DISABLED"},
+    {"class":"MARK_LUKE_HARDWARE","id_pattern":"HW-MARK-*|HW-LUKE-*","authority":"build/test/mission evidence","coin_events":["OBS","EVD","TSK","GOV","RUN","REC"],"public_anchor":"optional public-safe integrity digest","nft":"historical birth-certificate pattern may be retained only after legal review","economic":"DISABLED"},
+    {"class":"ARTISTIC_RENDER","id_pattern":"VIS-*","authority":"approved visual lock plus source/prompt provenance","coin_events":["EVD","GOV","REC"],"public_anchor":"optional image hash","nft":"optional art object after IP/rights review","economic":"DISABLED"},
+    {"class":"EMC2_ECONOMIC_LAYER","id_pattern":"EMC2-*","authority":"future separately authorised legal/product architecture","coin_events":[],"public_anchor":null,"nft":"potential future token architecture only","economic":"DISABLED_PENDING_COUNSEL_PRODUCT_AML_TAX_CUSTODY_SECURITY_GATE"}
+  ],
+  "rights_defaults":{
+    "transferability":"NON_TRANSFERABLE_OR_NON_FINANCIAL_PREFERRED",
+    "physical_title":false,
+    "land_rights":false,
+    "ip_licence":false,
+    "revenue_or_yield":false,
+    "engineering_certification":false,
+    "mission_or_resource_rights":false,
+    "regulatory_exemption":false
+  },
+  "privacy_security_rules":[
+    "Personal, sensitive ecological/cultural, restricted engineering, security and OT topology data stay off public immutable layers.",
+    "Public integrity anchors may prove existence/integrity but do not bridge value or legal rights.",
+    "A COIN event records provenance/authority/execution/receipt state only within its authorised scope.",
+    "Drive remains canonical for approved knowledge-state promotion."
+  ],
+  "legacy_lineage":{"source":"legacy LightSpeed/EMC2 token and NFT strategy","status":"PRESERVED_HISTORICAL_STRATEGY","operating_effect":"NONE_UNLESS_SEPARATELY_REAUTHORISED"}
+}
