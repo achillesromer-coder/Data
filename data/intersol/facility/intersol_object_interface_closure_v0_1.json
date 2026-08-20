@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1.0",
+  "canonical_source": "Type 1 Romer Cognigrex / 147_INTERSOL_OBJECT_INTERFACE_CLOSURE_v0_1",
+  "purpose": "Thin machine-routing mirror of the InterSol object/interface closure contract. Drive remains canonical.",
+  "closure_scope": [
+    "watch_tower_primary_shell",
+    "watch_tower_A_C_candidate_graph",
+    "rooftop_heavy_anchor_H40_nominal",
+    "rooftop_light_anchor_L30_nominal",
+    "responsive_roof_module_state_machine",
+    "underground_refuge_node",
+    "free_flow_storage_node",
+    "warehouse_primary_node",
+    "R_and_D_primary_node",
+    "temporary_support_module_family",
+    "site_adapter_federated_node_graph",
+    "external_collaboration_knowledge_transfer_interface"
+  ],
+  "identity_doctrine": {
+    "persistent_asset_ids": true,
+    "site_transform_does_not_rename_asset": true,
+    "configuration_hash_for_reconfigurable_modules": true,
+    "candidate_edges_not_canonical_until_review": true
+  },
+  "anchor_classes": {
+    "H40": {
+      "status": "OWNER_CURRENT_NOMINAL_INTERFACE_NOT_RATED_CAPACITY",
+      "functions": ["mechanical_receiver", "power_data", "selected_water", "selected_gas_capable_service_suite"],
+      "required_states": ["CAPPED", "AVAILABLE", "CONNECTED", "ISOLATED", "MAINTENANCE", "FAULT"],
+      "guardrails": ["40 mm does not imply capacity", "gas and electrical coexistence requires discipline segregation and approval", "flush cap/cover required when unused"]
+    },
+    "L30": {
+      "status": "OWNER_CURRENT_NOMINAL_INTERFACE_NOT_RATED_CAPACITY",
+      "functions": ["mechanical_receiver", "power_data", "selected_water"],
+      "required_states": ["CAPPED", "AVAILABLE", "CONNECTED", "ISOLATED", "MAINTENANCE", "FAULT"],
+      "guardrails": ["30 mm does not imply capacity", "no gas by baseline"]
+    }
+  },
+  "responsive_roof_states": ["OPEN", "PARTIAL", "CLOSED", "STORM_STOW", "LAUNCH_PROTECT", "MAINTENANCE", "FAULT"],
+  "watch_tower_robustness_states": ["NOMINAL_SLACK", "WEATHER_SLACK", "FAILSAFE", "LOSS_X1", "LOSS_X2", "LOSS_X3", "DAMAGE_CASE"],
+  "site_adapter_states": ["STANDALONE", "CONNECTED", "SUPPORTING", "SUPPORTED", "ISOLATED", "DEGRADED", "REJOIN"],
+  "hard_boundaries": [
+    "No fifth A/C anchor.",
+    "No cable force, pretension or survivability claim without engineering evidence.",
+    "No render-derived engineering geometry.",
+    "No bunker depth, blast rating, refuge duration or capacity guessed.",
+    "No Free Flow non-toxicity, runaway-immunity, capacity or performance claim inferred.",
+    "No proposed partner is treated as contracted or authorised.",
+    "No H40/L30 nominal insert diameter is treated as a structural rating."
+  ],
+  "next_evidence": [
+    "authorised site/survey/geotech/hydrology/utilities",
+    "mission/operator/QRA/hazard basis",
+    "occupancy/classification",
+    "vehicle/payload/process/lifting/throughput data",
+    "cable/material/reinforcement/foundation data",
+    "SDS/process inventories",
+    "Eco-X and acoustic-ecology baseline"
+  ],
+  "state": "DIGITAL_OBJECT_INTERFACE_CLOSURE_ACTIVE / ENGINEERING_AND_SITE VALUES EVIDENCE_GATED"
+}
