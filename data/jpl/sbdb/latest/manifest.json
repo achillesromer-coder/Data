@@ -8,13 +8,13 @@
   ],
   "objects": {
     "anteros": {
-      "captured_at": "2026-08-19T04:54:18+00:00",
+      "captured_at": "2026-08-20T04:56:03+00:00",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/sbdb/latest/anteros.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Anteros",
-      "sha256": "44be7628bb8ee6c87d2aac054a61d1e691c198e6395307f7622721ef34b02ca4",
+      "sha256": "4cad261826ef5bf69220edf6915e409393b0e07036d2d8a4cab6fb295a206cb0",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Anteros&phys-par=1&ca-data=1",
       "status": "captured"
