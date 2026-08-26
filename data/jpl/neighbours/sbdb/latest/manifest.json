@@ -176,13 +176,13 @@
       "status": "captured"
     },
     "vinciguerra": {
-      "captured_at": "2026-07-14T09:18:22+00:00",
+      "captured_at": "2026-08-26T04:58:44+00:00",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/vinciguerra.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Vinciguerra",
-      "sha256": "4379ead0727e16213c452251fb29cd3de0c64a7ecff8d802937780b19c6b50ec",
+      "sha256": "4c1a7ce77be9b62d1ce1fbb37a069801514bdc38733be7f86775de424a13fdc4",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Vinciguerra&phys-par=1&ca-data=1",
       "status": "captured"
