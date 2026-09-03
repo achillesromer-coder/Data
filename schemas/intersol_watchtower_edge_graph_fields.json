@@ -1,0 +1,46 @@
+{
+  "schema_name": "intersol_watchtower_edge_graph_fields",
+  "version": "2026-08-13-v0.1",
+  "source_workbook": "Type 1 Romer Cognigrex",
+  "source_surface": "105_WATCHTOWER_EDGE_GRAPH_v0_1",
+  "asset_id": "WT-001",
+  "purpose": "Field contract for source-traceable Watch Tower cable/edge topology and operational cable-state definitions. Exact target-node mapping remains held until attributable current FreeCAD extraction.",
+  "fields": [
+    {"name":"Edge_ID","type":"string","required":true,"description":"Stable edge or state-profile identifier."},
+    {"name":"From_Node","type":"string","required":true,"description":"Stable source node ID. A family/state profile may use an explicit group token."},
+    {"name":"To_Node","type":"string","required":true,"description":"Stable destination node ID or explicit unresolved token such as TARGET_FCSTD_UNRESOLVED."},
+    {"name":"Edge_Class","type":"string","required":true,"description":"Primary cable family, pole/interface family, perimeter family, failure case or state definition."},
+    {"name":"Mirror_Group","type":"string","required":false,"description":"Mirror/symmetry QA grouping; not a substitute for source coordinates."},
+    {"name":"Quantity_or_Faces","type":"string","required":false,"description":"Explicit quantity/faces or FCStd-defined unresolved cardinality."},
+    {"name":"Geometry_Rule","type":"string","required":true,"description":"Endpoint line-of-sight rule plus catenary/sag or other source-backed geometry rule."},
+    {"name":"Operational_State","type":"string","required":true,"description":"NOMINAL, WEATHER_SLACK, SAFETY_RELAX, CABLE_LOSS_N1, MAINTENANCE_ISOLATED or explicit unresolved state."},
+    {"name":"Load_or_Function","type":"string","required":true,"description":"Structural/support/maintenance/failure-screening role."},
+    {"name":"Evidence_State","type":"string","required":true,"description":"Owner-current start node, target open, derived test case, schema-ready or other controlled state."},
+    {"name":"Validation_Needed","type":"string","required":true,"description":"Required geometry/cable/structural/safety evidence before promotion."},
+    {"name":"Repo_Key","type":"string","required":true,"description":"Stable downstream adapter key."},
+    {"name":"Twin_State","type":"string","required":true,"description":"Gated state such as HOLD-ENDPOINT, SCHEMA-READY, G3-HOLD or G5-HOLD."},
+    {"name":"Notes","type":"string","required":false,"description":"Provenance and anti-inference guardrails."},
+    {"name":"Active_Default","type":"boolean_or_string","required":true,"description":"Whether the row is active by default in a twin state; source-unresolved edges remain false."}
+  ],
+  "edge_invariants": [
+    "WT-A-F1 through WT-A-F4 and WT-C-F1 through WT-C-F4 are valid current tower-face source anchors.",
+    "No exact face-anchor-to-wing-pole target may be invented before current FCStd extraction.",
+    "Primary cable geometry is not a rigid straight-member assumption; equilibrium/sag must be derived from endpoint geometry and later cable properties.",
+    "Cable visual count must derive from the resolved edge graph rather than an artistic render.",
+    "WT-E remains a physical node with unresolved adjacency until extracted.",
+    "Left/right perimeter families do not assert an all-to-all pole connection."
+  ],
+  "state_profiles": [
+    {"id":"NOMINAL","description":"Normal engineered equilibrium state after cable properties and pretension are defined."},
+    {"id":"WEATHER_SLACK","description":"Environment-dependent state allowing additional sag/slack only where the engineered envelope permits."},
+    {"id":"SAFETY_RELAX","description":"Controlled relaxation/isolation state only where residual stability and exclusion logic are proven."},
+    {"id":"CABLE_LOSS_N1","description":"Failure-screening state removing one defined cable or cable pair and re-equilibrating the system."},
+    {"id":"MAINTENANCE_ISOLATED","description":"Inspection/replacement state with temporary stability, access and vegetation-clearance controls."}
+  ],
+  "guardrails": [
+    "Numeric pretension, diameter, grade, damping and sag values are intentionally absent until engineering/source evidence exists.",
+    "No autonomous cable release or active safety mechanism is assumed by the state model.",
+    "Living growth/support interfaces must not obscure structural cable terminations, inspection zones or replacement paths.",
+    "Simulation outputs remain screening evidence until mapped to calibrated physical/assembly validation."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "version":"0.1.0",
+  "delta_id":"WT-LC-STANDARDS-DELTA-001",
+  "asset_id":"WT-001",
+  "parent_lifecycle_manifest":"watchtower_lifecycle_manifest_v0_1.json@0.1.1",
+  "record":{
+    "record_id":"WT-LC-STD-001",
+    "record_class":"ENGINEERING_BASIS",
+    "artifact_or_state_id":"watchtower_standards_applicability_seed_v0_1",
+    "version":"0.1.0",
+    "sha256_or_immutable_id":null,
+    "parents":["WT-LC-SRC-001","WT-LC-BOD-001"],
+    "geometry_sha256":"c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "semantic_map_version":null,
+    "status":"REVIEW_GATED",
+    "revalidation_trigger":[
+      "authorised_site_or_jurisdiction_set_or_changed",
+      "building_or_structure_classification_set_or_changed",
+      "approval_or_permit_timing_changes",
+      "NCC_adoption_or_jurisdiction_variation_changes",
+      "referenced_standard_edition_or_amendment_changes",
+      "discipline_design_basis_changes"
+    ],
+    "cadence_days":null,
+    "revalidation_method":"Repeat official ABCB/NCC and Standards Australia referenced-source sweep; capture jurisdiction adoption/variations and project classification; have certifier/discipline owners mark each source APPLICABLE_REVIEWED or NOT_APPLICABLE_REVIEWED before numerical engineering use.",
+    "decision_owner":"Building certifier/surveyor / discipline engineers / Owner / Achilles",
+    "security_class":"INTERNAL",
+    "rollback_target":"WT-LC-BOD-001",
+    "receipt":"SRC-073; 115_WATCHTOWER_STANDARDS_APPLICABILITY_v0_1; Data standards applicability schema/seed",
+    "notes":"Official source currency was verified on 2026-08-13 for the candidate register. No authorised site/jurisdiction/building classification is fixed, so no source is promoted to project applicability or compliance."
+  },
+  "guardrails":[
+    "Current/published source status is not project applicability.",
+    "NCC adoption and variations are jurisdiction-specific.",
+    "Referenced editions must be reconciled against the actually applicable NCC/jurisdiction and approval basis.",
+    "No compliance, design action, factor, material capacity, fire rating or electrical design follows from this lifecycle record."
+  ]
+}

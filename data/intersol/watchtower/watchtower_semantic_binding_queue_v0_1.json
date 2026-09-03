@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1.0",
+  "queue_id": "WT-SEMANTIC-BIND-001",
+  "asset_id": "WT-001",
+  "source_lock": {
+    "file_name": "InterSol - Watch Tower In Site Footprint.FCStd",
+    "sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "geometry_extract": "data/intersol/watchtower/watchtower_fcstd_geometry_extract_v0_1.json",
+    "coordinate_state": "LOCAL_CAD_NOT_GEODETIC"
+  },
+  "status": "OWNER_SEMANTIC_BINDING_REQUIRED",
+  "topology_invariants": {
+    "primary_tower_node_elevations": 2,
+    "tower_node_ids": ["WT-A", "WT-C"],
+    "face_anchors_per_tower_node": 4,
+    "external_pole_lines_in_fcstd": 9,
+    "owner_pole_topology": "WT-E + WT-L1..WT-L4 + WT-R1..WT-R4",
+    "distinct_cable_solids_in_fcstd": 0,
+    "distinct_labelled_A_C_objects_in_fcstd": 0
+  },
+  "pole_candidates": [
+    {"geometry_key":"E_candidate","axis_xy_m":[681.053043,393.143597],"canonical_id":null,"proposed_role":"WT-E","confidence":"HIGH_CANDIDATE_NOT_FINAL","decision":"OWNER_CONFIRM"},
+    {"geometry_key":"NW_P1","axis_xy_m":[690.458944,442.648378],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"NW_P2","axis_xy_m":[691.078599,442.230197],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"NW_P3","axis_xy_m":[680.116102,425.636020],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"NW_P4","axis_xy_m":[693.871992,428.549702],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"SE_P1","axis_xy_m":[728.521705,377.376835],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"SE_P2","axis_xy_m":[728.575531,376.631186],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"SE_P3","axis_xy_m":[708.670078,376.186955],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"},
+    {"geometry_key":"SE_P4","axis_xy_m":[718.070145,386.629400],"canonical_id":null,"decision":"OWNER_ASSIGN_L_OR_R_AND_NUMBER"}
+  ],
+  "tower_nodes": [
+    {
+      "canonical_id": "WT-A",
+      "role": "lower_primary_cable_node_elevation",
+      "z_m": null,
+      "face_anchors": {
+        "F1": {"xyz_m": null},
+        "F2": {"xyz_m": null},
+        "F3": {"xyz_m": null},
+        "F4": {"xyz_m": null}
+      },
+      "decision": "OWNER_DEFINE_ON_SOURCE_LOCKED_WT_T_GEOMETRY"
+    },
+    {
+      "canonical_id": "WT-C",
+      "role": "upper_primary_cable_node_elevation",
+      "z_m": null,
+      "face_anchors": {
+        "F1": {"xyz_m": null},
+        "F2": {"xyz_m": null},
+        "F3": {"xyz_m": null},
+        "F4": {"xyz_m": null}
+      },
+      "decision": "OWNER_DEFINE_ON_SOURCE_LOCKED_WT_T_GEOMETRY"
+    }
+  ],
+  "edge_creation_gate": {
+    "state": "BLOCKED",
+    "rule": "No structural cable edge may be created until both canonical endpoints are explicitly resolved and attributable.",
+    "after_binding": [
+      "generate stable edge IDs",
+      "compute line-of-sight chord lengths from resolved endpoints",
+      "retain catenary/sag/pretension as engineering variables rather than geometry facts",
+      "run exactly-two-node-level and orphan-edge QA",
+      "preserve source hash and semantic-map version in every derived edge record"
+    ]
+  },
+  "required_owner_decisions": [
+    "Confirm or reject E_candidate -> WT-E.",
+    "Bind NW and SE geometry clusters to semantic Left/Right wings.",
+    "Assign P1..P4 in each bound wing cluster to L1..L4 or R1..R4 using the owner's intended numbering convention.",
+    "Define exact WT-A and WT-C elevations/face-reference scheme on the source-locked tower geometry.",
+    "Confirm the intended cable endpoint pairings only after the above node identities are bound."
+  ],
+  "guardrails": [
+    "Compass orientation is not a substitute for semantic Left/Right naming.",
+    "The accepted sunset render is aesthetic-only and cannot assign coordinates or cable edges.",
+    "Absence of cable solids in the FCStd is a negative finding, not evidence that cables are removed from the design.",
+    "Exactly two primary tower cable-node elevations remain the current topology invariant.",
+    "No material size, pretension, structural adequacy or compliance claim is encoded in this queue."
+  ]
+}
