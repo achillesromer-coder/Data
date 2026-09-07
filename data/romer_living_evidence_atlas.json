@@ -1,0 +1,272 @@
+{
+  "artifact_id": "Romer_Living_Evidence_Atlas",
+  "canonical_identity": "L5-LIVING-EVIDENCE-ATLAS",
+  "last_reconciled": "2026-09-08",
+  "update_model": "living canonical; edit stable Drive IDs/Git paths in place; provider/Git/ACR3 receipts carry revision lineage",
+  "authority": "publication/evidence bridge only; ACR3 and owning Type-1/specialist sources remain authority",
+  "public_send_submission": false,
+  "counts": {
+    "evidence_rows": 37,
+    "test_rows": 8,
+    "open_gates": 10,
+    "figures": 6
+  },
+  "provider_bindings": {
+    "drive": {
+      "living_evidence_atlas_xlsx": "18WcNLqCyGsq40PjIZM3QIzI41h3SSMCN",
+      "living_type1_dossier_docx": "1fujyoYVtdRnO2ADk5MfjQZPvHIzJFTje",
+      "living_type1_evidence_review_pptx": "1uqgDTf3mdVpDy1NhqkLwcwffMdtH4RLV"
+    },
+    "git": {
+      "repository": "achillesromer-coder/Data",
+      "json_path": "data/romer_living_evidence_atlas.json",
+      "doctrine_path": "docs/living_corpus_operating_doctrine.md"
+    }
+  },
+  "artifact_sha256": {
+    "living_evidence_atlas_xlsx": "a314b85a11103d2460f30d612acac79cb9a28a3214e27941116ec5a65bfba088",
+    "living_type1_dossier_docx": "14c62df60f5607fc8c8c87e30de71efb025bb3c917444b2f38e1c008adb59834",
+    "living_type1_evidence_review_pptx": "aeaf5212381951dcd9134ff2e6aa3ded7d56fcc08899d852398b0a232db1b0ab"
+  },
+  "selected_evidence": [
+    {
+      "id": "EV-001",
+      "domain": "Canon Control",
+      "object_id": "ACR3",
+      "name": "ACR3 Next Stage Consolidation Register",
+      "class": "SOURCE/DIGITAL",
+      "status": "ACTIVE",
+      "value": "",
+      "unit": "",
+      "source": "1AgAhLPNtrO91C_-ea7EdOkOsyXrCCYvFVvmDSGq8uls",
+      "ceiling": "Canon control only; not technical truth by itself",
+      "gate": "Owner-canon write/readback"
+    },
+    {
+      "id": "EV-002",
+      "domain": "Programme",
+      "object_id": "ROMER-T1",
+      "name": "Type 1 Römer Cognigrex",
+      "class": "SOURCE/DIGITAL",
+      "status": "CURRENT CANON",
+      "value": "",
+      "unit": "",
+      "source": "1refNFmebTcmPVojCuZsyILJEWaKz-sVzYLfZtqMl8k8",
+      "ceiling": "Programme authority; physical performance still gated",
+      "gate": "Evidence-safe wording and restricted/public split"
+    },
+    {
+      "id": "EV-003",
+      "domain": "Sovereignty",
+      "object_id": "SYS-AUS-CAP",
+      "name": "Australian Sovereign Capacity Resource Pack",
+      "class": "SOURCE/DIGITAL",
+      "status": "ACTIVE",
+      "value": "",
+      "unit": "",
+      "source": "60_Aus_Sovereign_Capacity",
+      "ceiling": "Proposed capability framework; no government approval or validated national-security status",
+      "gate": "Institutional review / collaborator evidence"
+    },
+    {
+      "id": "EV-011",
+      "domain": "Solar Hull",
+      "object_id": "SHQ-001",
+      "name": "Archive reconciliation and performance ceiling",
+      "class": "DERIVED/SCENARIO",
+      "status": "NO CURRENT PERFORMANCE CLAIM",
+      "value": "31–31.5 target; 29.288226 synthetic default",
+      "unit": "% efficiency",
+      "source": "SHQ-001",
+      "ceiling": "Target/model only; no measured/validated efficiency",
+      "gate": "Measured coupon protocol and calibrated I–V evidence"
+    },
+    {
+      "id": "EV-015",
+      "domain": "Free Flow",
+      "object_id": "FF-BAT-SYN-001",
+      "name": "Synthetic reference battery article",
+      "class": "DERIVED/SCENARIO",
+      "status": "SYNTHETIC / FORMULA CHECK",
+      "value": "12.8 V; 6 Ah; 55.296 usable",
+      "unit": "V, Ah, Wh",
+      "source": "Free Flow synthetic article",
+      "ceiling": "Formula/twin verification only",
+      "gate": "Physical cell chemistry, ESR, thermal, cycling, safety tests"
+    },
+    {
+      "id": "EV-017",
+      "domain": "RFS/EMFF",
+      "object_id": "RFSEM-TESTS",
+      "name": "RFS/EMFF systematic test architecture",
+      "class": "SOURCE/DIGITAL",
+      "status": "12 TESTS / 9 INSTRUMENT STATES",
+      "value": "",
+      "unit": "",
+      "source": "RFS/EMFF rows",
+      "ceiling": "Source-defined tests; no capability claim",
+      "gate": "Calibrated current/field/displacement packets"
+    },
+    {
+      "id": "EV-018",
+      "domain": "Mark Series",
+      "object_id": "M3-AUTH",
+      "name": "Mark III current authority",
+      "class": "SOURCE/DIGITAL",
+      "status": "CURRENT THREE-APPENDAGE AUTHORITY",
+      "value": "0.75 × 0.32 × 0.32",
+      "unit": "m envelope",
+      "source": "Mark III current authority",
+      "ceiling": "Digital/source authority; physical validation open",
+      "gate": "CAD/BOM/ICD derivative regeneration and tests"
+    },
+    {
+      "id": "EV-020",
+      "domain": "Mark Series",
+      "object_id": "M5-AUTH",
+      "name": "Mark V function boundary",
+      "class": "SOURCE/DIGITAL",
+      "status": "FUNCTION BOUNDARY RESOLVED",
+      "value": "",
+      "unit": "",
+      "source": "Mark V current authority",
+      "ceiling": "Extraction responsibility remains Mark III/RFS/EMFF",
+      "gate": "Engineering configuration + physical qualification"
+    },
+    {
+      "id": "EV-022",
+      "domain": "Mission",
+      "object_id": "CAP-MODEL",
+      "name": "Active-unit capacity correction",
+      "class": "DERIVED/SCENARIO",
+      "status": "CORRECTED MODEL",
+      "value": "M1=3; M2=7; M3=11; M4=15; M5=19",
+      "unit": "m³ active capture capacity",
+      "source": "capacity_model_unit_count_correction.md@eeb9b7f",
+      "ceiling": "Capacity planning only, not recovered material",
+      "gate": "Mission hardware, targets, capture efficiency, legal custody"
+    },
+    {
+      "id": "EV-024",
+      "domain": "Mission",
+      "object_id": "MARK-IV-GUARD",
+      "name": "Mark IV / Luke IV non-conflation",
+      "class": "SOURCE/DIGITAL",
+      "status": "GUARDRAIL",
+      "value": "",
+      "unit": "",
+      "source": "capacity_model_unit_count_correction.md@eeb9b7f",
+      "ceiling": "Terminology guardrail only",
+      "gate": "Post-mission successor model surface when intentionally created"
+    },
+    {
+      "id": "EV-031",
+      "domain": "M1",
+      "object_id": "M1-UNIT",
+      "name": "1 km block and 10 km pilot planning",
+      "class": "DERIVED/SCENARIO",
+      "status": "CONTROLLED PLANNING",
+      "value": "10 km = 10 × 1 km blocks",
+      "unit": "km, unit count",
+      "source": "M1-EQ-001",
+      "ceiling": "Planning/twin/costing unit only",
+      "gate": "Exact site, chainage, structure, TMR data"
+    },
+    {
+      "id": "EV-032",
+      "domain": "M1",
+      "object_id": "M1-XSEC",
+      "name": "Upper-deck five-lane cross-section screen",
+      "class": "DERIVED/SCENARIO",
+      "status": "TMR-STANDARD-BOUNDED",
+      "value": "X=22.0; Y=23.5 known subtotal",
+      "unit": "m/direction",
+      "source": "M1-STD-013 / M1-EQ-024",
+      "ceiling": "Traffic/shoulder subtotal only",
+      "gate": "Barriers, working width, drainage, structure, design speed"
+    },
+    {
+      "id": "EV-033",
+      "domain": "InterSol",
+      "object_id": "INTERSOL-TRACE",
+      "name": "InterSol ISP→IPS documentation/configuration traceability",
+      "class": "SOURCE/DIGITAL",
+      "status": "48/48 STABLE-ID PASS",
+      "value": "48/48",
+      "unit": "stable IDs",
+      "source": "InterSol rows",
+      "ceiling": "Documentation traceability only",
+      "gate": "Installed/qualified physical interfaces"
+    },
+    {
+      "id": "EV-034",
+      "domain": "Watch Tower",
+      "object_id": "WT-GEOM",
+      "name": "Watch Tower source-native geometry",
+      "class": "SOURCE/DIGITAL",
+      "status": "SOURCE-LOCKED",
+      "value": "SHA-256 c476f9f2...",
+      "unit": "hash",
+      "source": "InterSol - Watch Tower In Site Footprint.FCStd",
+      "ceiling": "Geometry/source authority only",
+      "gate": "Cable topology, material, pretension, structural/site loads"
+    },
+    {
+      "id": "EV-035",
+      "domain": "Publication",
+      "object_id": "DOSSIER-LIVING",
+      "name": "Living Type-1 Dossier",
+      "class": "DERIVED/SCENARIO",
+      "status": "CONTROLLED LIVING BUILD",
+      "value": "20 pages",
+      "unit": "pages",
+      "source": "Romer_Living_Type1_Dossier",
+      "ceiling": "Useful start only",
+      "gate": "Evidence Atlas import and rebuild"
+    },
+    {
+      "id": "EV-036",
+      "domain": "Publication",
+      "object_id": "DECK-LIVING",
+      "name": "Living Type-1 Evidence Review Deck",
+      "class": "DERIVED/SCENARIO",
+      "status": "CONTROLLED LIVING BUILD",
+      "value": "15 slides",
+      "unit": "slides",
+      "source": "Romer_Living_Type1_Evidence_Review_Deck",
+      "ceiling": "Useful summary only",
+      "gate": "Native charts, source captions, data layer"
+    },
+    {
+      "id": "EV-037",
+      "domain": "Publication",
+      "object_id": "ATLAS-LIVING",
+      "name": "Living Evidence Atlas",
+      "class": "SOURCE/DIGITAL",
+      "status": "LIVING CANONICAL PUBLICATION BRIDGE",
+      "value": "",
+      "unit": "",
+      "source": "Romer_Living_Evidence_Atlas",
+      "ceiling": "Publication bridge, not engineering master",
+      "gate": "Ongoing import/readback from owner workbooks"
+    }
+  ],
+  "open_gates": [
+    {"id":"G-001","domain":"Solar Hull","priority":"HIGH","blocked_claim":"Measured efficiency, durability or roof energy credit"},
+    {"id":"G-002","domain":"Free Flow","priority":"HIGH","blocked_claim":"Usable storage/field performance"},
+    {"id":"G-003","domain":"RFS/EMFF","priority":"HIGH","blocked_claim":"Physical material response or separation capability"},
+    {"id":"G-004","domain":"Mark III","priority":"HIGH","blocked_claim":"Manufacturable/qualified current hardware"},
+    {"id":"G-005","domain":"Mark V","priority":"HIGH","blocked_claim":"Operational Mission 1 hardware role beyond function boundary"},
+    {"id":"G-006","domain":"Mission 1","priority":"HIGH","blocked_claim":"Resource retrieval/revenue/return result"},
+    {"id":"G-007","domain":"Luke II","priority":"MED-HIGH","blocked_claim":"EMF catch or return mechanism performance"},
+    {"id":"G-008","domain":"ASC/SAI","priority":"HIGH","blocked_claim":"Sovereign-content percentage or deployed capability"},
+    {"id":"G-009","domain":"Eco-X","priority":"MED-HIGH","blocked_claim":"Ecological restoration outcome"},
+    {"id":"G-010","domain":"M1","priority":"MED","blocked_claim":"Traffic benefit, approval, constructability or safety performance"}
+  ],
+  "receipt": {
+    "id": "REC-LIVING-CORPUS-20260908-001",
+    "state": "DRIVE_READBACK_COMPLETE / GIT_COMMIT_PENDING_AT_GENERATION",
+    "note": "Exact Git commit and Drive IDs are bound in ACR3 after provider write/readback."
+  },
+  "full_atlas": "Römer Industries — Living Evidence Atlas.xlsx on Drive; this Git index is not a replacement technical authority."
+}
