@@ -1,0 +1,43 @@
+{
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "state": "REQUIREMENT_ARCHITECTURE_ONLY_NO_HARDWARE_SELECTED",
+  "geometry_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "semantic_map_version": null,
+  "source_basis": ["WT-BOD-016", "TASK-061", "BPC-011..015", "P_infinity lifecycle controls"],
+  "sensor_classes": [
+    {"sensor_id":"WT-SENS-GEO-001","class":"GEOMETRY_SURVEY","quantity":"reference geometry / deformation survey","unit":null,"object_id":"WT-ROOT","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Geometry/twin state remains source-locked or stale; require survey/readback before promoting drift/as-built changes.","security":"RESTRICTED_TECHNICAL"},
+    {"sensor_id":"WT-SENS-STR-001","class":"STRAIN","quantity":"structural strain candidate","unit":null,"object_id":"WT-T","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"No strain-based structural inference; route to structural review.","security":"RESTRICTED_TECHNICAL"},
+    {"sensor_id":"WT-SENS-VIB-001","class":"ACCELERATION_VIBRATION","quantity":"tower/global vibration candidate","unit":null,"object_id":"WT-T","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"No modal/dynamic health inference; use reviewed analysis/inspection baseline.","security":"RESTRICTED_TECHNICAL"},
+    {"sensor_id":"WT-SENS-CAB-001","class":"CABLE_TENSION_OR_SAG","quantity":"cable tension/sag candidate","unit":null,"object_id":null,"placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Cable state remains UNKNOWN; do not infer safe tension/sag. Requires semantic edge graph first.","security":"RESTRICTED_SECURITY"},
+    {"sensor_id":"WT-SENS-WIND-001","class":"WIND_ENVIRONMENT","quantity":"wind/environment reference","unit":null,"object_id":"WT-ROOT","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Environmental state becomes UNKNOWN/STALE and any dependent response model must not update automatically.","security":"INTERNAL"},
+    {"sensor_id":"WT-SENS-ENV-001","class":"TEMPERATURE_HUMIDITY","quantity":"temperature and humidity reference","unit":null,"object_id":"WT-ROOT","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Thermal/moisture state becomes UNKNOWN/STALE; no Solar Hull or glazing performance inference.","security":"INTERNAL"},
+    {"sensor_id":"WT-SENS-WTR-001","class":"WATER_DRAINAGE_MOISTURE","quantity":"roof/drainage/moisture candidate","unit":null,"object_id":null,"placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Drainage/moisture state becomes UNKNOWN; inspection/manual safe-state procedure required.","security":"RESTRICTED_TECHNICAL"},
+    {"sensor_id":"WT-SENS-PWR-001","class":"ELECTRICAL_POWER","quantity":"power/voltage/current/grounding candidate","unit":null,"object_id":null,"placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Electrical state defaults to unverified; protective system design governs, not twin assumption.","security":"RESTRICTED_SECURITY"},
+    {"sensor_id":"WT-SENS-LTG-001","class":"LIGHTNING_EARTHING","quantity":"lightning/earthing condition candidate","unit":null,"object_id":null,"placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"No protective-performance claim; follow designed inspection/testing protocol after event.","security":"RESTRICTED_SECURITY"},
+    {"sensor_id":"WT-SENS-GLZ-001","class":"FACADE_GLAZING","quantity":"glazing/environment/condition candidate","unit":null,"object_id":"WT-OBS","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Protected-envelope state becomes UNKNOWN; no security/pressure adequacy inference.","security":"RESTRICTED_SECURITY"},
+    {"sensor_id":"WT-SENS-LIV-001","class":"LIVING_IRRIGATION_MEDIA","quantity":"irrigation/media moisture/flow candidate","unit":null,"object_id":null,"placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Irrigation-dependent twin state becomes stale; system falls back to reviewed water-off/maintenance logic rather than assuming normal growth state.","security":"INTERNAL"},
+    {"sensor_id":"WT-SENS-LIFE-001","class":"ACCESS_FIRE_LIFE_SAFETY","quantity":"life-safety/access system health candidate","unit":null,"object_id":null,"placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"NO_PROMOTION","fail_safe":"Life-safety state is not inferred from missing data; physical alarm/egress systems and reviewed procedures remain authoritative.","security":"RESTRICTED_SECURITY"},
+    {"sensor_id":"WT-SENS-OT-001","class":"OT_SYSTEM_HEALTH","quantity":"sensor/twin transport and freshness health","unit":null,"object_id":"WT-ROOT","placement_state":"UNSET","health":"UNVERIFIED","data_quality":"NO_DATA","twin_action":"FORCE_STALE_STATE","fail_safe":"Any dependent runtime fields without fresh, attributable data are marked stale/unknown and cannot be represented as current measured state.","security":"RESTRICTED_SECURITY"}
+  ],
+  "runtime_state_machine": {
+    "UNVERIFIED":"No measurement-based promotion; show requirement/schema only.",
+    "NORMAL":"Internal update allowed only when calibration/source/applicability gates are satisfied.",
+    "DEGRADED":"Display degraded quality; route to review; do not silently retain normal trust.",
+    "STALE":"Force dependent value stale/unknown after its approved freshness rule is exceeded.",
+    "OFFLINE":"Force dependent value unavailable; safe-state/manual inspection rules govern.",
+    "FAILED":"Quarantine sensor data; trigger maintenance/review.",
+    "MAINTENANCE":"Suppress operational interpretation and record service state."
+  },
+  "security_boundary": {
+    "public_candidate_fields":["asset-level availability summary only after classification review"],
+    "internal_fields":["non-sensitive environmental and aggregate health states"],
+    "restricted_fields":["sensor locations","cable/tension instrumentation","protected-envelope instrumentation","lightning/earthing topology","power architecture","life-safety/security logic","OT network/credentials/endpoints"]
+  },
+  "next_actions": [
+    "Complete Watch Tower semantic object/edge map before binding sensor physical-object IDs.",
+    "Define measurement requirements and engineering sensitivity before selecting hardware.",
+    "Define calibration/freshness criteria per sensor class with professional review; no generic cadence is invented.",
+    "Only then create LightSpeed adapters that consume classified, calibrated records."
+  ]
+}

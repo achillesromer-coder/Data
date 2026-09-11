@@ -1,0 +1,29 @@
+{
+  "schema_name": "intersol_watchtower_standards_applicability_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "purpose": "Review-gated candidate register for Australian regulatory/code/standard sources potentially applicable to Watch Tower engineering. Source currency does not establish project applicability or compliance.",
+  "fields": [
+    {"name":"Applicability_ID","type":"string","required":true},
+    {"name":"Discipline","type":"string","required":true},
+    {"name":"Source_or_Standard","type":"string","required":true},
+    {"name":"Edition_or_Amendment","type":"string","required":true},
+    {"name":"Official_Source","type":"string","required":true},
+    {"name":"Official_Source_State","type":"enum","allowed_values":["CURRENT_OFFICIAL","PUBLISHED_PREVIEW","OFFICIAL_RELEASE","SUPERSEDED","UNKNOWN"],"required":true},
+    {"name":"Project_Applicability_State","type":"enum","allowed_values":["JURISDICTION_CHECK_REQUIRED","CLASSIFICATION_REQUIRED","CANDIDATE","LIKELY_RELEVANT_PENDING_REVIEW","APPLICABLE_REVIEWED","NOT_APPLICABLE_REVIEWED","SUPERSEDED_FOR_PROJECT"],"required":true},
+    {"name":"Application_Question","type":"string","required":true},
+    {"name":"Required_Project_Inputs","type":"array_string","required":true},
+    {"name":"Decision_Owner","type":"string","required":true},
+    {"name":"Evidence_State","type":"enum","allowed_values":["SOURCE_VERIFIED","APPLICABILITY_PENDING","APPLICABILITY_REVIEWED","PROJECT_BASIS_LOCKED"],"required":true},
+    {"name":"Last_Web_Verified_Date","type":"date","required":true},
+    {"name":"Next_Action","type":"string","required":true},
+    {"name":"Notes","type":"string","required":true}
+  ],
+  "guardrails": [
+    "An official standard marked Current is not automatically applicable to WT-001.",
+    "NCC legal effect and adoption are jurisdiction-specific; do not assume NCC 2025 applies without the authorised project jurisdiction and its adoption state.",
+    "Building classification, importance level, design working life and special-structure treatment remain professional/regulatory decisions.",
+    "Referenced-standard editions must be reconciled against the actually applicable NCC/jurisdiction and project approval basis before engineering use.",
+    "No load, factor, acceptance threshold, compliance or certification result is created by this register."
+  ]
+}

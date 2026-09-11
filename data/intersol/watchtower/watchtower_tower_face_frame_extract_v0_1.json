@@ -1,0 +1,113 @@
+{
+  "version": "0.1.0",
+  "extract_id": "WT-TOWER-FACE-FRAME-001",
+  "asset_id": "WT-001",
+  "source_fcstd": "InterSol - Watch Tower In Site Footprint.FCStd",
+  "source_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "source_feature": "Pad004",
+  "source_feature_shape": "Pad004.AddSubShape.brp",
+  "coordinate_state": "LOCAL_CAD_NOT_GEODETIC",
+  "method": "Direct OpenCascade extraction of Pad004 AddSubShape BREP side faces, face areas, centroids, plane normals and edge lengths.",
+  "shaft": {
+    "cross_section": "FIVE_SIDED_EQUAL_EDGE_PRISM",
+    "side_face_count": 5,
+    "side_edge_length_m": 2.71212856110368,
+    "z_min_m": 13.3,
+    "z_max_m": 68.3,
+    "height_m": 55.0,
+    "cross_section_centroid_xy_m": [692.7608010835793, 399.9658422662211],
+    "cross_section_area_m2": 12.65521467846545
+  },
+  "shaft_faces": [
+    {
+      "face_key": "WT-T-SF1",
+      "source_face_ordinal": 1,
+      "midline_xy_m": [692.0016424494721, 398.26074405647347],
+      "outward_unit_normal_xy": [-0.4067366430128848, -0.9135454576706127],
+      "outward_azimuth_deg": 246.0,
+      "positive_tangent_unit_xy": [0.9135454576706127, -0.4067366430128848],
+      "width_m": 2.712128561103624,
+      "height_m": 55.0,
+      "area_m2": 149.1670708607002,
+      "z_range_m": [13.3, 68.3]
+    },
+    {
+      "face_key": "WT-T-SF2",
+      "source_face_ordinal": 2,
+      "midline_xy_m": [694.1478529275175, 398.71693517646145],
+      "outward_unit_normal_xy": [0.7431448255234767, -0.6691306063076785],
+      "outward_azimuth_deg": 318.0,
+      "positive_tangent_unit_xy": [0.6691306063076785, 0.7431448255234767],
+      "width_m": 2.7121285611036727,
+      "height_m": 55.0,
+      "area_m2": 149.16707086070247,
+      "z_range_m": [13.3, 68.3]
+    },
+    {
+      "face_key": "WT-T-SF3",
+      "source_face_ordinal": 3,
+      "midline_xy_m": [694.3772049013985, 400.8990734457066],
+      "outward_unit_normal_xy": [0.866025403750004, 0.5000000000596427],
+      "outward_azimuth_deg": 30.0,
+      "positive_tangent_unit_xy": [-0.5000000000596427, 0.866025403750004],
+      "width_m": 2.71212856110365,
+      "height_m": 55.0,
+      "area_m2": 149.16707086070284,
+      "z_range_m": [13.3, 68.3]
+    },
+    {
+      "face_key": "WT-T-SF4",
+      "source_face_ordinal": 4,
+      "midline_xy_m": [692.3727417385984, 401.79151794426406],
+      "outward_unit_normal_xy": [-0.2079116908851231, 0.978147600719487],
+      "outward_azimuth_deg": 102.0,
+      "positive_tangent_unit_xy": [-0.978147600719487, -0.2079116908851231],
+      "width_m": 2.712128561103712,
+      "height_m": 55.0,
+      "area_m2": 149.1670708607014,
+      "z_range_m": [13.3, 68.3]
+    },
+    {
+      "face_key": "WT-T-SF5",
+      "source_face_ordinal": 5,
+      "midline_xy_m": [690.90456340091, 400.1609407082002],
+      "outward_unit_normal_xy": [-0.9945218953754723, 0.10452846319916068],
+      "outward_azimuth_deg": 174.0,
+      "positive_tangent_unit_xy": [-0.10452846319916068, -0.9945218953754723],
+      "width_m": 2.7121285611037527,
+      "height_m": 55.0,
+      "area_m2": 149.16707086070426,
+      "z_range_m": [13.3, 68.3]
+    }
+  ],
+  "parametric_anchor_equation": {
+    "description": "For a selected shaft face, an anchor point can be expressed without inventing its location as P(z,u) = [face_midline_x, face_midline_y, z] + u*(width/2)*[tangent_x,tangent_y,0], with u in [-1,1] and z in [13.3,68.3].",
+    "z_state": "OWNER_UNBOUND_FOR_A_AND_C",
+    "u_state": "OWNER_OR_ENGINEERING_UNBOUND_PER_ANCHOR"
+  },
+  "geometric_incidence_only": {
+    "method": "For each current external pole axis, compare its plan-direction unit vector from the Pad004 cross-section centroid with each shaft-face outward normal. This is a geometric direction score only, not a cable-edge assignment.",
+    "results": [
+      {"geometry_key":"NW_P1","plan_azimuth_deg":93.08695479,"nearest_face_by_normal":"WT-T-SF4","cosine_alignment":0.9879246154},
+      {"geometry_key":"NW_P2","plan_azimuth_deg":92.27927842,"nearest_face_by_normal":"WT-T-SF4","cosine_alignment":0.9856424688},
+      {"geometry_key":"NW_P3","plan_azimuth_deg":116.22408398,"nearest_face_by_normal":"WT-T-SF4","cosine_alignment":0.9693421506},
+      {"geometry_key":"NW_P4","plan_azimuth_deg":87.77376088,"nearest_face_by_normal":"WT-T-SF4","cosine_alignment":0.9693329075},
+      {"geometry_key":"SE_P1","plan_azimuth_deg":327.72072146,"nearest_face_by_normal":"WT-T-SF2","cosine_alignment":0.9856424692},
+      {"geometry_key":"SE_P2","plan_azimuth_deg":326.91422944,"nearest_face_by_normal":"WT-T-SF2","cosine_alignment":0.9879214129},
+      {"geometry_key":"SE_P3","plan_azimuth_deg":303.78452222,"nearest_face_by_normal":"WT-T-SF2","cosine_alignment":0.9693790476},
+      {"geometry_key":"SE_P4","plan_azimuth_deg":332.21357239,"nearest_face_by_normal":"WT-T-SF2","cosine_alignment":0.9693872136},
+      {"geometry_key":"E_candidate","plan_azimuth_deg":210.22984707,"nearest_face_by_normal":"WT-T-SF1","cosine_alignment":0.8113684307,"second_face":"WT-T-SF5","second_cosine_alignment":0.8066525387,"state":"NEAR_FACE_VERTEX_BISECTOR_AMBIGUOUS"}
+    ]
+  },
+  "owner_topology_delta": {
+    "owner_rule": "Exactly four tower face anchors at A and exactly four at C.",
+    "source_geometry_fact": "Pad004 has five vertical side faces.",
+    "required_binding": "At each of A and C, explicitly select four of five WT-T-SF1..SF5 faces (or otherwise define the four anchor-face associations) and define anchor z/u values. Do not silently assume the excluded face or face-centre placement."
+  },
+  "guardrails": [
+    "WT-T-SF1..SF5 are geometric shaft-face identifiers and do not equal WT-A-F1..F4 or WT-C-F1..F4 until an owner semantic mapping is recorded.",
+    "Nearest-face-by-normal scores are geometric incidence diagnostics only; they do not create structural cable edges.",
+    "No A or C elevation, lateral anchor coordinate, cable endpoint or pretension is inferred.",
+    "Local CAD directions/azimuths are not geodetic bearings."
+  ]
+}

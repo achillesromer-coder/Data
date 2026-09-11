@@ -1,0 +1,49 @@
+{
+  "schema_name": "intersol_watchtower_lifecycle_manifest_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "purpose": "P-infinity lifecycle, provenance, revalidation and rollback contract for Watch Tower design/twin states.",
+  "fields": [
+    {"name":"Lifecycle_Record_ID","type":"string","required":true},
+    {"name":"Asset_ID","type":"string","required":true},
+    {"name":"Record_Class","type":"enum","allowed_values":["SOURCE_REVISION","SEMANTIC_MAP","DERIVED_EXPORT","ENGINEERING_BASIS","SIMULATION","TEST_EVIDENCE","AS_BUILT_SURVEY","INSPECTION","MAINTENANCE","SENSOR_CALIBRATION","INCIDENT","PUBLICATION_RELEASE","ROLLBACK_ANCHOR"],"required":true},
+    {"name":"Artifact_or_State_ID","type":"string","required":true},
+    {"name":"Version","type":"string_or_null","required":true},
+    {"name":"SHA256_or_Immutable_ID","type":"string_or_null","required":true},
+    {"name":"Parent_Record_IDs","type":"array_string","required":true},
+    {"name":"Geometry_SHA256","type":"string_or_null","required":true},
+    {"name":"Semantic_Map_Version","type":"string_or_null","required":true},
+    {"name":"Effective_From","type":"datetime_or_null","required":true},
+    {"name":"Superseded_By","type":"string_or_null","required":true},
+    {"name":"Status","type":"enum","allowed_values":["CURRENT","REVIEW_GATED","SUPERSEDED","REJECTED","ARCHIVED","ROLLBACK_READY","HOLD"],"required":true},
+    {"name":"Revalidation_Trigger","type":"array_string","required":true},
+    {"name":"Cadence_Days","type":"number_or_null","required":true},
+    {"name":"Revalidation_Method","type":"string","required":true},
+    {"name":"Decision_Owner","type":"string","required":true},
+    {"name":"Security_Class","type":"enum","allowed_values":["PUBLIC_SAFE_CANDIDATE","INTERNAL","RESTRICTED_TECHNICAL","RESTRICTED_SECURITY"],"required":true},
+    {"name":"Rollback_Target_Record_ID","type":"string_or_null","required":true},
+    {"name":"Evidence_or_Receipt","type":"string_or_null","required":true},
+    {"name":"Notes","type":"string","required":true}
+  ],
+  "mandatory_event_triggers": [
+    "source_FCStd_hash_changes",
+    "semantic_object_or_edge_mapping_changes",
+    "structural_material_section_or_foundation_basis_changes",
+    "cable_edge_property_or_pretension_basis_changes",
+    "Solar_Hull_configuration_or_roof_interface_changes",
+    "living_species_media_irrigation_or_mature_load_basis_changes",
+    "site_environment_hazard_or_applicable_standard_changes",
+    "sensor_calibration_or_data-quality failure affecting relied-on state",
+    "as-built survey differs from accepted design geometry",
+    "inspection finds degradation outside accepted condition state",
+    "incident_or_near_miss_affects_assumptions",
+    "public_or_security classification changes"
+  ],
+  "guardrails": [
+    "Cadence remains null until an applicable engineering, manufacturer, regulatory or owner-reviewed basis exists.",
+    "Event-driven revalidation is mandatory even where a periodic cadence exists.",
+    "A new file or timestamp does not automatically supersede a higher-authority accepted record.",
+    "Archive-before-delete and rollback anchors apply to promoted geometry, semantic maps, engineering models and releases.",
+    "Public release records must reference the exact internal source state while suppressing restricted fields."
+  ]
+}

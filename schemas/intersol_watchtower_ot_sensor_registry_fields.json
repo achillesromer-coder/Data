@@ -1,0 +1,39 @@
+{
+  "schema_name": "intersol_watchtower_ot_sensor_registry_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "purpose": "Controlled Watch Tower instrumentation/OT registry separating sensor identity, measurement provenance, calibration/health, twin trust and safety fallbacks. Runtime health never substitutes for physical engineering validation.",
+  "geometry_anchor": {
+    "fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "semantic_map_version_required": true
+  },
+  "fields": [
+    {"name":"Sensor_ID","type":"string","required":true},
+    {"name":"Sensor_Class","type":"enum","allowed_values":["GEOMETRY_SURVEY","STRAIN","ACCELERATION_VIBRATION","CABLE_TENSION_OR_SAG","WIND_ENVIRONMENT","TEMPERATURE_HUMIDITY","WATER_DRAINAGE_MOISTURE","ELECTRICAL_POWER","LIGHTNING_EARTHING","FACADE_GLAZING","LIVING_IRRIGATION_MEDIA","ACCESS_FIRE_LIFE_SAFETY","OT_SYSTEM_HEALTH"],"required":true},
+    {"name":"Measured_Quantity","type":"string","required":true},
+    {"name":"Unit","type":"string_or_null","required":true},
+    {"name":"Physical_Object_ID","type":"string_or_null","required":true},
+    {"name":"Placement_State","type":"enum","allowed_values":["UNSET","SEMANTIC_CANDIDATE","DESIGN_REVIEWED","INSTALLED_AS_BUILT"],"required":true},
+    {"name":"Device_or_Method","type":"string_or_null","required":true},
+    {"name":"Range_or_Resolution","type":"string_or_null","required":true},
+    {"name":"Calibration_Reference","type":"string_or_null","required":true},
+    {"name":"Calibration_Date","type":"date_or_null","required":true},
+    {"name":"Calibration_Due","type":"date_or_null","required":true},
+    {"name":"Health_State","type":"enum","allowed_values":["UNVERIFIED","NORMAL","DEGRADED","STALE","OFFLINE","FAILED","MAINTENANCE"],"required":true},
+    {"name":"Data_Quality_State","type":"enum","allowed_values":["NO_DATA","SYNTHETIC_ONLY","RAW_UNVERIFIED","CALIBRATED","REVIEWED","REJECTED"],"required":true},
+    {"name":"Last_Sample_Time","type":"datetime_or_null","required":true},
+    {"name":"Twin_Trust_Action","type":"enum","allowed_values":["NO_PROMOTION","INFORMATIONAL_ONLY","ALLOW_INTERNAL_STATE_UPDATE","TRIGGER_REVIEW","FORCE_STALE_STATE","FORCE_SAFE_STATE"],"required":true},
+    {"name":"Fail_Safe_Action","type":"string","required":true},
+    {"name":"Security_Class","type":"enum","allowed_values":["PUBLIC_SAFE_CANDIDATE","INTERNAL","RESTRICTED_TECHNICAL","RESTRICTED_SECURITY"],"required":true},
+    {"name":"Source_or_Requirement_IDs","type":"array_string","required":true},
+    {"name":"Evidence_State","type":"enum","allowed_values":["SCHEMA_ONLY","REQUIREMENT_DEFINED","DESIGN_REVIEWED","INSTALLED_UNCOMMISSIONED","COMMISSIONED","OUT_OF_SERVICE"],"required":true},
+    {"name":"Next_Action","type":"string","required":true}
+  ],
+  "trust_rules": [
+    "No sensor stream can change an engineering acceptance gate unless the sensor identity, calibration and applicability are traceable.",
+    "Stale, offline, failed or unverified sensors force the affected twin field to stale/unknown or reviewed safe-state behaviour; values are never silently held as current.",
+    "Synthetic/demo values are test-fixture inputs only and cannot be represented as physical measurements.",
+    "Public outputs must not expose restricted sensor locations, protected-envelope details, security logic or operational vulnerabilities.",
+    "Sensor health is evidence about instrumentation, not proof that structure, cable, glazing, Solar Hull or living systems are compliant."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema_name": "intersol_watchtower_object_registry_fields",
+  "version": "2026-08-13-v0.1",
+  "source_workbook": "Type 1 Romer Cognigrex",
+  "source_surface": "104_WATCHTOWER_OBJECT_REG_v0_1",
+  "asset_id": "WT-001",
+  "purpose": "Stable machine-readable field contract for the InterSol Watch Tower object registry. It mirrors the canonical workbook schema without promoting unresolved geometry or implementation readiness.",
+  "authority_order": [
+    "owner-current sketches/instructions and attributable current FreeCAD geometry",
+    "current Type 1 Romer Cognigrex qualification/control rows",
+    "historical 2022-2023 InterSol owner records for lineage/function only",
+    "derived digital-twin schema",
+    "locked artistic render for aesthetic language only"
+  ],
+  "fields": [
+    {"name":"Object_ID","type":"string","required":true,"description":"Stable Watch Tower object identifier, for example WT-T or WT-L1."},
+    {"name":"Parent_ID","type":"string","required":true,"description":"Parent object or infrastructure identifier."},
+    {"name":"Object_Name","type":"string","required":true,"description":"Human-readable canonical object name."},
+    {"name":"Object_Class","type":"string","required":true,"description":"Assembly, primary structure, node, cable anchor, pole, glazing, roof, MEP, biological, digital or other bounded class."},
+    {"name":"Side_or_Zone","type":"string","required":true,"description":"Centre, left, right, tower face, roof, whole asset or other explicit zone."},
+    {"name":"Geometry_Authority","type":"string","required":true,"description":"Source class controlling geometry for this object."},
+    {"name":"Geometry_Status","type":"string","required":true,"description":"Resolved, current-form/dimensions-open, XYZ-open, unresolved, legacy-placeholder or equivalent explicit state."},
+    {"name":"Nominal_Dimension_or_Rule","type":"string","required":false,"description":"Only attributable dimensions or design rules; unknown values must remain explicit unknowns."},
+    {"name":"Material_Route","type":"string","required":false,"description":"Material-family routing or unresolved material status; not an engineering member schedule."},
+    {"name":"Connections_or_Function","type":"string","required":true,"description":"Functional relationship or connection interface."},
+    {"name":"Evidence_State","type":"string","required":true,"description":"OWNER-CURRENT, HISTORICAL, DERIVED_REQUIRED, AESTHETIC_LOCK, R&D or other controlled evidence state."},
+    {"name":"Validation_Needed","type":"string","required":true,"description":"Discipline evidence needed before promotion."},
+    {"name":"Repo_Key","type":"string","required":true,"description":"Stable dot-path key for adapters and downstream twins."},
+    {"name":"Digital_Twin_State","type":"string","required":true,"description":"Gated digital state such as ACTIVE/G1, HOLD-ENDPOINT, G2-HOLD or SCHEMA-READY."},
+    {"name":"Notes","type":"string","required":false,"description":"Guardrails, provenance and unresolved-detail notes."}
+  ],
+  "topology_invariants": [
+    "Central vertical asset identifier is WT-T (Tower T).",
+    "There are exactly two primary tower cable-node elevations in the current owner topology: WT-A and WT-C.",
+    "WT-A carries four face anchors WT-A-F1 through WT-A-F4.",
+    "WT-C carries four face anchors WT-C-F1 through WT-C-F4.",
+    "Current wing pole naming is WT-L1 through WT-L4 and WT-R1 through WT-R4.",
+    "WT-E is a physical FreeCAD-referenced pole/node whose exact identity/equivalence and coordinates remain extraction-gated.",
+    "Mirrored architecture is a QA/design constraint but must not be used to fabricate missing coordinates.",
+    "The legacy Type1 FreeCAD 60 m height, 18 m envelope and +250 m X relation are placeholder provenance only."
+  ],
+  "material_routing_guardrail": {
+    "owner_rule": "solid structural thickness >=120 mm routes to reinforced-concrete family; below 120 mm routes to steel-frame family",
+    "exceptions": ["glazing", "cables", "coatings", "membranes", "gaskets", "Solar Hull", "biological/living systems"],
+    "warning": "This rule classifies material families; it does not size or certify any structural member."
+  },
+  "publication_boundary": [
+    "No site, approval, partner, structural compliance, blast, ballistic, fire, Solar Hull performance or operational claim is authorised by this schema.",
+    "Security-sensitive geometry and implementation details require a separate controlled classification before any web/API export.",
+    "The locked sunset Watch Tower render is an aesthetic reference only and must never override attributable CAD/source geometry."
+  ]
+}

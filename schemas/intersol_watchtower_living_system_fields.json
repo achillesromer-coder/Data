@@ -1,0 +1,47 @@
+{
+  "schema_name": "intersol_watchtower_living_system_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "layer_id": "BPC-013",
+  "purpose": "Evidence-aware living-infrastructure state model for Watch Tower roof/canopy systems. Separates aesthetic palette, local ecological suitability, biological growth state, water state and structural load state.",
+  "geometry_anchor": {
+    "fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "support_semantics": "OPEN",
+    "coordinate_state": "LOCAL_CAD_NOT_GEODETIC"
+  },
+  "fields": [
+    {"name":"State_ID","type":"string","required":true},
+    {"name":"State_Label","type":"string","required":true},
+    {"name":"Time_or_Maturity_Class","type":"enum","allowed_values":["T0","T1","T3","T5_PLUS","MATURE_WET","STORM","CUT_BACK","MAINTENANCE","FAIL_SAFE"],"required":true},
+    {"name":"Geometry_SHA256","type":"string","required":true},
+    {"name":"Semantic_Map_Version","type":"string_or_null","required":true},
+    {"name":"Support_Surface_or_Object_IDs","type":"array_string_or_null","required":true},
+    {"name":"Species_or_Functional_Group","type":"string_or_null","required":true},
+    {"name":"Species_Status","type":"enum","allowed_values":["AESTHETIC_PALETTE_ONLY","CANDIDATE_NATIVE_LOCAL","CANDIDATE_NON_NATIVE_OR_ORNAMENTAL","SITE_REVIEWED","APPROVED_PLANTING_SCHEDULE","UNKNOWN"],"required":true},
+    {"name":"Substrate_or_Media","type":"string_or_null","required":true},
+    {"name":"Dry_Mass_kg","type":"number_or_null","required":true},
+    {"name":"Water_Mass_kg","type":"number_or_null","required":true},
+    {"name":"Total_Wet_Mass_kg","type":"number_or_null","required":true},
+    {"name":"Projected_Windage_Area_m2","type":"number_or_null","required":true},
+    {"name":"Drag_or_Windage_Model_State","type":"enum","allowed_values":["UNSET","BOUNDING_ASSUMPTION","SOURCE_BACKED","MEASURED_OR_CALIBRATED"],"required":true},
+    {"name":"Irrigation_State","type":"enum","allowed_values":["OFF","NORMAL","HIGH_DEMAND","RAIN_LOCKOUT","DRAIN_DOWN","MAINTENANCE","FAILED_SAFE"],"required":true},
+    {"name":"Irrigation_Flow_L_min","type":"number_or_null","required":true},
+    {"name":"Storage_or_Retention_L","type":"number_or_null","required":true},
+    {"name":"Drainage_State","type":"enum","allowed_values":["DRY","NORMAL","SATURATED","OVERFLOW_BOUNDED","BLOCKED","UNKNOWN"],"required":true},
+    {"name":"Fire_Fuel_State","type":"enum","allowed_values":["UNASSESSED","LOWER_BIOMASS_CONTROL","NORMAL","DRY_STRESS","CUT_BACK","REVIEWED"],"required":true},
+    {"name":"Biosecurity_State","type":"enum","allowed_values":["UNASSESSED","CANDIDATE","CLEARED","HOLD"],"required":true},
+    {"name":"Custodial_or_Local_Review_State","type":"enum","allowed_values":["NOT_STARTED","REQUIRED","IN_REVIEW","RECORDED"],"required":true},
+    {"name":"Maintenance_State","type":"string","required":true},
+    {"name":"Evidence_State","type":"enum","allowed_values":["SCHEMA_ONLY","AESTHETIC_SOURCE","LOCAL_SOURCE_PENDING","LOAD_MODEL_PENDING","REVIEWED_INTERNAL","VALIDATED_OPERATIONAL"],"required":true},
+    {"name":"Failure_Modes","type":"array_string","required":true},
+    {"name":"Next_Action","type":"string","required":true},
+    {"name":"Source_IDs","type":"array_string","required":true}
+  ],
+  "guardrails": [
+    "DIM-WT-012 is an aesthetic/ecological palette, not a final species schedule.",
+    "Local species, regional ecosystem, biosecurity, fire, hydrology and custodial/First Nations review are required before planting approval.",
+    "No wet mass, windage, irrigation demand or storage value is invented when evidence is absent.",
+    "Living-system loads remain separate from structural cable geometry and are coupled only after support objects/edges are semantically bound.",
+    "No ecological restoration, biodiversity, cooling or climate outcome claim follows from visual or schema state alone."
+  ]
+}

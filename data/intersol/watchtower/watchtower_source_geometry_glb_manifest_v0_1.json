@@ -1,0 +1,43 @@
+{
+  "asset_id": "WT-001",
+  "export_id": "WT-GLB-SOURCE-001",
+  "state": "SOURCE_GEOMETRY_ONLY_SEMANTICS_OPEN",
+  "source_fcstd": "InterSol - Watch Tower In Site Footprint.FCStd",
+  "source_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "source_brep": "body.brp",
+  "mesh_tessellation": {
+    "linear_tolerance_mm": 5.0,
+    "angular_tolerance_rad": 0.15
+  },
+  "units": "metres",
+  "coordinate_state": "LOCAL_CAD_NOT_GEODETIC",
+  "mesh": {
+    "vertices": 3006,
+    "faces": 1002,
+    "bounds_m": [[677.189875,366.81590625,-4.9],[728.629375,442.72990625,76.62]],
+    "extents_m": [51.4395,75.914,81.52]
+  },
+  "glb": {
+    "file_name": "WatchTower_SourceGeometry_localCAD_m.glb",
+    "sha256": "60fdbedb11868015d96b4c9e6692d4550e4987e59bbec60bfb0ead75762f3683",
+    "size_bytes": 49224,
+    "library_path": "/Romer/InterSol/WatchTower/Twin/WatchTower_SourceGeometry_localCAD_m.glb",
+    "library_file_id": "file_00000000092c81fa92a6bd1e44ccfd34"
+  },
+  "manifest_library_path": "/Romer/InterSol/WatchTower/Twin/watchtower_source_geometry_glb_manifest_v0_1.json",
+  "semantic_state": {
+    "pole_ids": "UNBOUND",
+    "A_C_nodes": "UNBOUND",
+    "cable_edges": "NOT_INCLUDED"
+  },
+  "visual_state": "NO_AESTHETIC_MATERIAL_PROFILE_APPLIED",
+  "derivation": "Exact source BREP -> STL tessellation in local millimetres -> scale 0.001 -> GLB in metres. This derivative is for raw geometry/twin viewing only.",
+  "guardrails": [
+    "Raw source-geometry twin only; not a semantic or engineering-complete model.",
+    "Does not imply structural adequacy, compliance, site approval or build readiness.",
+    "No cable geometry is created because endpoints remain unresolved.",
+    "No final E/L/R pole naming is embedded.",
+    "Accepted sunset render remains a separate aesthetic profile and does not alter this geometry.",
+    "Derived mesh bounds may differ from exact BREP bounds by tessellation tolerance; BREP/SRC-068 remains geometry authority."
+  ]
+}
