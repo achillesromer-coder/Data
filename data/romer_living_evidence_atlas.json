@@ -1,10 +1,17 @@
 {
   "artifact_id": "Romer_Living_Evidence_Atlas",
   "canonical_identity": "L5-LIVING-EVIDENCE-ATLAS",
-  "last_reconciled": "2026-09-08",
+  "last_reconciled": "2026-09-14",
   "update_model": "living canonical; edit stable Drive IDs/Git paths in place; provider/Git/ACR3 receipts carry revision lineage",
-  "authority": "publication/evidence bridge only; ACR3 and owning Type-1/specialist sources remain authority",
+  "authority": "publication/evidence bridge only; ACR3 and owning Type-1/specialist/CAD/raw-evidence sources remain authority",
   "public_send_submission": false,
+  "authority_ladder": [
+    "archive/historical handoff preserves source-native identity, terminology, topology, intent and contradiction evidence without automatic current promotion",
+    "current owning canon controls present configuration, status and evidence ceiling",
+    "deterministic digital derivatives inherit only the authority of their bound inputs",
+    "living review/publication derivatives translate the current evidence graph without becoming engineering or empirical authority",
+    "external release requires exact artifact, exact target/action, applicable restricted/legal/status checks and provider readback"
+  ],
   "counts": {
     "evidence_rows": 37,
     "test_rows": 8,
@@ -20,7 +27,15 @@
     "git": {
       "repository": "achillesromer-coder/Data",
       "json_path": "data/romer_living_evidence_atlas.json",
-      "doctrine_path": "docs/living_corpus_operating_doctrine.md"
+      "doctrine_path": "docs/living_corpus_operating_doctrine.md",
+      "doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c"
+    },
+    "type1_review": {
+      "pr46_head": "c78b0746902906106bfe3707eb5d45513886797f",
+      "record_lineage_sidecar_blob": "b0897c0da39b1adf3ada227ec7b56675044714d3",
+      "deterministic_render_manifest_blob": "edb05a7baa911cf6bedafb91105d4d417a21bc85",
+      "exact_head_ci_run": "34784681698",
+      "state": "OPEN/DRAFT/UNMERGED / EXACT-HEAD CI SUCCESS / REVIEW-ONLY"
     }
   },
   "artifact_sha256": {
@@ -35,7 +50,7 @@
       "object_id": "ACR3",
       "name": "ACR3 Next Stage Consolidation Register",
       "class": "SOURCE/DIGITAL",
-      "status": "ACTIVE",
+      "status": "ACTIVE / LIVING CONTINUITY THROUGH ROW 934",
       "value": "",
       "unit": "",
       "source": "1AgAhLPNtrO91C_-ea7EdOkOsyXrCCYvFVvmDSGq8uls",
@@ -48,7 +63,7 @@
       "object_id": "ROMER-T1",
       "name": "Type 1 Römer Cognigrex",
       "class": "SOURCE/DIGITAL",
-      "status": "CURRENT CANON",
+      "status": "CURRENT CANON / ART-068 + SYNC-022 LIVING BRIDGE BOUND",
       "value": "",
       "unit": "",
       "source": "1refNFmebTcmPVojCuZsyILJEWaKz-sVzYLfZtqMl8k8",
@@ -87,12 +102,12 @@
       "object_id": "FF-BAT-SYN-001",
       "name": "Synthetic reference battery article",
       "class": "DERIVED/SCENARIO",
-      "status": "SYNTHETIC / FORMULA CHECK",
+      "status": "SYNTHETIC / FORMULA CHECK / TST-018 DIGITAL ADMISSION HOLD",
       "value": "12.8 V; 6 Ah; 55.296 usable",
       "unit": "V, Ah, Wh",
-      "source": "Free Flow synthetic article",
-      "ceiling": "Formula/twin verification only",
-      "gate": "Physical cell chemistry, ESR, thermal, cycling, safety tests"
+      "source": "Free Flow synthetic article + ACR3 row930",
+      "ceiling": "Formula/twin verification and digital run-admission logic only",
+      "gate": "Selected MPN/BOM/netlist, calibrated source-bound electrical/thermal/RF/flex evidence, raw-data destination and acceptance authority"
     },
     {
       "id": "EV-017",
@@ -113,25 +128,25 @@
       "object_id": "M3-AUTH",
       "name": "Mark III current authority",
       "class": "SOURCE/DIGITAL",
-      "status": "CURRENT THREE-APPENDAGE AUTHORITY",
+      "status": "CURRENT THREE-APPENDAGE AUTHORITY / ARCHIVAL PERSISTENCE BRIDGE REVERIFIED",
       "value": "0.75 × 0.32 × 0.32",
       "unit": "m envelope",
-      "source": "Mark III current authority",
+      "source": "Mark III current authority + ACR3 row932",
       "ceiling": "Digital/source authority; physical validation open",
-      "gate": "CAD/BOM/ICD derivative regeneration and tests"
+      "gate": "Exact current panel/half-shell CAD, BOM/ICD derivative regeneration and physical tests; historical package visibility remains non-resolved"
     },
     {
       "id": "EV-020",
       "domain": "Mark Series",
       "object_id": "M5-AUTH",
-      "name": "Mark V function boundary",
+      "name": "Mark V authority boundary",
       "class": "SOURCE/DIGITAL",
-      "status": "FUNCTION BOUNDARY RESOLVED",
+      "status": "HISTORICAL OWNER-CAD IDENTITY BOUND / CURRENT CONFIGURATION + PHYSICAL AUTHORITY OPEN",
       "value": "",
       "unit": "",
-      "source": "Mark V current authority",
-      "ceiling": "Extraction responsibility remains Mark III/RFS/EMFF",
-      "gate": "Engineering configuration + physical qualification"
+      "source": "Mark V current authority + ACR3 row924",
+      "ceiling": "Historical identity/function lineage only where current authority has not re-qualified geometry or physical state; extraction responsibility remains Mark III/RFS/EMFF",
+      "gate": "Current engineering configuration, same-object CAD/source authority and physical qualification"
     },
     {
       "id": "EV-022",
@@ -191,12 +206,12 @@
       "object_id": "INTERSOL-TRACE",
       "name": "InterSol ISP→IPS documentation/configuration traceability",
       "class": "SOURCE/DIGITAL",
-      "status": "48/48 STABLE-ID PASS",
+      "status": "48/48 STABLE-ID PASS / ARCHIVAL DEFINITIONS BRIDGED",
       "value": "48/48",
       "unit": "stable IDs",
-      "source": "InterSol rows",
-      "ceiling": "Documentation traceability only",
-      "gate": "Installed/qualified physical interfaces"
+      "source": "InterSol rows + ACR3 rows925/929/934",
+      "ceiling": "Documentation/configuration traceability and source-role semantics only",
+      "gate": "DEP-001 exact site/authority, DEP-003 current operator/activity/vehicle basis, DEP-004 numerical occupancy/classification and installed/qualified physical interfaces"
     },
     {
       "id": "EV-034",
@@ -217,12 +232,12 @@
       "object_id": "DOSSIER-LIVING",
       "name": "Living Type-1 Dossier",
       "class": "DERIVED/SCENARIO",
-      "status": "CONTROLLED LIVING BUILD",
+      "status": "STABLE LIVING DERIVATIVE / DRIVE ID BOUND",
       "value": "20 pages",
       "unit": "pages",
-      "source": "Romer_Living_Type1_Dossier",
-      "ceiling": "Useful start only",
-      "gate": "Evidence Atlas import and rebuild"
+      "source": "Drive 1fujyoYVtdRnO2ADk5MfjQZPvHIzJFTje",
+      "ceiling": "Review/publication derivative only; not technical authority",
+      "gate": "Propagate only source-backed owner deltas; external release gate remains separate"
     },
     {
       "id": "EV-036",
@@ -230,12 +245,12 @@
       "object_id": "DECK-LIVING",
       "name": "Living Type-1 Evidence Review Deck",
       "class": "DERIVED/SCENARIO",
-      "status": "CONTROLLED LIVING BUILD",
+      "status": "STABLE LIVING DERIVATIVE / DRIVE ID BOUND",
       "value": "15 slides",
       "unit": "slides",
-      "source": "Romer_Living_Type1_Evidence_Review_Deck",
-      "ceiling": "Useful summary only",
-      "gate": "Native charts, source captions, data layer"
+      "source": "Drive 1uqgDTf3mdVpDy1NhqkLwcwffMdtH4RLV",
+      "ceiling": "Review/publication derivative only; not technical authority",
+      "gate": "Propagate only source-backed owner deltas; exact external release artifact/target/action/readback"
     },
     {
       "id": "EV-037",
@@ -243,30 +258,37 @@
       "object_id": "ATLAS-LIVING",
       "name": "Living Evidence Atlas",
       "class": "SOURCE/DIGITAL",
-      "status": "LIVING CANONICAL PUBLICATION BRIDGE",
+      "status": "LIVING CANONICAL PUBLICATION BRIDGE / STABLE DRIVE ID BOUND",
       "value": "",
       "unit": "",
-      "source": "Romer_Living_Evidence_Atlas",
-      "ceiling": "Publication bridge, not engineering master",
-      "gate": "Ongoing import/readback from owner workbooks"
+      "source": "Drive 18WcNLqCyGsq40PjIZM3QIzI41h3SSMCN",
+      "ceiling": "Publication/evidence bridge, not engineering master",
+      "gate": "Ongoing owner-workbook import/readback and exact claim-ceiling reconciliation"
     }
   ],
   "open_gates": [
     {"id":"G-001","domain":"Solar Hull","priority":"HIGH","blocked_claim":"Measured efficiency, durability or roof energy credit"},
-    {"id":"G-002","domain":"Free Flow","priority":"HIGH","blocked_claim":"Usable storage/field performance"},
+    {"id":"G-002","domain":"Free Flow","priority":"HIGH","blocked_claim":"Selected reference-electronics compatibility plus usable storage/thermal/safety/field performance; TST-018 remains digital HOLD"},
     {"id":"G-003","domain":"RFS/EMFF","priority":"HIGH","blocked_claim":"Physical material response or separation capability"},
-    {"id":"G-004","domain":"Mark III","priority":"HIGH","blocked_claim":"Manufacturable/qualified current hardware"},
-    {"id":"G-005","domain":"Mark V","priority":"HIGH","blocked_claim":"Operational Mission 1 hardware role beyond function boundary"},
+    {"id":"G-004","domain":"Mark III","priority":"HIGH","blocked_claim":"Manufacturable/qualified current hardware and exact current panel/half-shell authority"},
+    {"id":"G-005","domain":"Mark V","priority":"HIGH","blocked_claim":"Current same-object geometry/configuration and operational Mission 1 hardware authority beyond historical/function lineage"},
     {"id":"G-006","domain":"Mission 1","priority":"HIGH","blocked_claim":"Resource retrieval/revenue/return result"},
-    {"id":"G-007","domain":"Luke II","priority":"MED-HIGH","blocked_claim":"EMF catch or return mechanism performance"},
+    {"id":"G-007","domain":"Luke II","priority":"MED-HIGH","blocked_claim":"Current telemetry/refinement performance, calibrated sensor/field-map evidence and Mark/RFS/EMFF interface qualification; no payload-capture or controlled-return claim"},
     {"id":"G-008","domain":"ASC/SAI","priority":"HIGH","blocked_claim":"Sovereign-content percentage or deployed capability"},
     {"id":"G-009","domain":"Eco-X","priority":"MED-HIGH","blocked_claim":"Ecological restoration outcome"},
     {"id":"G-010","domain":"M1","priority":"MED","blocked_claim":"Traffic benefit, approval, constructability or safety performance"}
   ],
+  "current_control_receipts": {
+    "acr3": "row934 LIVING-CORPUS-ARCHIVE-CURRENT-PUBLICATION-BRIDGE-20260914",
+    "type1_artifact": "ART-068",
+    "type1_sync": "SYNC-022",
+    "type1_publish_continuity": "TASK-100 LIVING CONTINUITY BRIDGE ACTIVE",
+    "git_doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c"
+  },
   "receipt": {
-    "id": "REC-LIVING-CORPUS-20260908-001",
-    "state": "DRIVE_READBACK_COMPLETE / GIT_COMMIT_PENDING_AT_GENERATION",
-    "note": "Exact Git commit and Drive IDs are bound in ACR3 after provider write/readback."
+    "id": "REC-LIVING-CORPUS-20260914-001",
+    "state": "ACR3_ROW934_READBACK_COMPLETE / TYPE1_ART068_SYNC022_TASK100_READBACK_COMPLETE / GIT_DOCTRINE_COMMIT_BOUND / LIVING_INDEX_REFRESHED",
+    "note": "Stable Drive IDs and Git paths are edited forward. Archive/current/deterministic/publication authority boundaries are explicit. This index remains a publication/evidence bridge and does not replace technical owners."
   },
   "full_atlas": "Römer Industries — Living Evidence Atlas.xlsx on Drive; this Git index is not a replacement technical authority."
 }
