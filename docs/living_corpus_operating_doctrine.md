@@ -15,6 +15,18 @@ This doctrine implements the existing ACR3 reconcile-first rule: understand and 
 5. **No last-chat-wins.** Conversational state, generated prose, rendered imagery or a later duplicate cannot silently override an attributable source or established owner decision.
 6. **Conflicts stay explicit.** Competing values or interpretations remain a contradiction set until a source, test, calculation, owner decision or professional/regulatory authority resolves them.
 
+## Archive → current → derivative authority ladder
+
+Archival definitions are active evidence inputs, but they do not bypass current authority. Reconciliation follows this ladder:
+
+1. **Archive / historical handoff:** preserves source-native identity, terminology, topology, intent, prior decisions and contradiction evidence. Historical numeric values, site states, partner relations, performance states and implementation claims remain historical unless independently re-authorised.
+2. **Current owning canon:** ACR3 plus the owning Type-1, specialist, CAD, source-data or raw-test surface decides present configuration, status and evidence ceiling. Where archive and current canon differ, preserve the contradiction and resolve it explicitly; never use newest-source-wins or archive-wins.
+3. **Deterministic digital derivative:** CAD projections, SVG/OBJ/GLB packages, calculations, simulations and generated manifests inherit only the authority of their bound inputs. A deterministic render can prove reproduction, not physical truth.
+4. **Living review/publication derivative:** the Living Evidence Atlas, Living Type-1 Dossier and Living Type-1 Evidence Review translate the current evidence graph for review and communication. They do not become engineering, scientific, legal, regulatory, site, manufacturing or empirical authority.
+5. **External release:** public state requires an exact artifact, exact target/action, applicable claim/restricted/legal checks and provider readback. Prepublish, CI success, mergeability, local rendering and review approval are distinct states.
+
+Where provenance metadata would alter a deterministic render hash without changing geometry or review content, keep provenance in an independently hash-bound lineage sidecar rather than weakening deterministic validation. The September 2026 Type1/PR46 record-lineage separation is the reference implementation of this boundary: archival/current record lineage can deepen while generated geometry remains at its existing evidence ceiling until qualified same-object geometry/domain evidence is available.
+
 ## Evidence and test preservation
 
 - Raw physical, digital, simulated and literature-derived test receipts are immutable in meaning. Corrections append; original inputs, configuration, environment, outputs, errors and timestamps remain recoverable where available.
