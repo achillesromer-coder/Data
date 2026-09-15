@@ -1,0 +1,61 @@
+{
+  "schema_name": "intersol_watchtower_solar_hull_roof_qualification_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "layer_id": "BPC-015",
+  "purpose": "Terrestrial curved-roof Solar Hull qualification contract bound to the source-locked Watch Tower geometry. Candidate Solar Hull values remain test inputs, not Watch Tower-validated performance.",
+  "geometry_anchor": {
+    "fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "roof_surface_semantics": "OPEN",
+    "coordinate_state": "LOCAL_CAD_NOT_GEODETIC"
+  },
+  "fields": [
+    {"name":"Qualification_ID","type":"string","required":true},
+    {"name":"Surface_ID","type":"string_or_null","required":true},
+    {"name":"Geometry_SHA256","type":"string","required":true},
+    {"name":"Semantic_Map_Version","type":"string_or_null","required":true},
+    {"name":"Solar_Hull_Config_Ref","type":"string_or_null","required":true},
+    {"name":"Layer_Name","type":"string","required":true},
+    {"name":"Material_or_Candidate","type":"string_or_null","required":true},
+    {"name":"Min_Thickness_um","type":"number_or_null","required":true},
+    {"name":"Target_Thickness_um","type":"number_or_null","required":true},
+    {"name":"Max_Thickness_um","type":"number_or_null","required":true},
+    {"name":"Thickness_State","type":"enum","allowed_values":["SOURCE_CANDIDATE","OWNER_TARGET","MEASURED","REVIEWED","UNKNOWN"],"required":true},
+    {"name":"Primary_Function","type":"string","required":true},
+    {"name":"Terrestrial_Qualification_Delta","type":"string","required":true},
+    {"name":"Required_Test_IDs","type":"array_string","required":true},
+    {"name":"Evidence_State","type":"enum","allowed_values":["SOURCE_CANDIDATE","COUPON_PENDING","COUPON_TESTED","CURVED_COUPON_TESTED","ASSEMBLY_PENDING","ASSEMBLY_TESTED","EXTERNAL_REVIEW_PENDING","REJECTED"],"required":true},
+    {"name":"Claim_Ceiling","type":"enum","allowed_values":["CONCEPT_ONLY","TARGET_ONLY","PROTOTYPE_PATHWAY","INTERNAL_TEST_RESULT","EXTERNALLY_REVIEWED"],"required":true},
+    {"name":"Failure_Modes","type":"array_string","required":true},
+    {"name":"Acceptance_Criteria","type":"string_or_null","required":true},
+    {"name":"Source_IDs","type":"array_string","required":true},
+    {"name":"Decision_Owner","type":"string","required":true},
+    {"name":"Next_Action","type":"string","required":true},
+    {"name":"Receipt_or_Hash","type":"string_or_null","required":true}
+  ],
+  "required_test_families": [
+    "substrate_surface_preparation_and_seed_continuity",
+    "cross_section_layer_thickness_and_voids",
+    "adhesion_pull_off_or_application_specific_equivalent",
+    "curved_coupon_bend_strain_cracking_and_delamination",
+    "optical_transmission_haze_reflectance_and_weathering",
+    "photoactive_IV_and_spectral_response",
+    "copper_routing_sheet_resistance_and_continuity",
+    "bismuth_or_Bi_family_thermal_gradient_response",
+    "thermal_cycling_and_CTE_compatibility",
+    "humidity_water_ingress_and_corrosion",
+    "UV_and_outdoor_weathering",
+    "abrasion_cleaning_and_soiling_recovery",
+    "grounding_and_electrical_safety",
+    "roof_drainage_ponding_and_overflow_interface",
+    "fire_and_combustibility_review",
+    "representative_curved_roof_assembly_test"
+  ],
+  "guardrails": [
+    "Copper is current collection/routing unless a defined photoactive copper-based chemistry is selected and validated.",
+    "31-31.5 percent remains an internal target/prior model, not a measured Watch Tower result.",
+    "Candidate thickness ranges inherited from Solar Hull v0.2 do not become Watch Tower design values until coupon and assembly evidence supports them.",
+    "Space-environment results, where they exist, do not substitute for terrestrial weather, fire, drainage, corrosion and building-envelope qualification.",
+    "No certified-roof, efficiency, EMI, fire, structural or deployment claim follows from schema completion."
+  ]
+}

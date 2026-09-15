@@ -1,0 +1,115 @@
+{
+  "version": "0.1.0",
+  "qualification_id": "WT-SH-ROOF-001",
+  "asset_id": "WT-001",
+  "layer_id": "BPC-015",
+  "state": "SOURCE_CANDIDATE_TEST_PATHWAY_READY",
+  "geometry": {
+    "fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "semantic_map_version": null,
+    "roof_surface_ids": null,
+    "note": "Current FCStd is source-locked, but exact roof-surface semantic extraction remains open. No roof area or curvature radius is invented here."
+  },
+  "source_basis": [
+    "DIM-WT-011",
+    "BPC-015",
+    "Solar_Hull_Digital_Twin_v0_2.xlsx",
+    "SRC-INT-001 Solar Hull.pdf via Solar Hull v0.2 source register",
+    "INV-004 / VAL-006 historical-concept context"
+  ],
+  "candidate_stack": [
+    {
+      "order": 1,
+      "layer_name": "Protective optical silica / lensing overcoat",
+      "material_or_candidate": "SiO2 / silica-family coating",
+      "thickness_um": {"min": 0.188, "target": 0.564, "max": 1.128},
+      "state": "SOURCE_CANDIDATE",
+      "function": "Optical/environmental protection and possible optical tuning",
+      "watchtower_delta": "Must demonstrate terrestrial UV, rain, humidity, abrasion, cleaning, hail/impact exposure where applicable, drainage compatibility and curved-roof adhesion."
+    },
+    {
+      "order": 2,
+      "layer_name": "Photoactive absorber + copper current collector",
+      "material_or_candidate": "Photoactive absorber chemistry TBD + copper routing/collector",
+      "thickness_um": {"absorber": null, "copper_min": 5.0, "copper_target": 25.0, "copper_max": 50.0},
+      "state": "SOURCE_CANDIDATE_ABSORBER_UNSET",
+      "function": "Photovoltaic/photoactive conversion plus current collection",
+      "watchtower_delta": "Select photoactive chemistry; measure terrestrial I-V, spectral response, temperature coefficient, shading/curvature effects and electrical isolation."
+    },
+    {
+      "order": 3,
+      "layer_name": "Bismuth / Bi-family thermal layer",
+      "material_or_candidate": "Bismuth, Bi2Te3-family or comparative thermal/TE candidate",
+      "thickness_um": {"min": 1.0, "target": 5.0, "max": 10.0},
+      "state": "SOURCE_CANDIDATE",
+      "function": "Heat spreading / thermal-gradient sensing or recovery candidate",
+      "watchtower_delta": "Elemental Bi and Bi-family compounds must not be conflated; thermal and Seebeck response require measured terrestrial coupon evidence."
+    },
+    {
+      "order": 4,
+      "layer_name": "Structural conductive layer",
+      "material_or_candidate": "Ag / Ti / Cu / comparative conductor",
+      "thickness_um": {"min": 10.0, "target": 50.0, "max": 100.0},
+      "state": "SOURCE_CANDIDATE",
+      "function": "Conductive backbone, grounding/discharge path, reinforcement and EMI support",
+      "watchtower_delta": "Material selection must account for CTE, corrosion, galvanic interfaces, fire/electrical path, roof curvature and substrate compatibility."
+    },
+    {
+      "order": 5,
+      "layer_name": "Interface / seed / adhesion layer",
+      "material_or_candidate": "Conductive primer / electroless Cu-Ni seed / Ti adhesion layer or comparative route",
+      "thickness_um": {"min": 0.1, "target": 1.0, "max": 2.0},
+      "state": "SOURCE_CANDIDATE",
+      "function": "Enable metallisation and control interface continuity/stress",
+      "watchtower_delta": "Surface preparation and adhesion route must be validated on the selected Watch Tower roof substrate."
+    },
+    {
+      "order": 6,
+      "layer_name": "3D-printed / fabricated substrate",
+      "material_or_candidate": "Graphene-polymer / polymer / ceramic-compatible or other engineered roof substrate",
+      "thickness_um": {"min": null, "target": null, "max": null},
+      "state": "WATCHTOWER_SUBSTRATE_UNSET",
+      "function": "Roof carrier geometry and mechanical backing",
+      "watchtower_delta": "Solar Hull v0.2 coupon substrate thicknesses are not inherited as Watch Tower roof structural thicknesses. Structural substrate is separately engineered."
+    }
+  ],
+  "qualification_sequence": [
+    {"gate":"SH-WT-Q0","name":"Source and geometry lock","status":"READY","exit":"FCStd SHA and Solar Hull source revision recorded; roof surfaces remain explicit semantic objects once extracted."},
+    {"gate":"SH-WT-Q1","name":"Flat material coupon","status":"BLOCKED_PHYSICAL_TEST","exit":"Layer thickness, adhesion, continuity, electrical and optical baseline logged with raw evidence."},
+    {"gate":"SH-WT-Q2","name":"Curved coupon","status":"BLOCKED_Q1","exit":"Curvature-induced cracking/delamination, optical/electrical loss and thermal response measured."},
+    {"gate":"SH-WT-Q3","name":"Terrestrial environment","status":"BLOCKED_Q2","exit":"UV, humidity, water, corrosion, abrasion/cleaning and temperature cycling evidence recorded."},
+    {"gate":"SH-WT-Q4","name":"Roof safety/interface","status":"BLOCKED_Q2_Q3","exit":"Drainage/ponding, electrical/grounding, fire/combustibility, waterproofing and substrate-interface review completed."},
+    {"gate":"SH-WT-Q5","name":"Representative roof assembly","status":"BLOCKED_Q4","exit":"Representative curved-roof assembly tested under reviewed structural/environmental/electrical conditions."},
+    {"gate":"SH-WT-Q6","name":"Independent review / application decision","status":"BLOCKED_Q5","exit":"Application-specific engineering review establishes allowed claim/design state."}
+  ],
+  "test_families": [
+    "surface preparation and conductive seed continuity",
+    "cross-section thickness / void / interface microscopy",
+    "adhesion and curvature strain",
+    "optical transmission / haze / reflectance / UV ageing",
+    "I-V / spectral response / temperature coefficient",
+    "sheet resistance / routing continuity / grounding",
+    "thermal conductivity / gradient / Seebeck candidate response",
+    "thermal cycling / CTE compatibility / delamination",
+    "humidity / water ingress / corrosion",
+    "abrasion / cleaning / soiling recovery",
+    "drainage / ponding / overflow",
+    "fire and electrical safety review",
+    "representative curved-roof assembly test"
+  ],
+  "claim_state": {
+    "efficiency": "INTERNAL_TARGET_ONLY_31_TO_31_5_PERCENT_NOT_WATCHTOWER_RESULT",
+    "certified_roof": false,
+    "structural_adequacy": false,
+    "weatherproof": false,
+    "fire_compliant": false,
+    "electrical_compliant": false,
+    "deployment_ready": false
+  },
+  "next_actions": [
+    "Extract and semantically bind Watch Tower roof surfaces from the source-locked FCStd without changing the BREP.",
+    "Bind the authoritative Solar Hull v0.2 configuration revision/hash into the Watch Tower evidence graph.",
+    "Draft coupon IDs and physical SOP only after owner/material/test review authorises the physical-test lane.",
+    "Do not import synthetic Solar Hull v0.2 test-log rows as evidence."
+  ]
+}

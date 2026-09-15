@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.1.0",
+  "extract_id": "WT-FCSTD-EXTRACT-2026-08-13",
+  "source": {
+    "name": "InterSol - Watch Tower In Site Footprint.FCStd",
+    "library_file_id": "file_00000000bd9c81fa830ace0afeb6251a",
+    "size_bytes": 48879924,
+    "sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "freecad_body_label": "Launch Tower",
+    "freecad_tip": "Pad086",
+    "units": "millimetres internally; values normalized to metres in this extract",
+    "coordinate_state": "LOCAL_CAD_NOT_GEODETIC"
+  },
+  "body": {
+    "bounds_m": [677.184938, 366.81094, -4.904951, 728.634339, 442.734853, 76.624951],
+    "extents_m": [51.449401, 75.923913, 81.529903],
+    "z_min_m": -4.904951,
+    "z_max_m": 76.624951,
+    "single_solid": true,
+    "faces": 356,
+    "edges": 1703,
+    "volume_m3": 5255.514331364259,
+    "surface_area_m2": 8646.793683578246,
+    "centre_of_mass_m": [695.001312461014, 401.2594325257564, 9.74215568136549]
+  },
+  "resolved_groups": {
+    "core_base": {
+      "features": ["Pad", "Pad001", "Pad002", "Pad003", "Pad086"],
+      "bounds_m": [682.368435, 388.22801, -4.9, 704.695125, 410.928449, 13.3]
+    },
+    "tower_shaft": {
+      "features": ["Pad004"],
+      "bounds_m": [690.762816, 397.709183, 13.3, 695.055237, 402.07346, 68.3],
+      "height_m": 55.0
+    },
+    "observation_head": {
+      "features": ["Pad005", "Pad006", "Pad007", "Pad008", "Pad009", "Pad010", "Pad011", "Pad012", "Pad013", "Pad014"],
+      "bounds_m": [687.796253, 394.358546, 68.3, 698.461964, 405.202802, 76.62]
+    },
+    "wing_cluster_NW": {
+      "features": ["Pad015", "Pad018", "Pad030", "Pad031", "Pad032", "Pad033", "Pad060", "Pad061", "Pad071", "Pad072", "Pad080", "Pad082", "Pad084"],
+      "bounds_m": [677.189889, 393.771598, -0.0, 697.718664, 442.644649, 9.1]
+    },
+    "wing_cluster_SE": {
+      "features": ["Pad016", "Pad017", "Pad045", "Pad046", "Pad047", "Pad048", "Pad062", "Pad063", "Pad064", "Pad070", "Pad081", "Pad083", "Pad085"],
+      "bounds_m": [681.214722, 366.815892, -0.0, 728.529076, 398.792178, 9.1]
+    }
+  },
+  "pole_geometry": [
+    {
+      "geometry_key": "E_candidate",
+      "main_feature": "Pad028",
+      "feature_group": ["Pad026", "Pad027", "Pad028", "Pad029"],
+      "axis_xy_m": [681.053043, 393.143597],
+      "z_main_m": [4.599939, 20.600061],
+      "group_bounds_m": [680.751144, 392.845251, -1.600061, 681.354941, 393.441943, 20.600061],
+      "mapping_state": "WT-E_CANDIDATE_HIGH_CONFIDENCE_UNLABELED_FCSTD"
+    },
+    {
+      "geometry_key": "NW_P1",
+      "main_feature": "Pad040",
+      "feature_group": ["Pad035", "Pad039", "Pad040", "Pad042", "Pad043", "Pad044"],
+      "axis_xy_m": [690.458944, 442.648378],
+      "z_main_m": [-0.901992, 8.101992],
+      "group_bounds_m": [690.361383, 442.157731, -0.901992, 691.177213, 442.731894, 12.101992],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "NW_P2",
+      "main_feature": "Pad038",
+      "feature_group": ["Pad036", "Pad037", "Pad038", "Pad041"],
+      "axis_xy_m": [691.078599, 442.230197],
+      "z_main_m": [0.749939, 13.750061],
+      "group_bounds_m": [690.869861, 442.147354, -2.001061, 691.168792, 442.390002, 13.750061],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "NW_P3",
+      "main_feature": "Pad075",
+      "feature_group": ["Pad073", "Pad074", "Pad075"],
+      "axis_xy_m": [680.116102, 425.63602],
+      "z_main_m": [3.101543, 11.10166],
+      "group_bounds_m": [680.052636, 425.602066, -0.898441, 680.156493, 425.662843, 11.10166],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "NW_P4",
+      "main_feature": "Pad078",
+      "feature_group": ["Pad076", "Pad077", "Pad078"],
+      "axis_xy_m": [693.871992, 428.549702],
+      "z_main_m": [3.101543, 12.101656],
+      "group_bounds_m": [693.830208, 428.522583, -0.898441, 693.936851, 428.583952, 12.101656],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "SE_P1",
+      "main_feature": "Pad053",
+      "feature_group": ["Pad049", "Pad050", "Pad053", "Pad054"],
+      "axis_xy_m": [728.521705, 377.376835],
+      "z_main_m": [0.75, 13.75],
+      "group_bounds_m": [728.467848, 377.158094, -2.0, 728.582963, 377.454349, 13.75],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "SE_P2",
+      "main_feature": "Pad058",
+      "feature_group": ["Pad051", "Pad052", "Pad055", "Pad056", "Pad057", "Pad058", "Pad059"],
+      "axis_xy_m": [728.575531, 376.631186],
+      "z_main_m": [-0.901931, 8.101931],
+      "group_bounds_m": [728.475698, 376.551741, -0.901931, 728.631318, 377.457245, 12.101931],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "SE_P3",
+      "main_feature": "Pad069",
+      "feature_group": ["Pad066", "Pad067", "Pad069"],
+      "axis_xy_m": [708.670078, 376.186955],
+      "z_main_m": [3.101543, 11.10166],
+      "group_bounds_m": [708.616666, 376.130233, -0.898441, 708.707705, 376.226145, 11.10166],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    },
+    {
+      "geometry_key": "SE_P4",
+      "main_feature": "Pad079",
+      "feature_group": ["Pad065", "Pad068", "Pad079"],
+      "axis_xy_m": [718.070145, 386.6294],
+      "z_main_m": [3.101543, 12.101656],
+      "group_bounds_m": [718.031565, 386.589152, -0.898441, 718.12451, 386.68718, 12.101656],
+      "mapping_state": "WING_POLE_GEOMETRY_RESOLVED_FINAL_LR_NUMBER_OPEN"
+    }
+  ],
+  "topology_findings": {
+    "external_pole_line_count": 9,
+    "unique_heavy_tall_pole_count": 1,
+    "slender_wing_pole_count": 8,
+    "wing_clusters": 2,
+    "matches_owner_topology": "E + 4 + 4 pole-count topology matches current owner model.",
+    "cable_solids_present": false,
+    "tower_A_C_node_geometry_present": false,
+    "node_rule": "Exactly two primary tower cable-node elevations A/C remains an owner topology rule; their exact Z and face coordinates are not encoded as labelled FCStd objects.",
+    "cable_edge_rule": "Do not promote exact cable edges until tower A/C face points and pole-number mapping are explicitly bound."
+  },
+  "mapping": {
+    "WT_T": {"state": "RESOLVED_TO_PAD004_SHAFT_PLUS_CORE_AND_HEAD_CONTEXT", "tower_axis_xy_m": [692.909027, 399.891321]},
+    "WT_E": {"state": "HIGH_CONFIDENCE_GEOMETRY_CANDIDATE_PENDING_LABEL_CONFIRMATION", "geometry_key": "E_candidate"},
+    "WT_L1_L4": {"state": "FOUR_POLE_CLUSTER_RESOLVED_AS_NW; EXACT L1-L4 ORDER OPEN"},
+    "WT_R1_R4": {"state": "FOUR_POLE_CLUSTER_RESOLVED_AS_SE; EXACT R1-R4 ORDER OPEN"},
+    "WT_A_C": {"state": "TOPOLOGY_LOCKED_EXACT_Z_OPEN"},
+    "cables": {"state": "NOT_MODELED_AS_DISTINCT_SOLIDS_IN_CURRENT_FCSTD"}
+  },
+  "guardrails": [
+    "The locked sunset render is aesthetic-only and does not override this geometry extract.",
+    "Legacy 60 m/18 m/+250 m placeholder geometry remains quarantined and is not used here.",
+    "The FCStd is unlabeled at pole level; L/R numbering is not invented.",
+    "No structural compliance, material grade, cable pretension, safety rating or build-readiness claim follows from geometric extraction.",
+    "All coordinates are local CAD coordinates, not geodetic coordinates."
+  ]
+}
