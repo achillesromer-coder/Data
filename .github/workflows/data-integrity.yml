@@ -52,3 +52,6 @@ jobs:
 
       - name: Validate committed data
         run: python scripts/validate_repository_data.py
+
+      - name: Validate InterSol cross-file contracts
+        run: python scripts/validate_intersol_contracts.py
