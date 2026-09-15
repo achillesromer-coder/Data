@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "canonical_drive": "Type 1 Romer Cognigrex",
+  "canonical_sheets": [154,155,156,157],
+  "purpose": "Compact human/machine readout, 2D parametric blueprint feed, authority-based overlap collapse, and export manifest without overriding canonical depth.",
+  "rules": {
+    "zero_placeholder": true,
+    "collapse_by_authority_not_deletion": true,
+    "visual_layer_never_overrides_fcstd_or_engineering": true,
+    "local_cad_not_geodetic": true
+  },
+  "watchtower_blueprint": {
+    "datum": "tower shaft centre = (0,0)",
+    "source_sheet": 107,
+    "exact_geometry_authority": "FCStd/BREP SHA-256 c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "a_c_levels": {"A_shaft_fraction_range": [0.30,0.45], "C_shaft_fraction_range": [0.65,0.80], "primary_levels": 2},
+    "anchor_rule": "four anchors from five source shaft faces at each level",
+    "roof_rule": "source-planar structural roof baseline plus separate shallow curved replaceable Solar Hull envelope"
+  },
+  "external_review_artifact": "InterSol_Digital_Asset_Review_Pack_v0_1.xlsx",
+  "next_build": "BUILD-049"
+}

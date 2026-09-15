@@ -1,0 +1,37 @@
+{
+  "version": "0.1.0",
+  "source": "Owner voice session 2026-08-16",
+  "canonical_drive_sheet": "142_OWNER_DECISIONS_VOICE_2026_08_16",
+  "source_id": "SRC-093",
+  "authority": "OWNER_CURRENT_WITH_TECHNICAL_HYPOTHESES_SEPARATELY_GATED",
+  "decisions": [
+    {"id":"OD-001","domain":"SITE_MASTERPLAN","decision":"Preferred northwest SEQLD site exists as current fit-check/reference, but master infrastructure remains site-neutral, modular and redeployable."},
+    {"id":"OD-002","domain":"DISTRIBUTED_NETWORK","decision":"Core relaunch/Watch Tower/R&D cluster locally; residential/transport nodes may be remote; current maglev concept is ~11 km away; long-term national/international federated deployment."},
+    {"id":"OD-003","domain":"ACADEMIC_GOVERNANCE","decision":"Integrate with existing universities/governance/specialist facilities rather than duplicate every institutional capability."},
+    {"id":"OD-004","domain":"PHASING","decision":"Public gallery/education waits until operational core is stable."},
+    {"id":"OD-005","domain":"TEMP_HOUSING","decision":"Phase-1 relocatable two-person shipping-container-style studio accommodation; reuse/move as site matures."},
+    {"id":"OD-006","domain":"PERMANENT_RESIDENCY","decision":"Limited higher-risk in-perimeter executive/operational residence may exist; founder/family/community residence remains separate from work precinct."},
+    {"id":"OD-007","domain":"WATCH_TOWER_NAMING","decision":"Use courtyard-facing local frame; wing sequence left then clockwise; number inside-to-out and then front-to-back; rotation/mirror/courtyard flip allowed; true north is separate site frame."},
+    {"id":"OD-008","domain":"BUSINESS_MODEL","decision":"InterSol is relaunch/repair/integration/mission-support and Römer-technology deployment hub, not full launch-vehicle manufacturing."},
+    {"id":"OD-009","domain":"WAREHOUSE_FLOW","decision":"Single principal anti-parallel incoming/outgoing warehouse; early operations can use partial future envelope; central internal fine/clean integration rooms."},
+    {"id":"OD-010","domain":"CLEAN_MODULES","decision":"Semi-reconfigurable clean/fine-assembly modules inside permanent warehouse shell, with sliding/opening partitions for large components."},
+    {"id":"OD-011","domain":"RND_WAREHOUSE_SEPARATION","decision":"R&D and warehouse remain separate buildings linked by controlled outdoor logistics routes."},
+    {"id":"OD-012","domain":"RND_CAPABILITY","decision":"Hybrid internal/subcontractor/co-delivery/external-lab model with deliberate staff training and knowledge transfer toward internal expertise."},
+    {"id":"OD-013","domain":"GROUND_HANDLING","decision":"Chain-hill/magnetic-assist low-energy transport remains preferred design intent/trade-study candidate, not yet fixed engineering baseline."},
+    {"id":"OD-014","domain":"FREE_FLOW_SCALE","decision":"Phase 1 spans bench to ~1 m3 single-cell validation using common base architecture, with scale/geometry/chemistry varied by evidence."},
+    {"id":"OD-015","domain":"FREE_FLOW_MATERIALS","decision":"Candidate materials include bismuth, copper, iron, silver, ceramic and carbon/graphene-related components; low-toxicity/recyclability is design intent, not blanket validated safety."},
+    {"id":"OD-016","domain":"FREE_FLOW_CASING","decision":"Internal 3D-printed conductive/semi-conductive casing is electroplated on both inner and outer surfaces; external casing is separate insulating polymer enclosure."},
+    {"id":"OD-017","domain":"FREE_FLOW_FIELD_HYPOTHESIS","decision":"Research whether internal/external conductor geometry and local electromagnetic interactions create cancellation/losses and whether geometry/chemistry can reduce them."},
+    {"id":"OD-018","domain":"TWIN_GRANULARITY","decision":"Use technology-centric twins (Solar Hull, Free Flow Battery, Free Flow Capacitor); prototype/test configurations are rows/receipts, not separate master twins."},
+    {"id":"OD-019","domain":"TEST_LINEAGE","decision":"Every workbook preserves raw appendix-log/index entries including failed/null/outlier/invalid-harness results plus separate shorthand synthesis with hypothesis/null/expectation/observation/outliers/reasoning/next steps."},
+    {"id":"OD-020","domain":"COGNIGREX_CROSS_DOMAIN","decision":"Continuous cross-corpus/cross-discipline analysis is default; unresolved gaps become explicit known-unknowns."},
+    {"id":"OD-021","domain":"COGNIGREX_RESEARCH_PROPOSALS","decision":"Cross-domain patterns automatically generate agent-reviewed research proposals with completed-task comparison, expected information gain and preliminary H/M/L priority; owner can override priority/depth."},
+    {"id":"OD-022","domain":"COGNIGREX_PRIORITY","decision":"Prioritise material knowledge/operational yield, uncertainty reduction, dependency unlock and safety impact ahead of tiny precision gains unless those gains are acceptance-critical."}
+  ],
+  "guardrails": [
+    "Partner names mentioned in planning remain proposed/earmarked until formally evidenced.",
+    "Approximate site relationships are owner-current planning inputs, not survey/geodetic authority.",
+    "Free Flow material safety/performance and electromagnetic-field geometry concepts remain R&D hypotheses until empirical validation.",
+    "Historical evidence is not silently overwritten by owner-current decisions; use supersession receipts."
+  ]
+}

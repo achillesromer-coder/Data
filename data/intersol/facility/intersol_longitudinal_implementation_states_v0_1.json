@@ -1,0 +1,44 @@
+{
+  "version": "0.1.0",
+  "id": "INTERSOL-IMPLEMENTATION-STATES-001",
+  "authority": "Google Drive Type 1 Romer Cognigrex / 125_IMPLEMENTATION_STATES_v0_1",
+  "authority_rule": "Drive is canonical; historical programme dates remain provenance only.",
+  "state_count": 20,
+  "source_refs": ["SRC-080","SRC-081","SRC-089","SRC-090"],
+  "phases": [
+    "P0 SOURCE / SITE FOUNDATION",
+    "P1 SAFE OCCUPIED CORE",
+    "P2 TECHNICAL OPERATIONS CORE",
+    "P3 MISSION / CONTROL INTEGRATION",
+    "P4 ADAPTIVE ENVIRONMENT",
+    "P5 ACOUSTIC R&D",
+    "P6 HUMAN / SENSORY R&D",
+    "P7 ECO-GREX / LIVING INTEGRATION",
+    "P8 ENERGY R&D OVERLAYS",
+    "P9 PUBLIC / EDUCATION OPENING",
+    "P10 RESIDENCY / COMMUNITY",
+    "P∞ CONTINUOUS ASSURANCE"
+  ],
+  "operational_states": [
+    "NORMAL",
+    "PRE_LAUNCH / HIGH HAZARD",
+    "LAUNCH LOCKOUT",
+    "ABORT / INCIDENT",
+    "POST-EVENT INSPECTION",
+    "MAINTENANCE",
+    "QUIET RESEARCH",
+    "SLEEP / RECOVERY"
+  ],
+  "promotion_rule": "Safe conventional occupied/process baselines are commissioned before adaptive, acoustic, sensory, ecological or advanced-energy R&D overlays are promoted.",
+  "learning_windows": {
+    "commissioning": true,
+    "P30": "optional internal post-occupancy learning checkpoint",
+    "P90": "optional internal post-occupancy learning checkpoint",
+    "P365": "optional internal post-occupancy learning checkpoint",
+    "seasonal": true,
+    "event_driven": ["incident","mission-profile change","equipment/process change","standard/source change","calibration drift","persistent occupant complaint","ecological or maintenance event"]
+  },
+  "cadence_boundary": "P30/P90/P365 are not statutory inspection intervals and must never replace legally/professionally required inspection or maintenance programmes.",
+  "rollback_rule": "Every promoted smart/R&D configuration retains the last accepted baseline and a tested path to isolate/revert the overlay.",
+  "current_state": "DRIVE_POPULATED / GIT_MANIFESTED / ACTUAL_CALENDAR_PROGRAMME_HELD"
+}

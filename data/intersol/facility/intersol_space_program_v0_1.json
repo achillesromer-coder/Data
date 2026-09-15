@@ -1,0 +1,39 @@
+{
+  "version": "0.1.0",
+  "id": "INTERSOL-SPACE-PROGRAM-001",
+  "authority": "Google Drive Type 1 Romer Cognigrex / 121_INTERSOL_SPACE_PROGRAM_v0_1",
+  "authority_rule": "Drive is canonical. This Git file is an execution manifest and must not become a parallel master dataset.",
+  "row_count": 48,
+  "fields": ["Space_ID","Program_Group","Space_or_Function","Historical_Anchor","Current_Function","Required_Baseline","Safety_Hygiene","Environmental_Lighting_Acoustic","Adjacency","Separation","Smart_R&D_Overlay","Evidence_State","Sizing_State","Review_Owner","Lifecycle_Reanalysis","COIN_Twin","Notes","Status"],
+  "source_refs": ["SRC-075","SRC-080","SRC-081","SRC-083","SRC-087","SRC-088","SRC-089","SRC-090"],
+  "semantic_correction": {
+    "historical_phrase": "R&D and faculty facilities",
+    "current_design_label": "SANITARY / AMENITIES / RESTROOMS",
+    "rule": "Preserve the archive phrase only in provenance. The current owner semantic controls design."
+  },
+  "programme_groups": {
+    "command_operations": ["ISP-001","ISP-002","ISP-003","ISP-004","ISP-005","ISP-006"],
+    "research_validation_human_factors": ["ISP-007","ISP-008","ISP-009","ISP-010","ISP-011","ISP-012","ISP-013","ISP-014","ISP-015","ISP-016"],
+    "industrial_integration_qa_logistics": ["ISP-017","ISP-018","ISP-019","ISP-020","ISP-021","ISP-022","ISP-023","ISP-024","ISP-025"],
+    "human_amenities_safety_wellbeing": ["ISP-026","ISP-027","ISP-028","ISP-029","ISP-030","ISP-031","ISP-032","ISP-033","ISP-034"],
+    "admin_public_knowledge": ["ISP-035","ISP-036","ISP-037","ISP-038","ISP-039","ISP-040"],
+    "habitation_services": ["ISP-041","ISP-042"],
+    "plant_site_support": ["ISP-043","ISP-044","ISP-045","ISP-046","ISP-047","ISP-048"]
+  },
+  "notable_current_programme": {
+    "sanitary_amenities_restrooms": "ISP-026",
+    "accessible_sanitary": "ISP-027",
+    "first_aid_room": "ISP-029",
+    "emergency_eyewash_safety_shower_nodes": "ISP-030",
+    "acoustic_measurement_chamber": "ISP-012",
+    "reverberation_materials_chamber": "ISP-013",
+    "sensory_biofield_r_and_d_chamber": "ISP-014",
+    "human_factors_simulator": "ISP-015",
+    "quiet_rest_recovery": "ISP-032",
+    "fatigue_sleep_rooms": "ISP-033"
+  },
+  "sizing_rule": "Functions are populated now. Counts, areas, fixture quantities, plant capacities and ratings remain unset until actual occupancy, site, equipment/process, hazards and building classifications exist.",
+  "historical_rule": "Historical warehouse/road/pad/programme dimensions may be used as comparators only through HST records and explicit re-adoption receipts.",
+  "health_claim_boundary": "Sensory/biofield terminology is R&D-only. No therapeutic, diagnostic or clinical effect is assumed.",
+  "current_state": "DRIVE_POPULATED / GIT_MANIFESTED / NUMERIC_SIZING_HELD"
+}

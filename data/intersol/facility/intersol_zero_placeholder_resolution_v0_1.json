@@ -1,0 +1,37 @@
+{
+  "schema": "intersol_zero_placeholder_resolution_v0_1",
+  "canonical_authority": "Google Drive Type 1 Romer Cognigrex / sheet 153_INTERSOL_ZERO_PLACEHOLDER_RESOLUTION_v0_1",
+  "policy": {
+    "silent_placeholders_prohibited": true,
+    "valid_states": [
+      "REQUIRED_WITH_ASSIGNED_FAMILY",
+      "NOT_APPLICABLE_WITH_REASON",
+      "EXTERNAL_EVIDENCE_GATED_WITH_INPUT_OWNER_VERIFICATION",
+      "EMPIRICAL_VARIABLE_EXPLICITLY_NAMED"
+    ],
+    "prohibited_states": ["TBD", "TBC", "UNKNOWN_WITHOUT_OWNER", "BLANK_DECISION_CELL", "GENERIC_OPEN"],
+    "guardrail": "Do not invent structural, fire, blast, ballistic, electrical, hydraulic, gas, HVAC or other safety-critical numerical values merely to eliminate blanks."
+  },
+  "resolution_families": {
+    "concrete": "parametric structural rule resolved; numerical element design evidence-gated",
+    "fixings": "inspectable reversible mechanical doctrine resolved; load/product selection gated",
+    "waterproofing": "continuous independent primary barrier + hidden-state QA resolved; product/site-water selection gated",
+    "sealants": "joint-specific compatible replaceable system resolved; chemistry/geometry gated",
+    "finishes": "room use-class hierarchy resolved; exact product exposure-gated",
+    "protective_openings": "complete tested assembly rule resolved; hazard rating gated",
+    "electrical": "federated distribution and load-class architecture resolved; supply/load sizing gated",
+    "ot_data": "federated segmented/manual-safe architecture resolved; restricted implementation gated",
+    "hydraulic": "potable/non-potable/waste separation and isolation architecture resolved; site/demand sizing gated",
+    "gas": "explicit no-active-service default; optional segregated H40 reservation only; process-trigger gated",
+    "hvac": "comfort/critical/process separation and safe-minimum rule resolved; load/airflow sizing gated",
+    "fire_penetrations": "deterministic barrier/penetration object model resolved; classification/rating gated",
+    "below_grade": "separate refuge and energy/service hazard objects resolved; site/geotech/hydrology/QRA gated",
+    "responsive_roof": "safe-state/locking/manual-recovery architecture resolved; mechanism sizing optimisation active",
+    "free_flow": "testbed interfaces and modular casing architecture resolved; empirical variables explicitly named",
+    "room_completeness": "every ISP space must resolve every assembly/service family to REQUIRED, N/A, or EVIDENCE-GATED"
+  },
+  "linked_drive": ["149", "150", "151", "152", "153"],
+  "task": "TASK-097",
+  "build": "BUILD-048",
+  "status": "ACTIVE_HIGH_PRIORITY_PRE_CONTINUATION_SWEEP"
+}

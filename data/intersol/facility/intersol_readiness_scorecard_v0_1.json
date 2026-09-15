@@ -1,0 +1,34 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 134_READINESS_SCORECARD_v0_1",
+  "calculated_on": "2026-08-15",
+  "purpose": "Report observable InterSol control/programme population and evidence blockers without converting architecture completeness into engineering or physical completion claims.",
+  "observed_metrics": {
+    "facility_families_structured": {"value":18,"denominator":18},
+    "facility_families_with_complete_site_specific_numerical_basis": {"value":0,"denominator":18},
+    "spaces_programmed": {"value":48,"denominator":48},
+    "spaces_with_final_current_dimensions_and_quantities": {"value":0,"denominator":48},
+    "principal_current_control_rows": 312,
+    "dependency_classes": 15,
+    "critical_root_dependency_classes": 4,
+    "watchtower_ac_discrete_face_exclusion_combinations": 25,
+    "watchtower_roof_control_and_curve_variants": 13,
+    "economic_token_layers_enabled": 0
+  },
+  "control_row_count_definition": "18 IFM + 48 ISP + 25 HFS + 18 EAL + 30 AFM + 20 IMP + 17 standards + 20 RIR + 24 HZ + 25 CA + 18 POE + 25 RQT + 24 BP = 312 rows across 13 principal programme/control sheets.",
+  "git_snapshot_before_this_manifest": {
+    "data_pr": 8,
+    "head": "45b899894cc7168667b4bcf445123ada861cf0f8",
+    "commits": 27,
+    "changed_files": 20,
+    "additions": 608,
+    "deletions": 0,
+    "ci_pr_triggered_runs_returned": 0
+  },
+  "rules": [
+    "Control population is not certification, construction percentage or design maturity.",
+    "Zero final dimensions is a deliberate null-safe state until occupancy/site/process/classification evidence exists.",
+    "Mergeability is not CI proof.",
+    "COIN remains non-monetary provenance/authority/receipt first; EMC2 economic activation remains disabled."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / sheets 149-150",
+  "date": "2026-08-20",
+  "purpose": "Machine-routing mirror of the InterSol component/assembly and penetration/service definition layer. Drive remains canonical.",
+  "assembly_families": [
+    "primary reinforced-concrete structure",
+    "roof/terrace substrate",
+    "H40 heavy rooftop receiver",
+    "L30 frequent rooftop receiver",
+    "detachable Solar Hull roof panels",
+    "living/green modules",
+    "external concrete envelope",
+    "internal concrete walls",
+    "steel-framed lightweight partitions",
+    "internal/wet-area linings",
+    "general/industrial floors",
+    "exterior and internal protective glazing",
+    "general and protective door sets",
+    "accessible ceilings/service rafts",
+    "LV distribution/general power/data/OT/lighting",
+    "potable water/sanitary drainage/stormwater/process gas",
+    "HVAC/process exhaust",
+    "firestop penetrations",
+    "below-grade waterproofing",
+    "movement joints/sealants/membranes",
+    "mechanical fixings/corrosion isolation",
+    "WT concrete stair/top-deck guardrail",
+    "sanitary/emergency-wash fixtures",
+    "earthing/lightning/surge",
+    "Free Flow test and operational storage interfaces",
+    "clean-integration modules",
+    "Solar Hull/living/scientific facade carriers",
+    "Chain Hill/service-corridor utility zones",
+    "access panels/hatches/maintainability interfaces"
+  ],
+  "penetration_rules": {
+    "preferred": "cast-in sleeve/frame/receiver where known; controlled post-installed penetration only after applicable structural/fire/waterproofing/service review",
+    "rated_boundaries": "use tested firestop or protective assembly matching actual penetrant and boundary; every alteration re-receipted",
+    "wet_boundaries": "membrane/flange/collar continuity is independent from decorative finish",
+    "below_grade": "puddle flange/waterstop/hydrostatic sealing strategy is site/geotech dependent",
+    "utility_segregation": "power, data, water and gas are segregated according hazard/electrical/EMC/plumbing requirements; co-location never implies shared cavity",
+    "maintenance": "valves, dampers, junctions, traps and critical fasteners remain inspectable and replaceable"
+  },
+  "fixed_owner_interfaces": {
+    "H40": "nominal 40 mm heavy insert family with three-phase/data and selected water/gas-capable service suites; diameter is not a load rating",
+    "L30": "nominal 30 mm frequent lighter insert family with power/data and selected water; no routine gas",
+    "primary_roof_rule": "concrete roof remains independently structural, weatherproof and drainable if all detachable/motorised R&D modules are removed"
+  },
+  "hard_boundaries": [
+    "No numerical fastener, anchor, cable, pipe, duct, sealant, membrane or protection rating is inferred from architecture alone.",
+    "No blast, ballistic, fire, pressure or cleanliness rating is claimed without complete tested/professionally designed assembly evidence.",
+    "No concealed service may be made inaccessible where inspection, isolation or maintenance is required.",
+    "No experimental Solar Hull, living, adaptive or Free Flow layer replaces the accepted conventional life-safety/weatherproofing baseline until separately qualified.",
+    "No contaminated process or trade waste is connected to stormwater or sanitary systems without an approved pathway."
+  ],
+  "next_build": "BUILD-046 assembly completeness and collision/maintainability sweep",
+  "state": "DEFINITION_LAYER_ACTIVE / PROCUREMENT_AND_RATINGS_EVIDENCE_GATED"
+}

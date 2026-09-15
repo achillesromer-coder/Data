@@ -1,0 +1,37 @@
+{
+  "version": "v0.1",
+  "canonical_drive_sheet": "158_INTERSOL_DERIVATION_LEDGER_v0_1",
+  "authority": "Google Drive Type 1 Romer Cognigrex",
+  "rules": {
+    "no_silent_placeholders": true,
+    "derived_reference_values_are_not_certified_design_values": true,
+    "final_safety_critical_selection_requires_evidence_and_professional_acceptance": true
+  },
+  "watchtower": {
+    "shaft": {"zmin_m": 13.3, "zmax_m": 68.3, "height_m": 55.0},
+    "node_A": {"fraction_range": [0.30, 0.45], "local_z_range_m": [29.8, 38.05]},
+    "node_C": {"fraction_range": [0.65, 0.80], "local_z_range_m": [49.05, 57.30]},
+    "anchors_per_level": 4,
+    "source_side_faces": 5,
+    "roof_overlay": {
+      "source_planar_substrate_preserved": true,
+      "candidate_spans_m": [13.282760569, 33.0],
+      "preferred_rise_span_range": [0.015, 0.05],
+      "study_extreme_rise_span": 0.075,
+      "preferred_rise_ranges_m": {
+        "short_span": [0.199241408535, 0.66413802845],
+        "long_span": [0.495, 1.65]
+      },
+      "circular_arc_reference_radius_ranges_m": {
+        "short_span": [110.789671408, 33.535520421],
+        "long_span": [275.2475, 83.325]
+      },
+      "note": "Circular radius is a reference family only; final overlay may be spline/non-circular after wind, drainage, Solar Hull, maintenance and actuation analysis."
+    }
+  },
+  "execution": {
+    "task": "TASK-099",
+    "build": "BUILD-050",
+    "next": "Sweep 104-158 for derivable values and stale open states; retain only exact evidence/professional gates where irreducible."
+  }
+}
