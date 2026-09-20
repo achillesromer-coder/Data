@@ -1,6 +1,9 @@
 {
   "endpoint": "https://ssd-api.jpl.nasa.gov/sbdb.api",
-  "errors": [],
+  "errors": [
+    "Failed to fetch Lugh: HTTP Error 502: Bad Gateway",
+    "Failed to fetch Toro: HTTP Error 502: Bad Gateway"
+  ],
   "normalization_guardrails": [
     "Orbit elements are keyed by JPL element name, not case-folded labels.",
     "Perihelion q and aphelion Q/ad are validated using q < a < Q and a(1±e).",
@@ -81,15 +84,15 @@
     },
     "lugh": {
       "captured_at": "2026-09-19T08:50:54+00:00",
-      "last_refresh_error": null,
+      "last_refresh_error": "Failed to fetch Lugh: HTTP Error 502: Bad Gateway",
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/lugh.json",
-      "refresh_status": "CAPTURED_CURRENT",
+      "refresh_status": "RETAINED_VALIDATED_CACHE",
       "requested_name": "Lugh",
       "sha256": "b608dbbbdde1aea5a0cb32f13ca615d07552421b0c00408d8355d64ec4379f7d",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Lugh&phys-par=1&ca-data=1",
-      "status": "captured"
+      "status": "retained_validated_cache"
     },
     "minos": {
       "captured_at": "2026-09-04T08:53:22+00:00",
@@ -165,15 +168,15 @@
     },
     "toro": {
       "captured_at": "2026-09-15T09:30:09+00:00",
-      "last_refresh_error": null,
+      "last_refresh_error": "Failed to fetch Toro: HTTP Error 502: Bad Gateway",
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/toro.json",
-      "refresh_status": "CAPTURED_CURRENT",
+      "refresh_status": "RETAINED_VALIDATED_CACHE",
       "requested_name": "Toro",
       "sha256": "4f1ea72a53e93f22d66b0cadb6d2540baebe6e0d8298687af7720c5d32911f0a",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Toro&phys-par=1&ca-data=1",
-      "status": "captured"
+      "status": "retained_validated_cache"
     },
     "vinciguerra": {
       "captured_at": "2026-08-26T04:58:44+00:00",
