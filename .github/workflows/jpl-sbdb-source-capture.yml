@@ -14,6 +14,7 @@ on:
       - scripts/fetch_jpl_horizons_windows.py
       - scripts/fetch_jpl_horizons_uncertainty.py
       - scripts/fetch_jpl_apophis_2029_event.py
+      - scripts/fetch_jpl_mdesign_priority.py
       - scripts/fetch_jpl_neighbour_batch.py
       - scripts/fetch_jpl_neighbour_horizons.py
 
@@ -78,6 +79,17 @@ jobs:
       - name: Fetch adaptive Apophis 2029 no-intervention baseline
         run: python scripts/fetch_jpl_apophis_2029_event.py
 
+      - name: Fetch priority JPL ballistic mission-design options
+        shell: bash
+        run: |
+          set +e
+          python scripts/fetch_jpl_mdesign_priority.py
+          code=$?
+          set -e
+          if [ "$code" -gt 2 ]; then
+            exit "$code"
+          fi
+
       - name: Fetch and normalize bounded neighbour SBDB payloads
         shell: bash
         run: |
@@ -105,7 +117,7 @@ jobs:
         run: |
           git config user.name "cognigrex-source-capture"
           git config user.email "actions@users.noreply.github.com"
-          git add data/jpl/sbdb/latest data/jpl/horizons/latest data/jpl/horizons/uncertainty/latest data/jpl/horizons/events/apophis-2029 data/jpl/neighbours/sbdb/latest data/jpl/neighbours/horizons/latest
+          git add data/jpl/sbdb/latest data/jpl/horizons/latest data/jpl/horizons/uncertainty/latest data/jpl/horizons/events/apophis-2029 data/jpl/mdesign/latest data/jpl/neighbours/sbdb/latest data/jpl/neighbours/horizons/latest
           if git diff --cached --quiet; then
             echo "No JPL source changes detected."
             exit 0
