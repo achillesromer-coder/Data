@@ -1,0 +1,52 @@
+{
+  "adaptive_levels": [
+    {
+      "name": "coarse",
+      "span": "2029-04-12..2029-04-15",
+      "step": "1 hour"
+    },
+    {
+      "name": "refine",
+      "span": "+/-3 hours around coarse minimum",
+      "step": "5 minutes"
+    },
+    {
+      "name": "final",
+      "span": "+/-10 minutes around 5-minute minimum",
+      "step": "30 seconds"
+    },
+    {
+      "definition": "formal 1-sigma XYZ/VXYZ component uncertainty",
+      "epochs": 1,
+      "name": "uncertainty",
+      "table": "2x"
+    }
+  ],
+  "captured_at": "2026-09-24T20:50:40+00:00",
+  "event_sha256": "a3a018be9a24b9469f3f079a04c4d06a39ebd89ed1e8d3498ab342d149c0a90f",
+  "guardrails": [
+    "No intervention is applied.",
+    "Range minima are source-sampled/refined nominal geometry, not impact probabilities.",
+    "Formal 1-sigma vector components do not replace full SBDB covariance or B-plane/encounter covariance analysis.",
+    "Any hypothetical deflection analysis must start from and preserve the validated no-intervention baseline as the control."
+  ],
+  "schema": "romer.jpl.horizons.apophis-2029-event-capture.v0.1",
+  "source_receipts": [
+    {
+      "raw_path": "data/jpl/horizons/events/apophis-2029/coarse_1h.json",
+      "sha256": "960550a592690ae18d377232aa611f7cb493317bf08209ab8f95cfc2c8585c6e"
+    },
+    {
+      "raw_path": "data/jpl/horizons/events/apophis-2029/refine_5m.json",
+      "sha256": "36522251791e55ac4a1deedabc36e76293101fd51d8b3f8069ddabe15cd4ac4c"
+    },
+    {
+      "raw_path": "data/jpl/horizons/events/apophis-2029/refine_30s.json",
+      "sha256": "4d9850ce68a37e468f06989201f303096ef050b1c372a30d5ea264103a70b253"
+    },
+    {
+      "raw_path": "data/jpl/horizons/events/apophis-2029/uncertainty_2x.json",
+      "sha256": "0b301bd638e91699ad3a81a83d05b96db2fccc70c9ebc388b8d9b50b40eb2526"
+    }
+  ]
+}
