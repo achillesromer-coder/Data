@@ -72,6 +72,8 @@ def fetch_object(name: str) -> FetchResult:
             "ca-time": "both",
             "ca-tunc": "both",
             "ca-unc": "1",
+            "cov": "mat",
+            "full-prec": "1",
         }
     )
     url = f"{SBDB_ENDPOINT}?{query}"
@@ -187,6 +189,16 @@ def normalize(result: FetchResult, previous_manifest: dict[str, Any], refresh_st
     orbit_class = obj.get("orbit_class") if isinstance(obj.get("orbit_class"), dict) else {}
     elements = list_to_map(orbit.get("elements"), key_names=("name",))
     physical = list_to_map(payload.get("phys_par"), key_names=("name",))
+    covariance = orbit.get("covariance") if isinstance(orbit.get("covariance"), dict) else None
+    covariance_labels = covariance.get("labels") if covariance else None
+    covariance_data = covariance.get("data") if covariance else None
+    covariance_available = (
+        isinstance(covariance_labels, list)
+        and len(covariance_labels) >= 6
+        and isinstance(covariance_data, list)
+        and len(covariance_data) > 0
+    )
+    covariance_dimension = len(covariance_labels) if covariance_available else None
 
     eccentricity = value_from(elements, "e")
     semimajor_axis = value_from(elements, "a")
@@ -233,13 +245,27 @@ def normalize(result: FetchResult, previous_manifest: dict[str, Any], refresh_st
         "spectral_type_b": value_from(physical, "spec_b"),
         "spectral_type_t": value_from(physical, "spec_t"),
         "close_approach_records": close_approach_count(payload),
+        "covariance_available": covariance_available,
+        "covariance_form": "mat" if covariance_available else None,
+        "covariance_epoch_jd": covariance.get("epoch") if covariance else None,
+        "covariance_dimension": covariance_dimension,
+        "covariance_labels": "|".join(str(label) for label in covariance_labels)
+        if covariance_available
+        else None,
+        "covariance_raw_owner": f"data/jpl/sbdb/latest/{slugify(result.requested_name)}.json"
+        if covariance_available
+        else None,
         "orbit_invariant_status": invariant_status,
         "orbit_invariant_notes": invariant_notes,
         "refresh_status": refresh_status,
         "last_refresh_error": refresh_error,
         "signature_source": signature.get("source"),
         "signature_version": signature.get("version"),
-        "source_url": f"{SBDB_ENDPOINT}?sstr={urllib.parse.quote(result.requested_name)}&phys-par=1&ca-data=1",
+        "source_url": (
+            f"{SBDB_ENDPOINT}?sstr={urllib.parse.quote(result.requested_name)}"
+            "&phys-par=1&ca-data=1&ca-time=both&ca-tunc=both&ca-unc=1"
+            "&cov=mat&full-prec=1"
+        ),
         "sha256": result.sha256,
         "captured_at": captured_at,
         "current_hardware_canon": "Mark III + Mark V only",
@@ -317,6 +343,9 @@ def main() -> int:
             "source_url": row["source_url"],
             "signature_version": row["signature_version"],
             "orbit_invariant_status": row["orbit_invariant_status"],
+            "covariance_available": row["covariance_available"],
+            "covariance_epoch_jd": row["covariance_epoch_jd"],
+            "covariance_dimension": row["covariance_dimension"],
             "refresh_status": refresh_status,
             "last_refresh_error": refresh_error,
             "status": "captured" if refresh_status == "CAPTURED_CURRENT" else "retained_validated_cache",
@@ -347,6 +376,8 @@ def main() -> int:
             "Orbit elements are keyed by JPL element name, not case-folded labels.",
             "Perihelion q and aphelion Q/ad are validated using q < a < Q and a(1±e).",
             "Transient upstream failures retain only previously captured raw payloads that still pass signature and orbit-invariant validation.",
+            "When available, full covariance is requested as cov=mat and preserved in the raw object payload at the JPL solution epoch.",
+            "The normalized summary records covariance presence, epoch, dimension and labels only; it does not flatten or reinterpret the covariance matrix.",
         ],
     }
 
