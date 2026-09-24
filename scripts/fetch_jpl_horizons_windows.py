@@ -13,6 +13,7 @@ import csv
 import hashlib
 import io
 import json
+import math
 import re
 import statistics
 import sys
@@ -209,6 +210,20 @@ def parse_samples(payload: dict[str, Any]) -> list[VectorSample]:
             range_rate = parse_float(fields[10])
         except (ValueError, IndexError):
             continue
+        numeric_state = (
+            julian_date,
+            x_au,
+            y_au,
+            z_au,
+            vx_au_per_day,
+            vy_au_per_day,
+            vz_au_per_day,
+            light_time_days,
+            range_au,
+            range_rate,
+        )
+        if not all(math.isfinite(value) for value in numeric_state):
+            raise ValueError("Non-finite Horizons vector sample encountered")
         if range_au <= 0:
             raise ValueError(f"Non-positive Horizons range encountered: {range_au}")
         samples.append(
