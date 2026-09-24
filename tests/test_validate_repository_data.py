@@ -35,7 +35,7 @@ class RepositoryDataValidationTests(unittest.TestCase):
         stats, errors = validator.validate_repository()
 
         self.assertEqual(errors, [])
-        self.assertEqual(stats["handoff_lanes"], 4)
+        self.assertEqual(stats["handoff_lanes"], 5)
 
     def test_duplicate_summary_identity_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
