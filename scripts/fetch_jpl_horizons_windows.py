@@ -226,6 +226,31 @@ def parse_samples(payload: dict[str, Any]) -> list[VectorSample]:
             raise ValueError("Non-finite Horizons vector sample encountered")
         if range_au <= 0:
             raise ValueError(f"Non-positive Horizons range encountered: {range_au}")
+        state_range_au = math.sqrt(x_au**2 + y_au**2 + z_au**2)
+        state_speed_au_per_day = math.sqrt(
+            vx_au_per_day**2 + vy_au_per_day**2 + vz_au_per_day**2
+        )
+        state_range_rate_au_per_day = (
+            x_au * vx_au_per_day
+            + y_au * vy_au_per_day
+            + z_au * vz_au_per_day
+        ) / state_range_au
+        if not math.isclose(state_range_au, range_au, rel_tol=1e-11, abs_tol=1e-12):
+            raise ValueError(
+                f"Horizons table-3 range/state mismatch: state={state_range_au} reported={range_au}"
+            )
+        if abs(state_range_rate_au_per_day) > state_speed_au_per_day + 1e-12:
+            raise ValueError("Horizons state violates |radial speed| <= total speed")
+        if not math.isclose(
+            state_range_rate_au_per_day,
+            range_rate,
+            rel_tol=1e-9,
+            abs_tol=1e-12,
+        ):
+            raise ValueError(
+                "Horizons table-3 range-rate/state derivative mismatch: "
+                f"state={state_range_rate_au_per_day} reported={range_rate}"
+            )
         samples.append(
             VectorSample(
                 calendar_date=sample_date,
@@ -298,6 +323,7 @@ def summarize_window(
         "minimum_range_vy_au_per_day": nearest.vy_au_per_day,
         "minimum_range_vz_au_per_day": nearest.vz_au_per_day,
         "minimum_range_speed_au_per_day": nearest.speed_au_per_day,
+        "minimum_range_state_range_rate_au_per_day": nearest.range_rate_au_per_day,
         "start_x_au": selected[0].x_au,
         "start_y_au": selected[0].y_au,
         "start_z_au": selected[0].z_au,
@@ -463,6 +489,7 @@ def main() -> int:
             f"At least {MIN_WINDOW_SAMPLES} samples required per month-wide comparison window.",
             "All ranges must be positive.",
             "Each parsed table-3 sample must contain finite XYZ position and XYZ velocity components.",
+            "For every table-3 sample, sqrt(X^2+Y^2+Z^2) must reproduce RG and (r dot v)/|r| must reproduce RR within numerical tolerance.",
             "Vector table 3 is geometric state + light-time/range/range-rate; statistical state uncertainty/covariance is a separate acquisition gate.",
             "Transient upstream failures may use only cached raw payloads that pass all validations.",
         ],
