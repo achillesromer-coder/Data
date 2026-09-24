@@ -22,31 +22,36 @@
       "table": "2x"
     }
   ],
-  "captured_at": "2026-09-24T20:50:40+00:00",
-  "event_sha256": "a3a018be9a24b9469f3f079a04c4d06a39ebd89ed1e8d3498ab342d149c0a90f",
+  "captured_at": "2026-09-24T21:21:41+00:00",
+  "event_sha256": "6f2f89d9136ed0102bcea9aa2bfa795e8fcc3f5e42394f971c1fcc8f7dea3c36",
   "guardrails": [
     "No intervention is applied.",
     "Range minima are source-sampled/refined nominal geometry, not impact probabilities.",
-    "Formal 1-sigma vector components do not replace full SBDB covariance or B-plane/encounter covariance analysis.",
+    "Formal 1-sigma vector components do not replace full SBDB covariance.",
+    "The SBDB close-approach record is used directly for 3-sigma TCA/distance bounds and 1-sigma B-plane ellipse parameters; do not re-derive those from the reduced event sample.",
     "Any hypothetical deflection analysis must start from and preserve the validated no-intervention baseline as the control."
   ],
-  "schema": "romer.jpl.horizons.apophis-2029-event-capture.v0.1",
+  "schema": "romer.jpl.horizons.apophis-2029-event-capture.v0.2",
   "source_receipts": [
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/coarse_1h.json",
-      "sha256": "960550a592690ae18d377232aa611f7cb493317bf08209ab8f95cfc2c8585c6e"
+      "sha256": "94d94ffb40e60930c8288faada0bb893c37894f0f53d7254db8d00046d9d2c78"
     },
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/refine_5m.json",
-      "sha256": "36522251791e55ac4a1deedabc36e76293101fd51d8b3f8069ddabe15cd4ac4c"
+      "sha256": "c942864452fb736e4d0be438c58b35355facaec33b234d02a503c2291991cb0f"
     },
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/refine_30s.json",
-      "sha256": "4d9850ce68a37e468f06989201f303096ef050b1c372a30d5ea264103a70b253"
+      "sha256": "25375d789f3246d42769a4b9e47cea4fe03bf709ef6f10482be562c53e110c3f"
     },
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/uncertainty_2x.json",
-      "sha256": "0b301bd638e91699ad3a81a83d05b96db2fccc70c9ebc388b8d9b50b40eb2526"
+      "sha256": "c6d113e4c41c739737e90a0059b18d4a332caccb1456680a40cafcf234192fdc"
+    },
+    {
+      "raw_path": "data/jpl/sbdb/latest/apophis.json",
+      "sha256": "176db132201b770d4ba37a6fd51258bd277e500469fe74b8b48ea8e9bbef0bc6"
     }
   ]
 }

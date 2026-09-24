@@ -1,0 +1,98 @@
+{
+  "adaptive_policy": "Mode-Q first. Run Mode-M only for bodies with stale/mismatched md_orbit_id, no current-window options, or a later mission-design question requiring a fresh launch/TOF grid.",
+  "captured_at": "2026-09-24T21:21:50+00:00",
+  "claim_boundary": "Mission-design source capture and screening only; no final target ranking or mission feasibility claim.",
+  "endpoint": "https://ssd-api.jpl.nasa.gov/mdesign.api",
+  "errors": [],
+  "objects": {
+    "anteros": {
+      "current_window_count_2027_2032": 24,
+      "designation": "1943",
+      "md_orbit_id": "1010",
+      "mission_count": 80,
+      "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
+      "orbit_id": "1010",
+      "orbit_match": true,
+      "raw_path": "data/jpl/mdesign/latest/anteros.json",
+      "requested_name": "Anteros",
+      "sha256": "d179db2c4602328f026db81c8f86b554b71c38d1d87cd7092deca99197bfcbde",
+      "signature_version": "1.1",
+      "status": "captured"
+    },
+    "apollo": {
+      "current_window_count_2027_2032": 24,
+      "designation": "1862",
+      "md_orbit_id": "579",
+      "mission_count": 80,
+      "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
+      "orbit_id": "579",
+      "orbit_match": true,
+      "raw_path": "data/jpl/mdesign/latest/apollo.json",
+      "requested_name": "Apollo",
+      "sha256": "443489a5b7f49f7a60b7f0d3363f0c87e062f317d034f0f779ca7cc0e28d4b11",
+      "signature_version": "1.1",
+      "status": "captured"
+    },
+    "apophis": {
+      "current_window_count_2027_2032": 24,
+      "designation": "99942",
+      "md_orbit_id": "220",
+      "mission_count": 80,
+      "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
+      "orbit_id": "220",
+      "orbit_match": true,
+      "raw_path": "data/jpl/mdesign/latest/apophis.json",
+      "requested_name": "Apophis",
+      "sha256": "b7330adf63a4bb73f729a53551fdb3721789599d7296e0e46198181bbe3a5165",
+      "signature_version": "1.1",
+      "status": "captured"
+    },
+    "castalia": {
+      "current_window_count_2027_2032": 24,
+      "designation": "4769",
+      "md_orbit_id": "187",
+      "mission_count": 80,
+      "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
+      "orbit_id": "187",
+      "orbit_match": true,
+      "raw_path": "data/jpl/mdesign/latest/castalia.json",
+      "requested_name": "Castalia",
+      "sha256": "ed4f940f67ea337f2d8db69acd77577bd06217587f788089e4e9c1e78a33a8ad",
+      "signature_version": "1.1",
+      "status": "captured"
+    },
+    "eros": {
+      "current_window_count_2027_2032": 24,
+      "designation": "433",
+      "md_orbit_id": "659",
+      "mission_count": 80,
+      "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
+      "orbit_id": "659",
+      "orbit_match": true,
+      "raw_path": "data/jpl/mdesign/latest/eros.json",
+      "requested_name": "Eros",
+      "sha256": "906a13bab1ffebac2657998f121a239dbcba1645b86623dd0cf65f7b95d11916",
+      "signature_version": "1.1",
+      "status": "captured"
+    },
+    "toutatis": {
+      "current_window_count_2027_2032": 24,
+      "designation": "4179",
+      "md_orbit_id": "726",
+      "mission_count": 80,
+      "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
+      "orbit_id": "726",
+      "orbit_match": true,
+      "raw_path": "data/jpl/mdesign/latest/toutatis.json",
+      "requested_name": "Toutatis",
+      "sha256": "abe386bb12df008682ef08d43163854eb6b2e7c82fd9c5659013abe6dfa320ea",
+      "signature_version": "1.1",
+      "status": "captured"
+    }
+  },
+  "report_receipt": {
+    "path": "data/jpl/mdesign/latest/report.json",
+    "sha256": "dab4766a92646ebaefb2bc69fa6f4becec770e0a2f798eef60a7e2447d15150b"
+  },
+  "schema": "romer.jpl.mdesign.priority-mode-q.v0.1"
+}
