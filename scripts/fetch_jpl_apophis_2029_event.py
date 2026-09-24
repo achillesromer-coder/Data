@@ -29,6 +29,7 @@ HORIZONS_ENDPOINT = "https://ssd.jpl.nasa.gov/api/horizons.api"
 DESIGNATION = "99942"
 NAME = "Apophis"
 OUTPUT_DIR = Path("data/jpl/horizons/events/apophis-2029")
+SBDB_APOPHIS = Path("data/jpl/sbdb/latest/apophis.json")
 MANIFEST_JSON = OUTPUT_DIR / "manifest.json"
 EVENT_JSON = OUTPUT_DIR / "event.json"
 USER_AGENT = "Romer-Industries-Cognigrex-Apophis-2029/1.0"
@@ -162,6 +163,22 @@ def tlist(center_jd: float, half_span_seconds: int, step_seconds: int) -> str:
     return " ".join(values)
 
 
+def load_sbdb_close_approach() -> tuple[dict[str, Any], str]:
+    payload = json.loads(SBDB_APOPHIS.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Apophis SBDB payload is not an object")
+    matches = [
+        row for row in payload.get("ca_data", [])
+        if isinstance(row, dict)
+        and row.get("body") == "Earth"
+        and str(row.get("cd", "")).startswith("2029-Apr-13")
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"Expected one Apophis 2029 Earth close-approach row, got {len(matches)}")
+    text = canonical_json(payload)
+    return matches[0], hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
@@ -205,6 +222,8 @@ def main() -> int:
         raise ValueError(f"Expected one uncertainty row, got {len(unc_rows)}")
     unc = unc_rows[0]
 
+    sbdb_ca, sbdb_sha = load_sbdb_close_approach()
+
     dp = math.sqrt(
         (float(final_min["x_au"])-float(unc["x_au"]))**2
         + (float(final_min["y_au"])-float(unc["y_au"]))**2
@@ -221,8 +240,15 @@ def main() -> int:
     write(OUTPUT_DIR / "refine_30s.json", refine30_text)
     write(OUTPUT_DIR / "uncertainty_2x.json", unc_text)
 
+    interpolated_zero_rr_jd = float(final_min["jd_tdb"]) - float(final_min["range_rate_au_per_day"]) * (30.0 / 86400.0) / (
+        float(refine30[min(range(len(refine30)), key=lambda i: abs(float(refine30[i]["jd_tdb"]) - float(final_min["jd_tdb"]) - 30.0/86400.0))]["range_rate_au_per_day"])
+        - float(final_min["range_rate_au_per_day"])
+    )
+    sbdb_jd = float(sbdb_ca["jd"])
+    sbdb_dist_au = float(sbdb_ca["dist"])
+
     summary = {
-        "schema": "romer.jpl.horizons.apophis-2029-no-intervention.v0.1",
+        "schema": "romer.jpl.horizons.apophis-2029-no-intervention.v0.2",
         "target": NAME,
         "designation": DESIGNATION,
         "center": "Earth (399), geocentric 500@399",
@@ -233,6 +259,28 @@ def main() -> int:
         "refine_5m_minimum": refine5_min,
         "refine_30s_minimum": final_min,
         "formal_state_uncertainty_1s": unc,
+        "sbdb_close_approach_crosscheck": {
+            "body": sbdb_ca["body"],
+            "calendar_tdb": sbdb_ca["cd"],
+            "jd_tdb": sbdb_jd,
+            "nominal_distance_au": sbdb_dist_au,
+            "distance_min_3sigma_au": float(sbdb_ca["dist_min"]),
+            "distance_max_3sigma_au": float(sbdb_ca["dist_max"]),
+            "time_uncertainty_3sigma_minutes": float(sbdb_ca["sigma_t"]),
+            "time_uncertainty_formatted": sbdb_ca["sigma_tf"],
+            "bplane_semimajor_1sigma_km": float(sbdb_ca["unc_major"]),
+            "bplane_semiminor_1sigma_km": float(sbdb_ca["unc_minor"]),
+            "bplane_major_axis_angle_deg": float(sbdb_ca["unc_angle"]),
+            "relative_velocity_km_s": float(sbdb_ca["v_rel"]),
+            "hyperbolic_excess_velocity_km_s": float(sbdb_ca["v_inf"]),
+            "orbit_ref": sbdb_ca["orbit_ref"],
+            "sbdb_payload_sha256": sbdb_sha,
+            "interpolated_zero_rr_time_delta_seconds": (interpolated_zero_rr_jd - sbdb_jd) * 86400.0,
+            "interpolated_range_delta_km": (
+                float(final_min["range_au"]) - sbdb_dist_au
+            ) * 149597870.7,
+            "interpretation": "SBDB direct close-approach product is authoritative for nominal TCA, 3-sigma distance/time bounds and 1-sigma B-plane ellipse. Horizons table-3 refinement is retained as an independent state/zero-RR cross-check.",
+        },
         "table3_vs_2x_position_delta_au": dp,
         "table3_vs_2x_velocity_delta_au_per_day": dv,
         "source_hashes": {
@@ -251,14 +299,15 @@ def main() -> int:
     event_sha = hashlib.sha256(summary_text.encode("utf-8")).hexdigest()
 
     manifest = {
-        "schema": "romer.jpl.horizons.apophis-2029-event-capture.v0.1",
+        "schema": "romer.jpl.horizons.apophis-2029-event-capture.v0.2",
         "captured_at": utc_now(),
         "event_sha256": event_sha,
         "source_receipts": [
             {"raw_path": (OUTPUT_DIR / "coarse_1h.json").as_posix(), "sha256": coarse_sha},
             {"raw_path": (OUTPUT_DIR / "refine_5m.json").as_posix(), "sha256": refine5_sha},
             {"raw_path": (OUTPUT_DIR / "refine_30s.json").as_posix(), "sha256": refine30_sha},
-            {"raw_path": (OUTPUT_DIR / "uncertainty_2x.json").as_posix(), "sha256": unc_sha}
+            {"raw_path": (OUTPUT_DIR / "uncertainty_2x.json").as_posix(), "sha256": unc_sha},
+            {"raw_path": SBDB_APOPHIS.as_posix(), "sha256": sbdb_sha}
         ],
         "adaptive_levels": [
             {"name": "coarse", "step": "1 hour", "span": "2029-04-12..2029-04-15"},
@@ -269,7 +318,8 @@ def main() -> int:
         "guardrails": [
             "No intervention is applied.",
             "Range minima are source-sampled/refined nominal geometry, not impact probabilities.",
-            "Formal 1-sigma vector components do not replace full SBDB covariance or B-plane/encounter covariance analysis.",
+            "Formal 1-sigma vector components do not replace full SBDB covariance.",
+            "The SBDB close-approach record is used directly for 3-sigma TCA/distance bounds and 1-sigma B-plane ellipse parameters; do not re-derive those from the reduced event sample.",
             "Any hypothetical deflection analysis must start from and preserve the validated no-intervention baseline as the control.",
         ],
     }
