@@ -240,9 +240,27 @@ def main() -> int:
     write(OUTPUT_DIR / "refine_30s.json", refine30_text)
     write(OUTPUT_DIR / "uncertainty_2x.json", unc_text)
 
-    interpolated_zero_rr_jd = float(final_min["jd_tdb"]) - float(final_min["range_rate_au_per_day"]) * (30.0 / 86400.0) / (
-        float(refine30[min(range(len(refine30)), key=lambda i: abs(float(refine30[i]["jd_tdb"]) - float(final_min["jd_tdb"]) - 30.0/86400.0))]["range_rate_au_per_day"])
-        - float(final_min["range_rate_au_per_day"])
+    final_jd = float(final_min["jd_tdb"])
+    h_seconds = 30.0
+    before = min(
+        refine30,
+        key=lambda row: abs(float(row["jd_tdb"]) - (final_jd - h_seconds / 86400.0)),
+    )
+    after = min(
+        refine30,
+        key=lambda row: abs(float(row["jd_tdb"]) - (final_jd + h_seconds / 86400.0)),
+    )
+    y_minus = float(before["range_au"])
+    y_zero = float(final_min["range_au"])
+    y_plus = float(after["range_au"])
+    quad_a = (y_plus + y_minus - 2.0 * y_zero) / (2.0 * h_seconds * h_seconds)
+    quad_b = (y_plus - y_minus) / (2.0 * h_seconds)
+    vertex_offset_seconds = -quad_b / (2.0 * quad_a)
+    interpolated_zero_rr_jd = final_jd + vertex_offset_seconds / 86400.0
+    interpolated_range_au = (
+        y_zero
+        + quad_b * vertex_offset_seconds
+        + quad_a * vertex_offset_seconds * vertex_offset_seconds
     )
     sbdb_jd = float(sbdb_ca["jd"])
     sbdb_dist_au = float(sbdb_ca["dist"])
@@ -275,8 +293,14 @@ def main() -> int:
             "hyperbolic_excess_velocity_km_s": float(sbdb_ca["v_inf"]),
             "orbit_ref": sbdb_ca["orbit_ref"],
             "sbdb_payload_sha256": sbdb_sha,
-            "interpolated_zero_rr_time_delta_seconds": (interpolated_zero_rr_jd - sbdb_jd) * 86400.0,
-            "interpolated_range_delta_km": (
+            "interpolated_zero_rr_jd_tdb": interpolated_zero_rr_jd,
+            "interpolated_zero_rr_offset_seconds_from_30s_sample": vertex_offset_seconds,
+            "interpolated_range_au": interpolated_range_au,
+            "interpolated_zero_rr_time_delta_seconds_vs_sbdb": (interpolated_zero_rr_jd - sbdb_jd) * 86400.0,
+            "interpolated_range_delta_km_vs_sbdb": (
+                interpolated_range_au - sbdb_dist_au
+            ) * 149597870.7,
+            "sampled_range_delta_km_vs_sbdb": (
                 float(final_min["range_au"]) - sbdb_dist_au
             ) * 149597870.7,
             "interpretation": "SBDB direct close-approach product is authoritative for nominal TCA, 3-sigma distance/time bounds and 1-sigma B-plane ellipse. Horizons table-3 refinement is retained as an independent state/zero-RR cross-check.",
