@@ -1,0 +1,40 @@
+{
+  "version": "0.1.0",
+  "delta_id": "WT-LC-ROOF-DELTA-001",
+  "parent_lifecycle_manifest": "watchtower_lifecycle_manifest_v0_1.json@0.1.1",
+  "asset_id": "WT-001",
+  "record": {
+    "record_id": "WT-LC-ROOF-001",
+    "record_class": "ENGINEERING_BASIS",
+    "artifact_or_state_id": "watchtower_curved_roof_geometry_seed_v0_1",
+    "version": "0.1.0",
+    "sha256_or_immutable_id": null,
+    "parents": ["WT-LC-SRC-001", "WT-LC-SH-001"],
+    "geometry_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "semantic_map_version": null,
+    "status": "HOLD",
+    "revalidation_trigger": [
+      "WT_ROOF_DEC_001_owner_treatment_choice",
+      "source_FCStd_hash_changes",
+      "roof_surface_semantics_change",
+      "curved_geometry_parameter_change",
+      "derived_or_new_CAD_hash_change",
+      "drainage_or_structural_substrate_change",
+      "Solar_Hull_configuration_change"
+    ],
+    "cadence_days": null,
+    "revalidation_method": "Preserve SRC-068/source roof faces; version owner treatment choice; generate separately hashed curved geometry or new CAD revision; diff against exact base surfaces; rerun Solar Hull, structural, drainage and viewer derivative gates affected by geometry change.",
+    "decision_owner": "Owner / Infrastructure / Energy / Envelope / DataIndex",
+    "security_class": "RESTRICTED_TECHNICAL",
+    "rollback_target": "WT-LC-SRC-001",
+    "receipt": "SRC-071; 113_WATCHTOWER_ROOF_GEOMETRY_v0_1; WT-ROOF-DEC-001; Data PR #7 roof extract/schema/seed",
+    "notes": "Current primary wing roof substrate faces are source-locked planes at local Z=9.1m. Curved Solar Hull geometry is not quantitatively defined. No render-derived radius/rise is permitted."
+  },
+  "consolidation_rule": "Merge this record into the next reviewed parent lifecycle-manifest revision after WT-ROOF-DEC-001 or during the next lifecycle consolidation pass; until then this delta is authoritative for the roof-geometry lifecycle branch.",
+  "guardrails": [
+    "Current FCStd source evidence is never overwritten by a later curved-roof decision.",
+    "A new CAD revision supersedes geometry only after explicit owner/review receipt; it does not erase SRC-068.",
+    "No periodic cadence is invented.",
+    "No geometry treatment decision establishes Solar Hull, drainage, fire, electrical or structural performance."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1.0",
+  "seed_id": "WT-BOD-SEED-001",
+  "asset_id": "WT-001",
+  "geometry_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "semantic_map_version": null,
+  "state": "SCHEMA_READY_GEOMETRY_LOCKED_SEMANTICS_OPEN",
+  "geometry_context": {
+    "body_extents_m": [51.449401,75.923913,81.529903],
+    "z_range_m": [-4.904951,76.624951],
+    "tower_shaft": {"feature":"Pad004","height_m":55.0,"z_range_m":[13.3,68.3]},
+    "observation_head_z_range_m": [68.3,76.62],
+    "external_pole_lines": 9,
+    "cable_solids_in_fcstd": 0
+  },
+  "cases": [
+    {"case_id":"WT-BOD-001","discipline":"STRUCTURAL","case_name":"Self-weight and dead-load basis","case_class":"BASELINE","population_state":"UNKNOWN_MATERIAL_PROPERTIES","next_action":"Bind material/section quantities after semantic object map and professional basis review."},
+    {"case_id":"WT-BOD-002","discipline":"STRUCTURAL","case_name":"Occupied/live-load basis","case_class":"OPERATING","population_state":"OCCUPANCY_AND_LOADS_UNSET","next_action":"Define occupancy zones and attributable design loads."},
+    {"case_id":"WT-BOD-003","discipline":"STRUCTURAL","case_name":"Wind and global dynamic response","case_class":"ENVIRONMENTAL","population_state":"WIND_BASIS_UNSET","next_action":"Verify applicable wind basis/site class before numeric simulation."},
+    {"case_id":"WT-BOD-004","discipline":"CABLE","case_name":"Nominal cable equilibrium","case_class":"OPERATING","population_state":"BLOCKED_SEMANTIC_ENDPOINTS_AND_CABLE_PROPERTIES","next_action":"Resolve A/C and pole endpoints, then define cable class/material/pretension as engineering inputs."},
+    {"case_id":"WT-BOD-005","discipline":"CABLE","case_name":"Weather slack / environmental cable response","case_class":"ENVIRONMENTAL","population_state":"BLOCKED_CABLE_PROPERTIES","next_action":"Derive response envelope only after nominal cable model is reviewed."},
+    {"case_id":"WT-BOD-006","discipline":"CABLE","case_name":"N-1 cable-loss case","case_class":"DEGRADED","population_state":"BLOCKED_EDGE_GRAPH","next_action":"Enumerate credible single-edge loss cases after exact edge IDs exist."},
+    {"case_id":"WT-BOD-007","discipline":"CABLE","case_name":"Maintenance isolated edge","case_class":"MAINTENANCE","population_state":"BLOCKED_EDGE_GRAPH","next_action":"Define temporary stability/access requirements after edge topology is bound."},
+    {"case_id":"WT-BOD-008","discipline":"LIVING_INFRASTRUCTURE","case_name":"Bare structure T0 control","case_class":"TEST_CONTROL","population_state":"GEOMETRY_AVAILABLE_LOADS_UNSET","next_action":"Use as biological-system zero-growth control state."},
+    {"case_id":"WT-BOD-009","discipline":"LIVING_INFRASTRUCTURE","case_name":"Mature wet living-system state","case_class":"ENVIRONMENTAL","population_state":"SPECIES_MEDIA_WATER_MASS_UNSET","next_action":"Bind local/custodial planting/media/irrigation data before load population."},
+    {"case_id":"WT-BOD-010","discipline":"LIVING_INFRASTRUCTURE","case_name":"Storm windage living-system state","case_class":"ENVIRONMENTAL","population_state":"SPECIES_AND_WIND_BASIS_UNSET","next_action":"Couple reviewed vegetation state with verified environmental basis."},
+    {"case_id":"WT-BOD-011","discipline":"MECHANICAL_HYDRAULIC","case_name":"Roof water / drainage state","case_class":"ENVIRONMENTAL","population_state":"DRAINAGE_GEOMETRY_AND_RAINFALL_BASIS_UNSET","next_action":"Extract/define drainage paths and verify rainfall design basis."},
+    {"case_id":"WT-BOD-012","discipline":"FACADE_GLAZING","case_name":"Thermal and glazing pressure state","case_class":"ENVIRONMENTAL","population_state":"GLAZING_ASSEMBLY_AND_CLIMATE_BASIS_UNSET","next_action":"Define tested glazing assembly and verified environmental inputs."},
+    {"case_id":"WT-BOD-013","discipline":"ELECTRICAL_LIGHTNING","case_name":"Lightning / power-loss degraded state","case_class":"DEGRADED","population_state":"MEP_AND_PROTECTION_DESIGN_UNSET","next_action":"Define earthing/lightning/power architecture and safe loss-of-power state."},
+    {"case_id":"WT-BOD-014","discipline":"FIRE_EGRESS","case_name":"Fire / smoke / egress state","case_class":"ACCIDENTAL_HAZARD","population_state":"OCCUPANCY_EGRESS_FIRE_BASIS_UNSET","next_action":"Bind egress geometry and verified fire-life-safety basis with professional review."},
+    {"case_id":"WT-BOD-015","discipline":"MULTI_DISCIPLINE","case_name":"Launch-malfunction pressure/debris/thermal bounding case","case_class":"ACCIDENTAL_HAZARD","population_state":"HAZARD_BASIS_UNSET","next_action":"Supply attributable launch/site hazard basis before any numerical pressure, debris or thermal envelope is used."},
+    {"case_id":"WT-BOD-016","discipline":"DIGITAL_OT","case_name":"Sensor / OT degraded state","case_class":"DEGRADED","population_state":"SENSOR_ARCHITECTURE_UNSET","next_action":"Define instrumentation, calibration, cybersecurity and fail-safe monitoring boundaries."}
+  ],
+  "promotion_rule": "No case advances from schema/unknown state without attributable input sources, units, uncertainty, owner/reviewer, receipt and current geometry/semantic-map identifiers.",
+  "public_claim_state": "BLOCKED"
+}

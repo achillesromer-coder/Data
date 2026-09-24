@@ -1,0 +1,85 @@
+{
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "state": "SOURCE_PLANAR_LOCKED_CURVED_INTENT_PARAMETERIZATION_PENDING",
+  "source_fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "source_surface_extract": "watchtower_roof_surface_extract_v0_1.json",
+  "records": [
+    {
+      "roof_geometry_id": "WT-ROOF-GEO-A",
+      "base_surface_key": "WT-ROOF-WING-A-SUBSTRATE",
+      "source_feature": "Pad017",
+      "source_surface_type": "PLANE",
+      "source_z_m": 9.1,
+      "source_area_m2": 438.3310987759486,
+      "source_boundary_edge_lengths_m": [13.282760569, 13.282760569, 33.0, 33.0],
+      "semantic_left_right": null,
+      "treatment_mode": "UNDECIDED",
+      "curve_axis": null,
+      "curve_representation": null,
+      "rise_m": null,
+      "radius_m": null,
+      "arc_length_m": null,
+      "control_points_local_m": null,
+      "edge_offset_m": null,
+      "drainage_fall_or_path_ref": null,
+      "structural_substrate_ref": null,
+      "solar_hull_config_ref": null,
+      "evidence_state": "OWNER_DECISION_PENDING",
+      "owner_decision_receipt": null,
+      "derived_geometry_sha256": null,
+      "next_action": "Owner chooses overlay versus source-face CAD revision; then define curve axis/representation from attributable design evidence."
+    },
+    {
+      "roof_geometry_id": "WT-ROOF-GEO-B",
+      "base_surface_key": "WT-ROOF-WING-B-SUBSTRATE",
+      "source_feature": "Pad018",
+      "source_surface_type": "PLANE",
+      "source_z_m": 9.1,
+      "source_area_m2": 438.3310987759463,
+      "source_boundary_edge_lengths_m": [13.282760569, 13.282760569, 33.0, 33.0],
+      "semantic_left_right": null,
+      "treatment_mode": "UNDECIDED",
+      "curve_axis": null,
+      "curve_representation": null,
+      "rise_m": null,
+      "radius_m": null,
+      "arc_length_m": null,
+      "control_points_local_m": null,
+      "edge_offset_m": null,
+      "drainage_fall_or_path_ref": null,
+      "structural_substrate_ref": null,
+      "solar_hull_config_ref": null,
+      "evidence_state": "OWNER_DECISION_PENDING",
+      "owner_decision_receipt": null,
+      "derived_geometry_sha256": null,
+      "next_action": "Owner chooses overlay versus source-face CAD revision; then define curve axis/representation from attributable design evidence."
+    }
+  ],
+  "owner_decision_packet": {
+    "decision_id": "WT-ROOF-DEC-001",
+    "question": "Should the shallow-curved Solar Hull roof be represented as a new/derived layer above the two source-planar wing roof substrates, or should a new Watch Tower CAD revision replace/modify the source-planar top faces?",
+    "option_A": {
+      "name": "OVERLAY_ABOVE_SOURCE_SUBSTRATE",
+      "effect": "Preserves the current FCStd planar roof geometry as structural/source substrate and adds a separately versioned curved Solar Hull/envelope geometry layer above it."
+    },
+    "option_B": {
+      "name": "CAD_REVISION_REPLACES_OR_MODIFIES_SOURCE_FACE",
+      "effect": "Creates a new authoritative Watch Tower CAD revision in which the wing roof geometry itself becomes curved; the current FCStd remains archived as superseded geometry evidence, not overwritten."
+    },
+    "recommendation_state": "NO_AUTOMATIC_SELECTION",
+    "required_follow_on": [
+      "define curve axis and geometric representation",
+      "define rise/radius/control points from owner/CAD/engineering evidence",
+      "bind drainage path and structural substrate",
+      "create derived/new CAD geometry with version/hash",
+      "rerun source-to-derived geometry QA and affected Solar Hull/structural/drainage gates"
+    ]
+  },
+  "guardrails": [
+    "No curvature value is inferred from the accepted render.",
+    "No semantic Left/Right assignment is inferred from local CAD compass orientation.",
+    "No source FCStd bytes are changed by this parameter seed.",
+    "No Solar Hull performance, structural adequacy, drainage, fire, electrical or build-readiness claim follows from choosing a geometry treatment mode."
+  ]
+}

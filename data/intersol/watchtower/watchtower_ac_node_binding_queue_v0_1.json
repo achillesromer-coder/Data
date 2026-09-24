@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "binding_queue_id": "WT-AC-BIND-001",
+  "asset_id": "WT-001",
+  "state": "OWNER_DECISION_PENDING",
+  "source_fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "tower_face_frame": "watchtower_tower_face_frame_extract_v0_1.json",
+  "topology_invariants": {
+    "primary_node_levels": 2,
+    "node_ids": ["WT-A","WT-C"],
+    "anchors_per_level": 4,
+    "source_shaft_side_faces": 5,
+    "C_above_A": true
+  },
+  "node_levels": [
+    {
+      "node_id": "WT-A",
+      "role": "lower_primary_cable_node_elevation",
+      "z_m": null,
+      "selected_four_of_five_faces": null,
+      "excluded_face_id": null,
+      "anchors": [
+        {"anchor_id":"WT-A-F1","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"},
+        {"anchor_id":"WT-A-F2","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"},
+        {"anchor_id":"WT-A-F3","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"},
+        {"anchor_id":"WT-A-F4","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"}
+      ]
+    },
+    {
+      "node_id": "WT-C",
+      "role": "upper_primary_cable_node_elevation",
+      "z_m": null,
+      "selected_four_of_five_faces": null,
+      "excluded_face_id": null,
+      "anchors": [
+        {"anchor_id":"WT-C-F1","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"},
+        {"anchor_id":"WT-C-F2","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"},
+        {"anchor_id":"WT-C-F3","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"},
+        {"anchor_id":"WT-C-F4","shaft_face_id":null,"face_local_u":null,"xyz_m":null,"target_id":null,"state":"OWNER_DECISION_PENDING"}
+      ]
+    }
+  ],
+  "owner_decision_packet": {
+    "decision_id": "WT-AC-DEC-001",
+    "required_fields": [
+      "WT-A z elevation",
+      "WT-C z elevation, above WT-A",
+      "four selected shaft faces at WT-A from WT-T-SF1..SF5",
+      "four selected shaft faces at WT-C from WT-T-SF1..SF5",
+      "mapping of A-F1..F4 and C-F1..F4 to those selected source faces",
+      "lateral face-local position u for each anchor, or an explicit rule that determines it",
+      "cable target pairing only where intended/current topology is explicit"
+    ],
+    "geometry_aids_not_decisions": [
+      "NW_P1..P4 plan directions align most closely with source shaft face WT-T-SF4.",
+      "SE_P1..P4 plan directions align most closely with source shaft face WT-T-SF2.",
+      "E_candidate lies close to the plan-direction bisector between WT-T-SF1 and WT-T-SF5, so nearest-face geometry does not uniquely assign it."
+    ],
+    "non_default_rule": "No face exclusion, anchor midline placement, A/C elevation or cable pairing is auto-selected."
+  },
+  "derivation_after_owner_binding": {
+    "anchor_formula": "P(z,u) = [face_midline_x,face_midline_y,z] + u*(face_width/2)*[face_tangent_x,face_tangent_y,0]",
+    "u_domain": [-1.0,1.0],
+    "required_QA": [
+      "exactly four anchors at A",
+      "exactly four anchors at C",
+      "C_z > A_z",
+      "all anchor points lie on selected source shaft faces",
+      "no anchor outside Pad004 z range",
+      "no duplicate anchor IDs",
+      "no structural cable edge without both endpoints bound",
+      "semantic-map version/hash attached to every derived endpoint/edge"
+    ]
+  },
+  "guardrails": [
+    "The five geometric shaft faces are source facts; the four-anchor owner topology is preserved and not expanded to five anchors.",
+    "A-F1..F4/C-F1..F4 are anchor semantic identifiers, not automatically equivalent to shaft-face ordinals SF1..SF5.",
+    "Local-CAD azimuths are not geodetic bearings.",
+    "Geometric face incidence does not establish cable design, load path, pretension or structural adequacy."
+  ]
+}

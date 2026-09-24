@@ -1,0 +1,68 @@
+{
+  "version": "0.1.0",
+  "extract_id": "WT-ROOF-SURFACE-001",
+  "asset_id": "WT-001",
+  "source_fcstd": "InterSol - Watch Tower In Site Footprint.FCStd",
+  "source_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "coordinate_state": "LOCAL_CAD_NOT_GEODETIC",
+  "method": "Direct OpenCascade read of source FCStd feature AddSubShape BREP; select the upper +Z planar face of the two source-resolved primary wing solids Pad017 and Pad018.",
+  "surfaces": [
+    {
+      "surface_key": "WT-ROOF-WING-A-SUBSTRATE",
+      "semantic_left_right_state": "UNBOUND",
+      "local_geometry_zone": "SE_LOCAL_CAD_CLUSTER",
+      "source_feature": "Pad017",
+      "source_feature_shape": "Pad017.AddSubShape.brp",
+      "source_face_selector": "upper planar face at maximum local Z",
+      "surface_type": "PLANE",
+      "normal": [0.0, 0.0, 1.0],
+      "z_m": 9.1,
+      "area_m2": 438.3310987759486,
+      "centroid_m": [711.8158338484468, 382.80861370288284, 9.1],
+      "bounds_m": [695.1099934108327, 366.83245130605815, 9.1, 728.5216742860608, 398.7847760997075, 9.1],
+      "boundary_edge_lengths_m": [13.282760569, 13.282760569, 33.0, 33.0],
+      "evidence_state": "SOURCE_LOCKED_GEOMETRIC_SURFACE",
+      "solar_hull_application_state": "CANDIDATE_SUBSTRATE_SURFACE_NOT_CURVED_SOLAR_HULL_GEOMETRY"
+    },
+    {
+      "surface_key": "WT-ROOF-WING-B-SUBSTRATE",
+      "semantic_left_right_state": "UNBOUND",
+      "local_geometry_zone": "NW_LOCAL_CAD_CLUSTER",
+      "source_feature": "Pad018",
+      "source_feature_shape": "Pad018.AddSubShape.brp",
+      "source_face_selector": "upper planar face at maximum local Z",
+      "surface_type": "PLANE",
+      "normal": [0.0, 0.0, 1.0],
+      "z_m": 9.1,
+      "area_m2": 438.3310987759463,
+      "centroid_m": [687.4297216681716, 425.0465989914762, 9.1],
+      "bounds_m": [677.5029285778332, 407.5263429748464, 9.1, 697.3565147585098, 442.56685500810585, 9.1],
+      "boundary_edge_lengths_m": [13.282760569, 13.282760569, 33.0, 33.0],
+      "evidence_state": "SOURCE_LOCKED_GEOMETRIC_SURFACE",
+      "solar_hull_application_state": "CANDIDATE_SUBSTRATE_SURFACE_NOT_CURVED_SOLAR_HULL_GEOMETRY"
+    }
+  ],
+  "aggregate": {
+    "primary_wing_substrate_surface_count": 2,
+    "combined_planar_area_m2": 876.6621975518949,
+    "source_curvature_present_on_selected_upper_faces": false
+  },
+  "design_delta": {
+    "current_fcstd": "The two selected primary wing upper-envelope substrate faces are planar at local Z=9.1 m.",
+    "owner_visual_intent": "Smooth shallow-curved Solar Hull roof language remains owner-current/aesthetic intent under DIM-WT-011/BPC-015 and the accepted visual lock.",
+    "state": "SOURCE_TO_INTENT_GEOMETRY_DELTA_OPEN",
+    "required_decision": "Choose whether the curved Solar Hull is (a) a new/derived roof layer applied above the source-planar substrates or (b) a future CAD geometry revision that replaces/modifies the planar source roof faces. Do not derive a curvature radius from the visual render."
+  },
+  "explicit_non_findings": [
+    "No authoritative shallow-curve radius was found in the selected current FCStd roof substrate faces.",
+    "No Solar Hull layer thickness is encoded by these BREP roof faces.",
+    "The SE/NW local-CAD labels do not establish owner semantic Left/Right naming.",
+    "This extraction does not establish structural adequacy, drainage capacity, waterproofing, fire compliance, electrical compliance, Solar Hull performance or build readiness."
+  ],
+  "next_actions": [
+    "Bind the two source roof substrate surfaces to semantic left/right only when the owner convention is explicit.",
+    "Record an owner design decision for overlay-versus-CAD-revision treatment of the shallow-curved Solar Hull roof.",
+    "After that decision, create a versioned curved-roof geometry parameter set without modifying the source FCStd receipt.",
+    "Keep Q1-Q6 physical/material qualification gates blocked until real coupon/assembly evidence exists."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_name": "intersol_watchtower_ac_node_binding_fields",
+  "version": "0.1.0",
+  "asset_id": "WT-001",
+  "purpose": "Owner/review-gated binding of the two primary tower cable-node elevations A/C and their four anchors each onto the five source-resolved Pad004 shaft side faces.",
+  "source_geometry": {
+    "fcstd_sha256": "c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+    "tower_face_extract": "watchtower_tower_face_frame_extract_v0_1.json",
+    "allowed_shaft_faces": ["WT-T-SF1","WT-T-SF2","WT-T-SF3","WT-T-SF4","WT-T-SF5"],
+    "shaft_z_range_m": [13.3,68.3]
+  },
+  "fields": [
+    {"name":"Binding_ID","type":"string","required":true},
+    {"name":"Node_Level_ID","type":"enum","allowed_values":["WT-A","WT-C"],"required":true},
+    {"name":"Node_Z_m","type":"number_or_null","required":true},
+    {"name":"Anchor_ID","type":"string","required":true},
+    {"name":"Selected_Shaft_Face_ID","type":"enum_or_null","allowed_values":["WT-T-SF1","WT-T-SF2","WT-T-SF3","WT-T-SF4","WT-T-SF5",null],"required":true},
+    {"name":"Face_Local_u","type":"number_or_null","required":true},
+    {"name":"Anchor_X_m","type":"number_or_null","required":true},
+    {"name":"Anchor_Y_m","type":"number_or_null","required":true},
+    {"name":"Anchor_Z_m","type":"number_or_null","required":true},
+    {"name":"Target_Node_or_Pole_ID","type":"string_or_null","required":true},
+    {"name":"Target_Binding_State","type":"enum","allowed_values":["UNBOUND","GEOMETRIC_CANDIDATE_ONLY","OWNER_BOUND","ENGINEERING_REVIEWED"],"required":true},
+    {"name":"Evidence_State","type":"enum","allowed_values":["OWNER_DECISION_PENDING","OWNER_BOUND","GEOMETRY_DERIVED","ENGINEERING_REVIEW_PENDING","REVIEWED"],"required":true},
+    {"name":"Owner_Decision_Receipt","type":"string_or_null","required":true},
+    {"name":"Derived_From_Face_Frame_Version","type":"string","required":true},
+    {"name":"Next_Action","type":"string","required":true}
+  ],
+  "validation_rules": [
+    "Exactly four anchors must be bound at WT-A and exactly four at WT-C.",
+    "The source shaft has five side faces, therefore a four-anchor level cannot silently imply that all shaft faces are used.",
+    "Node_Z_m must remain inside the source Pad004 shaft range 13.3..68.3m; WT-C must be above WT-A under the current owner topology.",
+    "Selected shaft faces must be explicit. Whether the same or different face is excluded at A and C is an owner/review decision, not a geometry inference.",
+    "Face_Local_u is constrained to [-1,1], where zero means geometric face midline; zero is not a default and cannot be inserted without owner/engineering evidence.",
+    "Anchor XYZ may only be derived after Node_Z_m, Selected_Shaft_Face_ID and Face_Local_u are explicit.",
+    "Target_Node_or_Pole_ID remains null until the cable endpoint pairing is explicitly attributable.",
+    "Geometric nearest-face diagnostics may inform review but cannot populate structural edge targets automatically."
+  ]
+}
