@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Capture descriptive JPL Horizons Earth-relative comparisons for M1-M3 candidates.
+"""Capture JPL Horizons Earth-relative state vectors and comparison windows for M1-M3 candidates.
 
 This runner intentionally does not calculate launch suitability, delta-v, route feasibility,
-mining feasibility, or a target score. It captures and validates public Horizons VECTORS
-range/range-rate data, then summarizes three approved month-wide comparison windows.
+mining feasibility, or a target score. It captures and validates public Horizons geometric
+state vectors plus light-time/range/range-rate context, then summarizes three approved
+month-wide comparison windows. Statistical state uncertainty/covariance is a separate gate.
 """
 
 from __future__ import annotations
@@ -66,8 +67,19 @@ class VectorSample:
     calendar_date: date
     calendar_label: str
     julian_date_tdb: float
+    x_au: float
+    y_au: float
+    z_au: float
+    vx_au_per_day: float
+    vy_au_per_day: float
+    vz_au_per_day: float
+    light_time_days: float
     range_au: float
     range_rate_au_per_day: float
+
+    @property
+    def speed_au_per_day(self) -> float:
+        return (self.vx_au_per_day**2 + self.vy_au_per_day**2 + self.vz_au_per_day**2) ** 0.5
 
 
 def utc_now() -> str:
@@ -120,7 +132,7 @@ def request_url(designation: str) -> str:
         "OUT_UNITS": "'AU-D'",
         "REF_SYSTEM": "'ICRF'",
         "REF_PLANE": "'ECLIPTIC'",
-        "VEC_TABLE": "'6'",
+        "VEC_TABLE": "'3'",
         "VEC_CORR": "'NONE'",
         "CSV_FORMAT": "'YES'",
         "VEC_LABELS": "'YES'",
@@ -178,7 +190,7 @@ def parse_samples(payload: dict[str, Any]) -> list[VectorSample]:
     samples: list[VectorSample] = []
     for parsed in csv.reader(io.StringIO(table)):
         fields = [field.strip() for field in parsed if field.strip()]
-        if len(fields) < 5:
+        if len(fields) < 11:
             continue
         match = DATE_RE.search(fields[1])
         if not match:
@@ -186,8 +198,15 @@ def parse_samples(payload: dict[str, Any]) -> list[VectorSample]:
         try:
             sample_date = datetime.strptime(match.group("date"), "%Y-%b-%d").date()
             julian_date = parse_float(fields[0])
-            range_au = parse_float(fields[-2])
-            range_rate = parse_float(fields[-1])
+            x_au = parse_float(fields[2])
+            y_au = parse_float(fields[3])
+            z_au = parse_float(fields[4])
+            vx_au_per_day = parse_float(fields[5])
+            vy_au_per_day = parse_float(fields[6])
+            vz_au_per_day = parse_float(fields[7])
+            light_time_days = parse_float(fields[8])
+            range_au = parse_float(fields[9])
+            range_rate = parse_float(fields[10])
         except (ValueError, IndexError):
             continue
         if range_au <= 0:
@@ -197,6 +216,13 @@ def parse_samples(payload: dict[str, Any]) -> list[VectorSample]:
                 calendar_date=sample_date,
                 calendar_label=fields[1],
                 julian_date_tdb=julian_date,
+                x_au=x_au,
+                y_au=y_au,
+                z_au=z_au,
+                vx_au_per_day=vx_au_per_day,
+                vy_au_per_day=vy_au_per_day,
+                vz_au_per_day=vz_au_per_day,
+                light_time_days=light_time_days,
                 range_au=range_au,
                 range_rate_au_per_day=range_rate,
             )
@@ -249,9 +275,31 @@ def summarize_window(
         "minimum_range_rate_au_per_day": min(sample.range_rate_au_per_day for sample in selected),
         "maximum_range_rate_au_per_day": max(sample.range_rate_au_per_day for sample in selected),
         "mean_range_rate_au_per_day": statistics.fmean(sample.range_rate_au_per_day for sample in selected),
+        "minimum_range_state_jd_tdb": nearest.julian_date_tdb,
+        "minimum_range_x_au": nearest.x_au,
+        "minimum_range_y_au": nearest.y_au,
+        "minimum_range_z_au": nearest.z_au,
+        "minimum_range_vx_au_per_day": nearest.vx_au_per_day,
+        "minimum_range_vy_au_per_day": nearest.vy_au_per_day,
+        "minimum_range_vz_au_per_day": nearest.vz_au_per_day,
+        "minimum_range_speed_au_per_day": nearest.speed_au_per_day,
+        "start_x_au": selected[0].x_au,
+        "start_y_au": selected[0].y_au,
+        "start_z_au": selected[0].z_au,
+        "start_vx_au_per_day": selected[0].vx_au_per_day,
+        "start_vy_au_per_day": selected[0].vy_au_per_day,
+        "start_vz_au_per_day": selected[0].vz_au_per_day,
+        "end_x_au": selected[-1].x_au,
+        "end_y_au": selected[-1].y_au,
+        "end_z_au": selected[-1].z_au,
+        "end_vx_au_per_day": selected[-1].vx_au_per_day,
+        "end_vy_au_per_day": selected[-1].vy_au_per_day,
+        "end_vz_au_per_day": selected[-1].vz_au_per_day,
+        "state_vector_available": True,
+        "state_uncertainty_available": False,
         "source_center": "Earth (399), geocentric 500@399",
         "source_ephemeris_type": "VECTORS",
-        "source_vector_table": 6,
+        "source_vector_table": 3,
         "source_units": "AU-D",
         "source_step": "1 day",
         "source_reference_system": "ICRF",
@@ -263,7 +311,7 @@ def summarize_window(
         "captured_at": captured_at,
         "refresh_status": refresh_status,
         "last_refresh_error": refresh_error,
-        "interpretation_limit": "Descriptive Earth-relative range/time comparison only; not launch, delta-v, route, mining or target feasibility.",
+        "interpretation_limit": "Geocentric geometric state vectors plus Earth-relative range/time comparison; not launch, delta-v, route, mining or target feasibility. Statistical state uncertainty/covariance is not attached in this lane.",
         "current_hardware_canon": "Mark III + Mark V only",
         "mark_iv_state": "Post-mission successor/next model of Mark III; not current input",
     }
@@ -399,9 +447,11 @@ def main() -> int:
             "At least 400 ordered daily samples required across the full query span.",
             f"At least {MIN_WINDOW_SAMPLES} samples required per month-wide comparison window.",
             "All ranges must be positive.",
+            "Each parsed table-3 sample must contain finite XYZ position and XYZ velocity components.",
+            "Vector table 3 is geometric state + light-time/range/range-rate; statistical state uncertainty/covariance is a separate acquisition gate.",
             "Transient upstream failures may use only cached raw payloads that pass all validations.",
         ],
-        "interpretation_limit": "Descriptive Earth-relative range/time comparison only; not launch, delta-v, route, mining or target feasibility.",
+        "interpretation_limit": "Geocentric geometric state vectors plus Earth-relative range/time comparison; not launch, delta-v, route, mining or target feasibility. Statistical state uncertainty/covariance is not attached in this lane.",
         "operating_state": {
             "current_hardware": ["Mark III", "Mark V"],
             "mark_iv": "Post-mission successor/next model of Mark III; not current input",
