@@ -1,0 +1,47 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 133_MISSING_INPUTS_QUEUE_v0_1",
+  "record_count": 15,
+  "purpose": "Collapse remaining InterSol evidence gaps into ordered acquisition lanes with cross-system reach while preserving the historical/current/derived boundary.",
+  "priority_order": [
+    "DEP-001 SITE / AUTHORITY ROOT",
+    "DEP-002 SURVEY / GEO / HYDROLOGY",
+    "DEP-003 MISSION / OPERATOR / LAUNCH BASIS",
+    "DEP-004 OCCUPANCY / CLASSIFICATION",
+    "DEP-005 VEHICLE / PAYLOAD / EQUIPMENT",
+    "DEP-006 OT / CYBER / SENSOR INVENTORY",
+    "DEP-007 ELECTRICAL / ENERGY CONNECTION",
+    "DEP-008 ECOLOGY / CULTURAL / BIOSECURITY",
+    "DEP-009 ACOUSTIC / VIBRATION BASELINE",
+    "DEP-010 CHEMICAL / SDS / WASTE",
+    "DEP-011 WATCH TOWER SEMANTICS + STRUCTURAL INPUTS",
+    "DEP-012 SOLAR HULL / SOLAR PAINT QUALIFICATION",
+    "DEP-013 HUMAN / SENSORY R&D PROTOCOL",
+    "DEP-014 AVIATION REQUIREMENT",
+    "DEP-015 LUKE IV / RETURN INTERFACE"
+  ],
+  "cross_system_reach": {
+    "DEP-001": 16,
+    "DEP-002": 11,
+    "DEP-003": 11,
+    "DEP-004": 8,
+    "DEP-005": 9,
+    "DEP-006": 9,
+    "DEP-007": 7,
+    "DEP-008": 7,
+    "DEP-009": 7,
+    "DEP-010": 4,
+    "DEP-011": 3,
+    "DEP-012": 2,
+    "DEP-013": 2,
+    "DEP-014": 2,
+    "DEP-015": 1
+  },
+  "rules": [
+    "Reach count measures routing/unlock breadth, not safety risk or engineering severity.",
+    "Historical values remain comparators until explicit current re-adoption with attributable evidence and review.",
+    "Site, launch, occupancy and discipline inputs remain null until sourced; no back-solving from render, archive or generic ratios.",
+    "Independent R&D qualification may progress in parallel where it cannot compromise conventional safe baselines."
+  ],
+  "next_sprint": "Acquire DEP-001..004 as the foundational evidence sprint while parallelising OT, energy, ecology, acoustic baseline and R&D qualification lanes where independent."
+}

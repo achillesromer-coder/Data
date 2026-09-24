@@ -1,0 +1,46 @@
+{
+  "version":"0.1.0",
+  "optimization_id":"WT-OPT-ENV-001",
+  "asset_id":"WT-001",
+  "geometry_sha256":"c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "canonical_control":"Google Drive Type 1 Romer Cognigrex / 118_WT_OPTIMIZATION_ENVELOPE_v0_1",
+  "method":"Pareto-front multi-objective candidate ranking after hard-constraint pruning; weighted owner preferences may only rank already technically admissible candidates.",
+  "variables":{
+    "A_zeta":{"exploratory":[0.20,0.50],"preferred":[0.30,0.45],"definition":"z=13.3m+55m*zeta on current Pad004 only","status":"DERIVED_SEARCH_RANGE"},
+    "C_zeta":{"exploratory":[0.55,0.90],"preferred":[0.65,0.80],"definition":"z=13.3m+55m*zeta on current Pad004 only","status":"DERIVED_SEARCH_RANGE"},
+    "min_A_C_separation_zeta":{"screening_min":0.15,"status":"DERIVED_SCREENING_CONSTRAINT"},
+    "excluded_face_A":{"domain":["SF1","SF2","SF3","SF4","SF5"],"selection":"FREE_OPTIMISATION"},
+    "excluded_face_C":{"domain":["SF1","SF2","SF3","SF4","SF5"],"selection":"FREE_OPTIMISATION_INDEPENDENT_OF_A"},
+    "face_local_u":{"exploratory":[-0.70,0.70],"note":"u=0 is a control candidate, not a default"},
+    "pole_numbering":{"rule":"L1/R1 nearest T progressing centre-outward to L4/R4","left_right_binding":"hold actual L/R display assignment until controlled approach/site datum; retain source cluster identities underneath"},
+    "cable_target_pairing":{"state":"CANDIDATE_GRAPH_GENERATION_UNLOCKED","rule":"enumerate feasible graph candidates; no canonical edge from azimuth alone"},
+    "cable_states":{"states":["TAUT_REFERENCE","NOMINAL_SLACK","WEATHER_SLACK","FAILSAFE_ISOLATED"],"numeric_sag":"UNSET_PENDING_CABLE_PROPERTIES"},
+    "roof_rise_span_percent":{"first_pass":[0.0,1.5,3.0,5.0,7.5],"source_control":0.0,"treatment":"SEPARATELY_VERSIONED_OVERLAY_ABOVE_PLANAR_SOURCE_SUBSTRATE"},
+    "roof_curve_families":["TRANSVERSE_SHALLOW","LONGITUDINAL_SHALLOW","GENTLE_BIAXIAL"],
+    "ecology_integration":{"selected_family":"HIGH_OUTSIDE_CRITICAL_ENVELOPES","hard_exclusions":["egress","security","critical cable access","launch hazard envelope","critical maintenance"]}
+  },
+  "enumeration":{
+    "base_face_exclusion_pairs":25,
+    "additional_dimensions":["A_zeta","C_zeta","A/C face mapping","per-anchor u","target graph","roof curve family/rise"],
+    "canonical_promotion":"NONE_FROM_ENUMERATION_ALONE"
+  },
+  "hard_constraints":[
+    "Exactly two tower node heights A and C.",
+    "Exactly four anchors at A and four anchors at C; no fifth anchor.",
+    "C must be above A and both must lie on source-valid Pad004 side faces.",
+    "No unsafe cable/roof/egress/security/maintenance clearance conflict.",
+    "No render-derived quantitative geometry.",
+    "No candidate failing a safety/compliance hard constraint may be rescued by weighted aesthetic, energy or ecological score."
+  ],
+  "objectives":[
+    "global tower bending/torsion robustness",
+    "anchor and pole reaction distribution",
+    "cable length/geometry and N-1 behaviour",
+    "maintenance/isolation access",
+    "roof wind/drainage/strain/solar/manufacturability",
+    "living-system wet/windage/fire/maintenance compatibility",
+    "architectural symmetry and accepted aesthetic intent",
+    "constructability and lifecycle replacement"
+  ],
+  "promotion_gates":["cable material/section/pretension/termination evidence","authorised environmental/site basis","professional structural/envelope/energy review","owner acceptance of technically admissible candidate"]
+}

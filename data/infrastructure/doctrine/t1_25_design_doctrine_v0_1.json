@@ -1,0 +1,27 @@
+{
+  "version":"0.1.0",
+  "doctrine_id":"T1-25-DESIGN-DOCTRINE-001",
+  "canonical_control":"Google Drive Type 1 Romer Cognigrex / 117_T1_25_DESIGN_DOCTRINE_v0_1",
+  "status":"PROVISIONAL_REVIEW_GATED",
+  "definition":"T1-25 is a certified-core plus innovation-reserve design philosophy. The +25 label is a lifecycle/service/innovation planning heuristic and scenario point, never a blanket engineering, legal, ecological, energy or financial multiplier.",
+  "rules":[
+    {"id":"T1-25-001","domain":"LEGAL_CODE","rule":"100 percent of applicable law/code/approval basis remains controlling; no 1.25 compliance multiplier.","validation":"certifier/counsel/discipline applicability review"},
+    {"id":"T1-25-002","domain":"STRUCTURAL","rule":"Certified conventional load path first; advanced topology/material concepts remain secondary until independently proven.","validation":"FEA, hand checks, materials/connections and RPEQ review"},
+    {"id":"T1-25-003","domain":"MEP_SERVICES","rule":"Use about 25 percent spare pathway/cabinet/conduit capacity as a planning scenario where lifecycle economics justify it; do not automatically oversize every active device.","validation":"growth, maintenance, fault and lifecycle analysis"},
+    {"id":"T1-25-004","domain":"ENERGY","rule":"Operational security uses proven supply/PV/BIPV/storage; allocate bounded interfaces/test areas to Solar Hull/Paint and Free Flow R&D.","validation":"energy/fault/fire/islanding and coupon-to-assembly qualification"},
+    {"id":"T1-25-005","domain":"WATER","rule":"Safe capture/first-flush/overflow/reuse first; 25 percent is only a storage/distribution sensitivity case unless the catchment model supports it.","validation":"hydrology/hydraulics/water-quality/failure analysis"},
+    {"id":"T1-25-006","domain":"ECOLOGY","rule":"High ecological integration outside critical operational envelopes; use E0 protection, E1 restoration, E2 engineered living and E3 experimental zones.","validation":"site ecology, custodial/cultural, fire, biosecurity, hydrology and monitoring review"},
+    {"id":"T1-25-007","domain":"ACOUSTICS","rule":"Harmonisation means measured optimisation for stated receptor/human/structural/ecological objectives; active resonance remains isolated R&D.","validation":"spectrum, insertion loss, reverberation, modal response and receptor monitoring"},
+    {"id":"T1-25-008","domain":"OT_DIGITAL","rule":"Sensors/twins improve observability and maintenance; they do not replace certification or human engineering authority.","validation":"calibration, stale-data/failure injection, cyber recovery and access tests"},
+    {"id":"T1-25-009","domain":"MODULARITY_MAINTENANCE","rule":"Advanced skins/sensors/ecology/digital layers should be replaceable without destructive primary-structure intervention where practical.","validation":"maintenance/access/isolation/replacement trial"},
+    {"id":"T1-25-010","domain":"AESTHETIC_ARCHITECTURE","rule":"Civic-industrial, clean, optimistic and advanced visual language; approximate 75/25 durable-to-experimental expression is a render/design heuristic only.","validation":"owner/architecture/maintainability/wayfinding/safety review"},
+    {"id":"T1-25-011","domain":"WEB4_COIN","rule":"COIN-first provenance/governance; economic/value layers are separately gated and disabled by default.","validation":"schema/invariant/rights/redaction/security and legal review"},
+    {"id":"T1-25-012","domain":"MISSION_AVIATION_STATES","rule":"Affected assets expose compatible NORMAL, PRE_LAUNCH, LAUNCH_LOCKOUT, ABORT and POST_EVENT_INSPECTION states; no autonomous launch/aviation authority.","validation":"state-transition tests, QRA/HAZID, drills, failover and inspection criteria"}
+  ],
+  "non_negotiable_constraints":[
+    "Hard safety/compliance constraints cannot be traded for aesthetics, energy, ecology or innovation score.",
+    "The +25 concept cannot create a code factor, resistance factor, load factor, ecological offset, energy-output claim, financial right or regulatory exemption.",
+    "Innovation promotion requires attributable evidence, a versioned decision owner and a revalidation trigger.",
+    "Drive remains the canonical approved knowledge/control surface for this programme."
+  ]
+}

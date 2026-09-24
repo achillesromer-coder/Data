@@ -1,0 +1,15 @@
+{
+  "schema_version": "v0.1",
+  "canonical_source": "Google Drive Type 1 Romer Cognigrex / 130_POST_OCCUPANCY_LEARNING_v0_1 A1:R19",
+  "drive_is_authoritative": true,
+  "control_refs": {"source_ids":["SRC-092"],"task_id":"TASK-078","build_id":"BUILD-034","artifact_id":"ART-032","lifecycle":"P-infinity / sheet 125"},
+  "record_count": 18,
+  "key_ids": "POE-001..POE-018",
+  "purpose": "Define privacy-aware longitudinal learning and event-driven reanalysis after accepted baselines exist.",
+  "domains": ["space use/capacity","sanitary amenities","first aid/emergency wash","IEQ/ventilation","lighting","mission acoustics","quiet/rest/sleep","mission human factors","industrial flow/maintenance","chemical/waste","energy/battery R&D","water/resource","public/education","Eco-Grex","acoustic R&D","sensory/biofield R&D","OT/cyber","emergency/drills/muster"],
+  "privacy_rule": "Prefer anonymous/aggregate environmental, maintenance and operational evidence; personal/biometric data requires justified purpose, governance, minimisation and consent where applicable.",
+  "learning_rule": "Positive, neutral, negative and failed findings remain in the evidence record; no cherry-picking.",
+  "timing_rule": "P30/P90/P365 are optional internal learning checkpoints only; event-driven reanalysis is primary and no statutory interval is inferred.",
+  "promotion_rule": "Observed trends do not automatically become design changes; relevant owner/discipline acceptance and rollback remain required.",
+  "biofield_boundary": "Biofield remains a project R&D label; operational promotion requires reproducible measured outcomes without therapeutic/clinical claims."
+}

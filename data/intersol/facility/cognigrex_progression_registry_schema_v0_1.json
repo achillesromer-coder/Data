@@ -1,0 +1,42 @@
+{
+  "version":"0.1.0",
+  "status":"REVIEW_GATED_SCHEMA_ONLY",
+  "canonical_authority":"Google Drive Type 1 Romer Cognigrex / 143_COGNIGREX_PROGRESSION_RULES_v0_1",
+  "source_id":"SRC-093",
+  "task_id":"TASK-084",
+  "purpose":"Minimal machine-routing schema for CPR-002 known-unknown registration, CPR-003 autonomous research proposals and CPR-010 evidence-triggered reanalysis. This file defines records only; it does not autonomously promote evidence or validate conclusions.",
+  "registries":{
+    "known_unknowns":{
+      "stable_id_pattern":"KU-<technology_or_domain>-<sequence>",
+      "required_fields":["known_unknown_id","technology_or_domain","question_or_variable","dependencies","resolution_method","falsifiable_next_step","evidence_state","source_ids","created_at","updated_at","status"],
+      "status_enum":["OPEN","AWAITING_SOURCE","AWAITING_RECEIPT","AWAITING_OWNER","RESOLVED_EVIDENCE","SUPERSEDED"],
+      "closure_rule":"RESOLVED_EVIDENCE requires attributable source/test/calculation receipt; SUPERSEDED requires supersession receipt. Never close from analogy or agent confidence alone."
+    },
+    "research_proposals":{
+      "stable_id_pattern":"RP-<technology_or_domain>-<sequence>",
+      "required_fields":["proposal_id","originating_known_unknown_ids","hypothesis_or_question","completed_current_task_comparison","expected_information_gain","priority_class","priority_features","falsifiable_method","safety_or_acceptance_gates","duplication_check","evidence_state","status"],
+      "priority_enum":["HIGH","MEDIUM","LOW"],
+      "status_enum":["PROPOSED","REVIEWED","QUEUED","HELD","REJECTED","SUPERSEDED"],
+      "promotion_rule":"Proposal priority is explainable and owner-overridable; proposal existence is not validation or engineering acceptance."
+    },
+    "reanalysis_events":{
+      "stable_id_pattern":"RA-<technology_or_domain>-<sequence>",
+      "required_fields":["reanalysis_id","trigger_evidence_ids","affected_known_unknown_ids","affected_proposal_ids","affected_conclusion_or_task_ids","materiality_reason","prior_state_refs","required_reanalysis","status","supersession_receipts"],
+      "status_enum":["TRIGGERED","IN_REVIEW","REANALYSED","NO_MATERIAL_CHANGE","SUPERSEDED"],
+      "propagation_rule":"Material new evidence identifies downstream conclusions/tasks for reanalysis; prior states remain retained and stale values must not propagate silently."
+    }
+  },
+  "shared_evidence_controls":{
+    "outcome_classification_enum":["VALID_POSITIVE","VALID_NULL","VALID_NEGATIVE","OUTLIER","INCONCLUSIVE","INVALID_HARNESS","INVALID_INPUT","MODEL_LIMITATION","SUPERSEDED"],
+    "raw_record_rule":"Raw inputs, code/config, environment, outputs, errors, timestamps and receipts remain distinct from synthesis and are append-only where available.",
+    "null_boundary":"INVALID_HARNESS, INVALID_INPUT and MODEL_LIMITATION must not be classified as physical VALID_NULL or concept falsification.",
+    "research_engineering_boundary":"R&D findings cannot bypass conventional/certified baseline, physical evidence, professional review, safety or regulatory gates.",
+    "partner_firewall":"External organisations remain proposed/candidate until attributable authority evidence exists."
+  },
+  "deduplication_key_guidance":{
+    "known_unknowns":["technology_or_domain","question_or_variable","active_dependency_set"],
+    "research_proposals":["originating_known_unknown_ids","hypothesis_or_question","falsifiable_method"],
+    "reanalysis_events":["trigger_evidence_ids","affected_conclusion_or_task_ids"]
+  },
+  "no_go":["No autonomous canon promotion.","No silent deletion or replacement of prior/raw states.","No forced normal-distribution assumption.","No safety/compliance override by information-yield scoring.","No partner commitment inference."]
+}

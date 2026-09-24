@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1.0",
+  "canonical_source": "Type 1 Romer Cognigrex / 146_INTERSOL_DIGITAL_ASSET_CLOSURE_v0_1",
+  "purpose": "Classify InterSol digital-asset maturity without conflating semantic/digital completeness with engineering approval, construction readiness or as-built state.",
+  "closure_states": [
+    {"id":"DAC-001","layer":"canonical_semantic_programme","state":"SUBSTANTIALLY_COMPLETE"},
+    {"id":"DAC-002","layer":"geometry_object_graph_digital_twin","state":"SOURCE_CONSTRAINED_PARTIAL"},
+    {"id":"DAC-003","layer":"structural_envelope_hazard_engineering","state":"EVIDENCE_BLOCKED"},
+    {"id":"DAC-004","layer":"mep_ot_energy_utilities","state":"ARCHITECTURE_READY_NUMERICAL_OPEN"},
+    {"id":"DAC-005","layer":"human_factors_acoustic_ecology_ecox","state":"METHOD_ARCHITECTURE_READY"},
+    {"id":"DAC-006","layer":"construction_procurement_commissioning","state":"NOT_READY"},
+    {"id":"DAC-007","layer":"as_built_live_operational_twin","state":"FUTURE"}
+  ],
+  "next_execution": [
+    "watch_tower_object_interface_closure",
+    "modular_rooftop_anchor_service_grid",
+    "underground_refuge_service_object_family",
+    "facility_node_site_adapter_graph",
+    "evidence_acquisition_packet"
+  ],
+  "hard_boundaries": [
+    "No digital-completeness statement may be represented as construction approval.",
+    "No as-built/live-twin state without physical commissioning evidence.",
+    "No render-derived engineering geometry.",
+    "No structural, blast, fire, electrical, hydraulic, gas or security rating inferred from owner intent.",
+    "Site-neutral/redeployable architecture is preserved until site-specific binding evidence is accepted."
+  ],
+  "state": "CLOSURE_ACTIVE / DRIVE_CANONICAL / REVIEW_GATED"
+}

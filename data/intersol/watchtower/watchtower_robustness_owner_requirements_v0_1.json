@@ -1,0 +1,53 @@
+{
+  "version":"0.1.0",
+  "asset_id":"WT-001",
+  "source_geometry_sha256":"c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321",
+  "state":"OWNER_REQUIREMENTS_LOCKED_ENGINEERING_INPUTS_OPEN",
+  "candidate_policy":{
+    "source_lock_baseline":true,
+    "analyse_alternative_A_C_face_bindings":true,
+    "symmetric_and_asymmetric_candidates":"DISPLAY_SIDE_BY_SIDE",
+    "automatic_candidate_promotion":false,
+    "promotion":"OWNER_AND_PROFESSIONAL_APPROVAL"
+  },
+  "A_C_height_family":{
+    "A_zeta_preferred":[0.30,0.45],
+    "A_zeta_exploratory":[0.20,0.50],
+    "C_zeta_preferred":[0.65,0.80],
+    "C_zeta_exploratory":[0.55,0.90],
+    "state":"OWNER_FAMILY_CONFIRMED_FINAL_VALUES_OPEN"
+  },
+  "required_failure_sets":{
+    "cable_loss_counts":[1,2,3],
+    "tower_damage_sensitivity":true,
+    "tower_damage_fraction_values":null,
+    "tower_damage_rule":"Each percentage must map to a physically defined damaged region/mechanism; percentage alone is not a structural failure model.",
+    "combined_damage_and_cable_loss":"REQUIRED_WHERE_CREDIBLE"
+  },
+  "required_outputs":[
+    "hard-constraint pass/fail",
+    "residual stability/capacity",
+    "tower and pole reactions",
+    "torsion and displacement",
+    "cable redistribution",
+    "clearance and snap/dynamic risk",
+    "safe isolation/recovery state",
+    "maintainability/inspection impact",
+    "uncertainty and model-limit statement"
+  ],
+  "blocked_inputs":[
+    "final pole semantic binding",
+    "cable material/construction/diameter/terminations",
+    "pole and secondary sections",
+    "concrete/steel/reinforcement properties",
+    "foundation/geotechnical inputs",
+    "site actions and hazard basis"
+  ],
+  "guardrails":[
+    "No fifth A/C anchor.",
+    "No cable pretension or capacity is invented.",
+    "Three-cable-loss is a required analysis envelope, not a survivability claim.",
+    "Symmetry is a seed/preference, not an automatic winner.",
+    "No analysis result becomes canonical without owner/professional promotion receipt."
+  ]
+}
