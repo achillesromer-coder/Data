@@ -124,6 +124,71 @@
         "orbit_invariant_status": "PASS"
       },
       "row_mode": "one_row_per_object"
+    },
+    "romer.jpl.horizons.critical-epoch-xyz-uncertainty.v0.1": {
+      "identity_fields": [
+        "requested_name",
+        "window"
+      ],
+      "manifest_object_match_fields": [
+        "designation"
+      ],
+      "manifest_object_required_fields": [
+        "requested_name",
+        "designation",
+        "sha256",
+        "raw_path",
+        "source_vector_table",
+        "uncertainty_coordinate_system",
+        "formal_uncertainty_sigma",
+        "row_count",
+        "status"
+      ],
+      "manifest_row_equal_fields": [],
+      "non_empty_fields": [
+        "requested_name",
+        "designation",
+        "window",
+        "state_jd_tdb",
+        "x_sigma_au_1s",
+        "y_sigma_au_1s",
+        "z_sigma_au_1s",
+        "vx_sigma_au_per_day_1s",
+        "vy_sigma_au_per_day_1s",
+        "vz_sigma_au_per_day_1s",
+        "nominal_payload_sha256",
+        "uncertainty_payload_sha256",
+        "source_vector_table",
+        "uncertainty_definition",
+        "claim_boundary"
+      ],
+      "required_fields": [
+        "requested_name",
+        "designation",
+        "window",
+        "state_jd_tdb",
+        "calendar",
+        "x_sigma_au_1s",
+        "y_sigma_au_1s",
+        "z_sigma_au_1s",
+        "vx_sigma_au_per_day_1s",
+        "vy_sigma_au_per_day_1s",
+        "vz_sigma_au_per_day_1s",
+        "position_component_sigma_rss_au",
+        "velocity_component_sigma_rss_au_per_day",
+        "nominal_position_delta_rss_au",
+        "nominal_velocity_delta_rss_au_per_day",
+        "nominal_payload_sha256",
+        "uncertainty_payload_sha256",
+        "source_vector_table",
+        "uncertainty_definition",
+        "claim_boundary"
+      ],
+      "required_values": {
+        "source_vector_table": "2x",
+        "uncertainty_definition": "formal 1-sigma XYZ/VXYZ component uncertainty"
+      },
+      "row_mode": "one_row_per_object_per_critical_epoch"
     }
   },
   "schema": "romer.data.jpl.normalized-handoff-contract.v1"
