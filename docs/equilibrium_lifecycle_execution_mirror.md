@@ -2,7 +2,7 @@
 
 **Authority:** This file is an execution-facing Git mirror only. The living architecture owner is Google Drive workbook **Type 1 Romer Cognigrex**, sheet **163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1**. ACR3 task **GST-064** carries transition provenance. This file MUST NOT become a parallel master.
 
-**Verified reference date:** 2026-09-25.
+**Verified reference date:** 2026-09-28.
 
 ## Constitutional rule
 
@@ -251,7 +251,7 @@ No autonomous system may convert first arrival, local majority, possession or su
 
 Debris prevention, passivation, planetary protection and harmful-contamination controls remain independent gates.
 
-## Current reference families — verified 2026-09-25
+## Current reference families — verified 2026-09-28
 
 This list is an applicability map, not a certification claim.
 
@@ -321,3 +321,81 @@ last evidence / next revalidation
 ```
 
 Physical promotion remains blocked until site-, mission-, jurisdiction-, professional- and regulator-specific evidence closes the applicable gates.
+
+
+## 2026-09-28 architecture extension
+
+Drive sheet `163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1` remains the living owner. The following controls were added there and are mirrored here only for execution/review continuity.
+
+### Added lifecycle lenses
+
+- **EQG-047 — Systems lifecycle:** retirement/transition are designed lifecycle states, not unmanaged failure.
+- **EQG-048 — Asset stewardship:** continuation/renewal balances service value, risk, lifecycle expenditure, environmental burden, supportability and retirement.
+- **EQG-049 — Human/maintainer continuity:** high-consequence automation retains competence, drills, procedures, tooling and manual/degraded recovery paths.
+- **EQG-050 — Occupancy/visitor safety:** tourists, astronauts and other non-operators create dependent-life obligations; optional mission activity is shed before life support, shelter, rescue or medical capability.
+- **EQG-051 — Legal/regulatory precedence:** internal canon, owner instruction, model output or majority vote cannot waive applicable law, licence conditions or competent external authority.
+- **EQG-052 — Identity/credential succession:** root authority is scoped, expiring, revocable and recoverable through independent governed succession; operational systems cannot mint successor roots.
+- **EQG-053 — Technical obsolescence:** unsupported software/protocols/formats enter bounded legacy, migration, isolation or retirement states rather than indefinite privileged operation.
+- **EQG-054 — Assurance diversity:** copies of one model/method are not independent evidence; consequence-sensitive decisions require heterogeneous evidence/review or explicit common-cause analysis.
+- **EQG-055 — Transboundary hazard:** closure cannot be achieved by exporting unmanaged hazardous or informational burden to another custodian/jurisdiction.
+- **EQG-056 — Biodiversity/biosafety release:** preservation does not imply automatic propagation or release; genetic diversity, welfare, provenance, ecological fit and biosecurity are separate gates.
+- **EQG-057 — Affected-party/future-generations:** benefit, risk, reversibility, duration and transferred burden remain visible; aggregate benefit cannot compensate away hard safety/rights/ecology gates.
+
+### Initial class defaults
+
+These are conservative starting envelopes, not asset-specific certification.
+
+| ID | System class | Initial consequence posture | Default degeneration posture |
+|---|---|---|---|
+| EQG-PAR-001 | Cognigrex / reasoning runtime | C1 advisory; C2 multi-node consequential coordination; C3 only when separately granted live physical/resource/financial/replication authority. Replication budget 0 by default. | Read-only/recovery advisory on authority/provenance loss; no privilege/root/constitution self-mutation. |
+| EQG-PAR-002 | Autonomous mining/manufacturing | C3 by default for autonomous production chains; peer-manufacture budget 0 unless separately leased. | Stop new extraction/batches, finish only safely interruptible work, park/passivate, preserve rescue/containment/monitoring. |
+| EQG-PAR-003 | Off-world resource/autonomous factory | C3; C4 theoretical review if autonomous self-replication or cross-body propagation exists. | NO_NEW_EXTRACTION + REP_FREEZE, secure material, passivate energy/propulsion where safe, retain hazard/navigation records. |
+| EQG-PAR-004 | Habitats / astronauts / visitors | C2; C3 for multi-habitat or remote-rescue cascade. | Preserve life support/shelter/rescue/medical envelope; shed optional production/compute first. |
+| EQG-PAR-005 | Ecological nursery / living repository | C1 contained; C2 where release/translocation can materially affect ecosystems. | Stop non-essential propagation/release; quarantine when indicated; retain minimum viable stewardship and provenance. |
+| EQG-PAR-006 | Radioactive/toxic/high-hazard legacy | C3 where failure can create off-site or long-lived harm. Production target 0 after mission end. | Maintain isolation/containment/cooling/monitoring/security until validated passive-safe transfer/disposal; no indiscriminate blackout. |
+| EQG-PAR-007 | Terrestrial utility / edge infrastructure | C1 local; C2 regional/multi-node essential service. | Shed optional compute/exports/experiments; island/isolate where designed; preserve essential/safety/ecology service floor. |
+| EQG-PAR-008 | Future-custodian / recovery cache | C0 read-only; C1 if powering bounded monitoring/diagnostics. No production or replication credentials. | Remain diagnostic/read-only on uncertainty; successor must inspect, authenticate, test and recommission explicitly. |
+
+### Current standards/protocol delta — verified 2026-09-28
+
+The applicability map was expanded with:
+
+- ISO/IEC/IEEE 15288:2023 — full system life-cycle processes, including retirement.
+- ISO 55000:2024 / ISO 55001:2024 — asset-management principles and management-system requirements.
+- ISO/IEC 5338:2023 — AI system life-cycle processes.
+- ISO/IEC 42005:2025 — AI system impact assessment across the lifecycle.
+- ISO/IEC 27001:2022 — information-security management.
+- ISO 22320:2018 — incident-management guidance; confirmed current in 2024.
+- ISO 22301:2019 remains the published continuity standard while Edition 3 is under development.
+- ISO 3691-4:2023 remains published for driverless industrial trucks while Edition 3 is under development.
+- IAEA SSR-6 (Rev. 2), 2025 Edition — safe transport of radioactive material.
+- COSPAR Planetary Protection Policy — 2026 version is current; mission-specific categorisation remains required.
+- Kunming-Montreal Global Biodiversity Framework, including genetic-diversity / sustainable-use considerations relevant to living repositories.
+- Cartagena Protocol on Biosafety where living modified organisms from modern biotechnology and its scope/applicability are engaged.
+
+These references are controls/evidence families only. They do not establish project compliance, legal applicability, certification, regulator acceptance or mission approval.
+
+### Parameterisation rule
+
+The architecture is no longer waiting for another generic safety framework. For each real `Object_ID`, the next step is to replace class defaults with measured and attributable values:
+
+```text
+cascade_class
+beneficiaries / dependants
+GROW_ALLOWED predicate states
+C_target
+expand_threshold
+contract_threshold
+MVSL
+mission_lease
+stop_ladder mapping
+replication_budget
+energy_descent_state
+credential/succession state
+material_hazard_passport
+circular_end_state
+current standards/jurisdiction applicability
+last evidence / next revalidation
+```
+
+No asset advances from a class default to an operational claim without current site/mission/jurisdiction/professional/regulator evidence where applicable.
