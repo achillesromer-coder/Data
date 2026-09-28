@@ -417,7 +417,7 @@ Physical promotion remains blocked until site-, mission-, jurisdiction-, profess
 
 ## 2026-09-28 canonical delta
 
-Drive owner `Type 1 Romer Cognigrex / 163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1` now extends through **EQG-056**, seven asset parameterisation profiles (**EQG-PROFILE-001..007**) and **EQG-DATA-004**. The new controls add retirement-by-design, admissibility-before-merit, an independent stop plane, circularity passports, GHS hazard communication, multi-hazard recovery, LMO/biosafety boundaries, OAIS-style preservation, robotics scope/applicability discipline and the explicit object-parameterisation contract. This Git file remains an execution mirror, not the living master.
+Drive owner `Type 1 Romer Cognigrex / 163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1` now extends through **EQG-065**, conservative class defaults **EQG-PAR-001..008**, and **EQG-DATA-004**. The reconciled controls cover system/asset lifecycle, maintainer continuity, occupied habitats, legal precedence, credential succession, obsolescence, assurance diversity, transboundary burdens, biodiversity/biosafety, future generations, admissibility-before-merit, an independent stop plane, circularity passports, GHS hazard communication, multi-hazard recovery, OAIS-style preservation, robotics applicability and the explicit object-parameterisation contract. This Git file remains an execution mirror, not the living master.
 
 
 ## 2026-09-28 architecture extension
@@ -496,3 +496,27 @@ last evidence / next revalidation
 ```
 
 No asset advances from a class default to an operational claim without current site/mission/jurisdiction/professional/regulator evidence where applicable.
+
+
+## 2026-09-28 concurrency reconciliation
+
+A concurrent resolver and this manual pass initially targeted the same unused Sheet-163 row band. The conflict was detected before handoff and reconciled against ACR3 `GST-064` plus resolver commit `19d4a8b9368ced4821a1b9edffc7b932a80c6b23`.
+
+The Drive owner now has one unique, read-back sequence:
+
+```text
+EQG-047 .. EQG-057     cross-cutting lifecycle / stewardship lenses
+EQG-PAR-001 .. 008     conservative class defaults
+EQG-DATA-004           2026-09-28 standards/protocol currency delta
+EQG-058 .. EQG-065     admissibility, stop-plane, circular data,
+                        chemical communication, disaster recovery,
+                        archival preservation, applicability and
+                        object-level parameterisation
+```
+
+No duplicate `Record_ID` remains in that range. The earlier manual `EQG-PROFILE-001..007` rows were folded into the canonical `EQG-PAR-001..008` class defaults rather than retained as a parallel profile namespace.
+
+### Operational consequence
+
+The architecture phase is substantially complete. The next admissible work is **object-level parameterisation**: bind actual stable `Object_ID` values from the living CGX/node/edge/asset registers, replace conservative class defaults with measured site/mission evidence, and prove stop/passivation/reactivation paths. New generic doctrine should be added only for a materially uncovered hazard/control class.
+
