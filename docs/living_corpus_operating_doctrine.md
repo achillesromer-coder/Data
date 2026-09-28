@@ -43,6 +43,27 @@ Figures, tables and narrative claims must resolve to an evidence row, source/con
 
 Rendered PDFs, images, ZIPs and audience-specific exports are generated only for a bounded release, review or interchange need. They are derivatives, not new canon. Do not create routine exports merely to mark progress.
 
+
+## Deferred cross-discipline synthesis and sovereign-capacity build rule
+
+Cross-discipline capacity analysis is maintained in the living owning canon, not as a stream of partial whitepapers. For Australian Sovereign Capacity and related operator/country/civilisation-node work, build and reconcile the underlying capability graph first. A review paper is assembled and presented only when the defined completeness gate passes.
+
+For every critical function, trace the complete capability chain:
+
+`need → resource/feedstock → equipment/tooling → consumables → process → specialist service → skill/workforce → facility/utilities → software/data/cyber → certification/permission → logistics → maintenance/spares → finance/insurance → emergency/degraded mode → recovery/recycling → knowledge/restart`.
+
+Maintain three linked bills rather than treating procurement as the whole system:
+
+- **BOM — Bill of Materials:** physical parts, feedstocks, consumables and configuration-controlled substitutes.
+- **BOP — Bill of Processes:** manufacturing, integration, calibration, test, inspection, certification and release processes.
+- **BOC — Bill of Capabilities:** people, services, facilities, software/data, licences/permissions, maintenance, spares, logistics, finance/insurance, emergency response, recovery and knowledge needed to keep the function operable.
+
+Each significant dependency should carry an evidence-bounded dependency-risk and localisation-viability state, a sovereignty maturity state from external dependency through serviceability/manufacture/circular recovery to inheritance/restart capacity, and one explicit intervention disposition such as DESIGN-OUT, STANDARDISE, SUBSTITUTE, STOCK, DUAL-SOURCE, RECOVER, ENABLE-SUPPLIER or INTERNALISE. Localisation is not the default answer: supplier enablement, offtake, shared industrial commons, allied sourcing and strategic inventory remain valid where they produce higher resilience at lower whole-system cost.
+
+The minimum analysis lenses are resource/material, production/process, service, operational, institutional/governance, workforce, finance/insurance, legal/regulatory, logistics, digital/cyber, maintenance/reliability, emergency/continuity, recovery/circularity, knowledge/succession, ecology/interspecies and off-world/civilisation-node continuity. Existing domain owners remain authoritative for their facts and gates.
+
+The Sovereign Cross-Discipline Capacity whitepaper is therefore a **living-review derivative target, not a new technical master**. Routine automation/domain passes update owning canon, task/build queues, evidence rows and receipts. Do not create or present a replacement paper after each expansion pass. Final synthesis is permitted only after a review-readiness receipt confirms: required-domain coverage; attributable current sources; source/config/status truth; explicit contradiction disposition; evidence ceilings; unresolved external gates; legal/regulatory and professional boundaries; and no fabricated supplier capacity, partnership, certification, deployment state or sovereign-content percentage. Publication polish cannot close a technical, service, operational, institutional or empirical gap.
+
 ## Drive and Git continuity
 
 - **Google Drive:** keep the same living file ID and replace/edit the contents in place after the current edit is reconciled and QA-complete. Do not publish or link an intermediate edit as though it were complete.
