@@ -1,7 +1,7 @@
 {
   "artifact_id": "Romer_Living_Evidence_Atlas",
   "canonical_identity": "L5-LIVING-EVIDENCE-ATLAS",
-  "last_reconciled": "2026-09-14",
+  "last_reconciled": "2026-09-29",
   "update_model": "living canonical; edit stable Drive IDs/Git paths in place; provider/Git/ACR3 receipts carry revision lineage",
   "authority": "publication/evidence bridge only; ACR3 and owning Type-1/specialist/CAD/raw-evidence sources remain authority",
   "public_send_submission": false,
@@ -76,12 +76,12 @@
       "object_id": "SYS-AUS-CAP",
       "name": "Australian Sovereign Capacity Resource Pack",
       "class": "SOURCE/DIGITAL",
-      "status": "ACTIVE",
+      "status": "ACTIVE / CROSS-DISCIPLINE CAPABILITY BUILD-OUT / WHITEPAPER DEFERRED",
       "value": "",
       "unit": "",
       "source": "60_Aus_Sovereign_Capacity",
-      "ceiling": "Proposed capability framework; no government approval or validated national-security status",
-      "gate": "Institutional review / collaborator evidence"
+      "ceiling": "Proposed evidence-governed operator/national/civilisation-node capability framework; no government approval, supplier/partner commitment, compliance, deployment, physical readiness or auditable sovereign-content percentage unless separately evidenced",
+      "gate": "TASK-104 / BUILD-054 domain-coverage + provenance + contradiction + evidence-ceiling review; institutional, supplier, regulatory and empirical evidence as applicable"
     },
     {
       "id": "EV-011",
@@ -267,28 +267,79 @@
     }
   ],
   "open_gates": [
-    {"id":"G-001","domain":"Solar Hull","priority":"HIGH","blocked_claim":"Measured efficiency, durability or roof energy credit"},
-    {"id":"G-002","domain":"Free Flow","priority":"HIGH","blocked_claim":"Selected reference-electronics compatibility plus usable storage/thermal/safety/field performance; TST-018 remains digital HOLD"},
-    {"id":"G-003","domain":"RFS/EMFF","priority":"HIGH","blocked_claim":"Physical material response or separation capability"},
-    {"id":"G-004","domain":"Mark III","priority":"HIGH","blocked_claim":"Manufacturable/qualified current hardware and exact current panel/half-shell authority"},
-    {"id":"G-005","domain":"Mark V","priority":"HIGH","blocked_claim":"Current same-object geometry/configuration and operational Mission 1 hardware authority beyond historical/function lineage"},
-    {"id":"G-006","domain":"Mission 1","priority":"HIGH","blocked_claim":"Resource retrieval/revenue/return result"},
-    {"id":"G-007","domain":"Luke II","priority":"MED-HIGH","blocked_claim":"Current telemetry/refinement performance, calibrated sensor/field-map evidence and Mark/RFS/EMFF interface qualification; no payload-capture or controlled-return claim"},
-    {"id":"G-008","domain":"ASC/SAI","priority":"HIGH","blocked_claim":"Sovereign-content percentage or deployed capability"},
-    {"id":"G-009","domain":"Eco-X","priority":"MED-HIGH","blocked_claim":"Ecological restoration outcome"},
-    {"id":"G-010","domain":"M1","priority":"MED","blocked_claim":"Traffic benefit, approval, constructability or safety performance"}
+    {
+      "id": "G-001",
+      "domain": "Solar Hull",
+      "priority": "HIGH",
+      "blocked_claim": "Measured efficiency, durability or roof energy credit"
+    },
+    {
+      "id": "G-002",
+      "domain": "Free Flow",
+      "priority": "HIGH",
+      "blocked_claim": "Selected reference-electronics compatibility plus usable storage/thermal/safety/field performance; TST-018 remains digital HOLD"
+    },
+    {
+      "id": "G-003",
+      "domain": "RFS/EMFF",
+      "priority": "HIGH",
+      "blocked_claim": "Physical material response or separation capability"
+    },
+    {
+      "id": "G-004",
+      "domain": "Mark III",
+      "priority": "HIGH",
+      "blocked_claim": "Manufacturable/qualified current hardware and exact current panel/half-shell authority"
+    },
+    {
+      "id": "G-005",
+      "domain": "Mark V",
+      "priority": "HIGH",
+      "blocked_claim": "Current same-object geometry/configuration and operational Mission 1 hardware authority beyond historical/function lineage"
+    },
+    {
+      "id": "G-006",
+      "domain": "Mission 1",
+      "priority": "HIGH",
+      "blocked_claim": "Resource retrieval/revenue/return result"
+    },
+    {
+      "id": "G-007",
+      "domain": "Luke II",
+      "priority": "MED-HIGH",
+      "blocked_claim": "Current telemetry/refinement performance, calibrated sensor/field-map evidence and Mark/RFS/EMFF interface qualification; no payload-capture or controlled-return claim"
+    },
+    {
+      "id": "G-008",
+      "domain": "ASC/SAI",
+      "priority": "HIGH",
+      "blocked_claim": "Sovereign-content percentage or deployed capability"
+    },
+    {
+      "id": "G-009",
+      "domain": "Eco-X",
+      "priority": "MED-HIGH",
+      "blocked_claim": "Ecological restoration outcome"
+    },
+    {
+      "id": "G-010",
+      "domain": "M1",
+      "priority": "MED",
+      "blocked_claim": "Traffic benefit, approval, constructability or safety performance"
+    }
   ],
   "current_control_receipts": {
     "acr3": "row934 LIVING-CORPUS-ARCHIVE-CURRENT-PUBLICATION-BRIDGE-20260914",
     "type1_artifact": "ART-068",
     "type1_sync": "SYNC-022",
     "type1_publish_continuity": "TASK-100 LIVING CONTINUITY BRIDGE ACTIVE",
-    "git_doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c"
+    "git_doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c",
+    "sovereign_cross_discipline": "TASK-104 / BUILD-054 / GST-049/051/059 scope expansion — 2026-09-29"
   },
   "receipt": {
     "id": "REC-LIVING-CORPUS-20260914-001",
     "state": "ACR3_ROW934_READBACK_COMPLETE / TYPE1_ART068_SYNC022_TASK100_READBACK_COMPLETE / GIT_DOCTRINE_COMMIT_BOUND / LIVING_INDEX_REFRESHED",
-    "note": "Stable Drive IDs and Git paths are edited forward. Archive/current/deterministic/publication authority boundaries are explicit. This index remains a publication/evidence bridge and does not replace technical owners."
+    "note": "Stable Drive IDs and Git paths are edited forward. Archive/current/deterministic/publication authority boundaries are explicit. This index remains a publication/evidence bridge and does not replace technical owners. Sovereign cross-discipline capacity build-out is queued through TASK-104/BUILD-054; final whitepaper synthesis remains deferred until review-readiness proof."
   },
   "full_atlas": "Römer Industries — Living Evidence Atlas.xlsx on Drive; this Git index is not a replacement technical authority."
 }
