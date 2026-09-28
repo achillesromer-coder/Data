@@ -251,25 +251,107 @@ No autonomous system may convert first arrival, local majority, possession or su
 
 Debris prevention, passivation, planetary protection and harmful-contamination controls remain independent gates.
 
+
+## Admissibility before merit
+
+Growth is a two-stage decision, not a scalar optimisation.
+
+```text
+ADMISSIBLE_i =
+  SAFETY
+  ∧ RIGHTS / LEGAL AUTHORITY
+  ∧ ECOLOGY
+  ∧ RESOURCE BUDGET
+  ∧ WASTE / CLOSURE
+  ∧ SECURITY
+  ∧ SUCCESSION
+  ∧ STOP PATH
+```
+
+Only admissible alternatives may be compared by service merit, lifecycle burden, resilience, circularity or cost. Prefer explicit multi-criteria / Pareto comparison over a single sovereign "good" score. No amount of revenue, utility, model confidence or political/economic demand compensates for a failed hard gate.
+
+## Independent safety / stop plane
+
+Cascade-capable systems separate mission intelligence from the mechanism that constrains or stops it.
+
+The independent safety plane has bounded safety logic, protected configuration, authenticated stop authority, state feedback and domain-specific safe-state outputs. The mission optimiser cannot veto, rewrite or peer-vote around this plane.
+
+Stop ordering is functional rather than indiscriminate:
+
+```text
+freeze expansion / replication / extraction
+-> isolate consequential mission authority
+-> preserve LIFE / SAFETY / ECO functions
+-> reach validated safe/passive state
+-> revoke or retire production authority as required
+```
+
+Emergency-stop standards are inputs to this architecture; they are not a universal blackout command.
+
+## Whole-life engineering and preservation
+
+Retirement, support, transfer, archival preservation and future-custodian legibility are design inputs at concept stage.
+
+Current lifecycle references include ISO/IEC/IEEE 15288:2023 for system life cycles, ISO/IEC/IEEE 12207:2026 for software life cycles, and ISO/IEC 5338:2023 for AI system life-cycle processes.
+
+High-consequence knowledge preservation uses an OAIS-style preservation profile: content, context, provenance, fixity/integrity, representation information, dependencies, migration history and access constraints. Live root keys and replication credentials are not archived as convenient recovery shortcuts.
+
+## Asset parameterisation profiles
+
+The living Type 1 owner now carries baseline profiles for:
+
+- autonomous terrestrial mining / earth-moving units;
+- off-world extraction / processing cells;
+- radioactive / toxic hazard-custodian nodes;
+- biological nurseries / seed banks / managed fauna-flora habitats;
+- crew / tourist / resident habitats;
+- Cognigrex / AI governance nodes; and
+- autonomous manufacturing / physical-replication cells.
+
+Each profile binds consequence class, actual beneficiaries/dependants, mission lease, workload/capacity ceiling, MVSL, stop path, replication authority, energy descent, material/hazard state and circular end-state. Profile values remain site-, mission-, organism-, jurisdiction- and evidence-specific.
+
+## Applicability discipline
+
+"Robot safety compliant" is not a valid cross-domain claim. Applicability is evaluated as:
+
+```text
+ENVIRONMENT
+× TASK
+× MOBILITY
+× HUMAN_ACCESS
+× HAZARD
+× AUTONOMY
+× CASCADE_CLASS
+× JURISDICTION
+```
+
+For example, ISO 10218-2:2025 is relevant to industrial robot applications but explicitly excludes space, nuclear, underground, service/public and several hazardous applications. Autonomous mining instead has ISO 17757:2019 as a dedicated reference; driverless industrial trucks / AMRs have ISO 3691-4:2023, currently under revision.
+
+
 ## Current reference families — verified 2026-09-28
 
 This list is an applicability map, not a certification claim.
 
 ### Machinery, robotics and autonomous mining
-- ISO 12100:2010 — machinery risk assessment/risk reduction.
+- ISO 12100:2010 — machinery risk assessment/risk reduction; still current, revision work underway.
 - ISO 13849-1:2023 — safety-related control systems.
-- ISO 13850:2015 — emergency stop principles.
-- ISO 10218-1:2025 / ISO 10218-2:2025 — industrial robot safety and integration.
+- ISO 13850:2015 — emergency stop principles; still current, revision underway.
+- ISO 10218-1:2025 / ISO 10218-2:2025 — industrial robot safety and integration; Part 2 has material scope exclusions including space, nuclear, underground, service/public and several hazardous applications.
 - ISO 17757:2019 — autonomous/semi-autonomous earth-moving and mining machinery; confirmed current in 2024.
+- ISO 3691-4:2023 — driverless industrial trucks / AMRs; replacement draft is under development.
 
 ### Functional safety / industrial cybersecurity
 - IEC 61508 family — functional safety.
 - IEC 62443 family, including IEC 62443-4-1:2018 — secure industrial product development lifecycle.
 
-### AI governance / risk / ethics
+### Systems, software and AI lifecycle / governance
+- ISO/IEC/IEEE 15288:2023 — system life-cycle processes.
+- ISO/IEC/IEEE 12207:2026 — current software life-cycle processes; replaces withdrawn 2017 edition.
+- ISO/IEC 5338:2023 — AI system life-cycle processes.
 - ISO/IEC 42001:2023 — AI management systems.
 - ISO/IEC 23894:2023 — AI risk management.
-- NIST AI RMF 1.0 — currently under revision in 2026; US guidance, not an international standard.
+- ISO/IEC 42005:2025 — AI system impact assessment.
+- NIST AI RMF 1.0 — under revision in 2026; US guidance, not an international standard.
 - OECD AI Principles — updated 2024.
 - UNESCO Recommendation on the Ethics of AI — adopted 2021; includes human oversight, plural governance, sustainability, environment and ecosystems.
 
@@ -279,21 +361,32 @@ This list is an applicability map, not a certification claim.
 - ISO 59010:2024 — circular business/value-network transition guidance.
 - ISO 59020:2024 — circularity performance measurement; Edition 2 work underway.
 - ISO 20887:2020 — design for disassembly/adaptability; confirmed current in 2025.
+- ISO 59040:2025 — Product Circularity Data Sheet methodology for interoperable circularity information.
 - Basel Convention environmentally sound management framework for hazardous wastes.
 
 ### Nuclear / radioactive waste
 - IAEA GSR Part 5 — predisposal radioactive waste management.
 - IAEA GSR Part 6 — decommissioning of facilities.
 - IAEA SSR-5 — disposal of radioactive waste.
-- Applicable IAEA transport requirements such as SSR-6 where transport is involved.
+- IAEA SSR-6 (Rev. 2), 2025 Edition — safe transport of radioactive material where transport is involved.
+- Joint Convention on the Safety of Spent Fuel Management and on the Safety of Radioactive Waste Management where applicable.
 - Jurisdiction-specific regulator/licence requirements remain controlling external gates.
+
+
+### Hazard communication, biosafety, disaster resilience and archives
+- UNECE GHS Rev.11 (2025) — current global chemical hazard classification/label/SDS reference; national implementation remains jurisdiction-specific.
+- Cartagena Protocol on Biosafety — relevant to living modified organisms from modern biotechnology; it is not a generic nursery standard.
+- Sendai Framework for Disaster Risk Reduction 2015–2030 — multi-hazard risk knowledge, governance, resilience investment and preparedness/recovery.
+- ISO 22301:2019 — business continuity management; successor revision is under development.
+- ISO 22320:2018 — incident management guidance; confirmed current in 2024.
+- ISO 14721:2025 — OAIS reference model for long-term digital information preservation.
 
 ### Space
 - Outer Space Treaty, including international responsibility/supervision and harmful-contamination duties.
 - Registration Convention where applicable.
 - UNOOSA/COPUOS Long-Term Sustainability Guidelines.
 - ISO 24113:2023 — current near-Earth debris mitigation standard; Edition 5 is under development.
-- COSPAR Planetary Protection Policy — mission-specific implementation must be rechecked.
+- COSPAR Planetary Protection Policy — current 2026 policy includes a unified Icy Worlds policy; mission-specific implementation must still be rechecked.
 - Artemis Accords — voluntary framework among signatories; not a universal treaty. As of 2026-09-23, NASA reports 74 signatories.
 
 ## Required next implementation
@@ -321,6 +414,10 @@ last evidence / next revalidation
 ```
 
 Physical promotion remains blocked until site-, mission-, jurisdiction-, professional- and regulator-specific evidence closes the applicable gates.
+
+## 2026-09-28 canonical delta
+
+Drive owner `Type 1 Romer Cognigrex / 163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1` now extends through **EQG-056**, seven asset parameterisation profiles (**EQG-PROFILE-001..007**) and **EQG-DATA-004**. The new controls add retirement-by-design, admissibility-before-merit, an independent stop plane, circularity passports, GHS hazard communication, multi-hazard recovery, LMO/biosafety boundaries, OAIS-style preservation, robotics scope/applicability discipline and the explicit object-parameterisation contract. This Git file remains an execution mirror, not the living master.
 
 
 ## 2026-09-28 architecture extension
