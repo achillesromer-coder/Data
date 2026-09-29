@@ -64,6 +64,24 @@ The minimum analysis lenses are resource/material, production/process, service, 
 
 The Sovereign Cross-Discipline Capacity whitepaper is therefore a **living-review derivative target, not a new technical master**. Routine automation/domain passes update owning canon, task/build queues, evidence rows and receipts. Do not create or present a replacement paper after each expansion pass. Final synthesis is permitted only after a review-readiness receipt confirms: required-domain coverage; attributable current sources; source/config/status truth; explicit contradiction disposition; evidence ceilings; unresolved external gates; legal/regulatory and professional boundaries; and no fabricated supplier capacity, partnership, certification, deployment state or sovereign-content percentage. Publication polish cannot close a technical, service, operational, institutional or empirical gap.
 
+
+### Automation execution contract for sovereign-capacity build-out
+
+The cross-discipline lane is execution-first. Each automation/domain pass performs one bounded capability transaction rather than drafting another paper:
+
+1. Select the highest-leverage unresolved capability by cross-project fan-out, build/operation criticality, disruption lead time, qualification burden, localisation viability, recoverability and evidence availability.
+2. Verify the current owning canon, stable IDs, source/configuration, evidence ceiling and contradiction state before changing anything.
+3. Decompose the full BOM/BOP/BOC capability chain and identify both build-stage and operating-stage pinch points.
+4. Assess dependency risk, localisation viability, whole-system TCO and current sovereignty maturity; record assumptions rather than fabricating precision.
+5. Choose the lowest-friction resilient intervention: DESIGN-OUT, STANDARDISE, SUBSTITUTE, STOCK, DUAL-SOURCE, RECOVER, ENABLE-SUPPLIER/OFFTAKE/SHARED-COMMONS, ALLIED-SOURCE or INTERNALISE.
+6. Execute every authorised non-external action in the existing owner; bind supplier/service/workforce/facility/test/maintenance/recovery routes where evidence exists.
+7. Verify Drive/Git/provider readback and write a durable receipt. Carry only the smallest unresolved external gate.
+8. Rotate coverage lenses until resource, production, services, operations, institution/governance, workforce, finance/insurance, legal/regulatory, logistics, digital/cyber, reliability, emergency/degraded/preservation/dormant/restart, recovery/circularity, knowledge/succession, ecology/interspecies and off-world/civilisation continuity all have explicit owner/evidence/gate state.
+
+Shared dependencies should be aggregated into reusable capability cells or industrial commons instead of being solved independently by each project. A common gas, vacuum, metrology, machining, electronics, qualification, energy, digital or recovery capability should therefore be linked to every consuming project and evaluated once at the appropriate authority layer.
+
+The final review whitepaper is triggered by a review-readiness receipt, not by conversational cadence. Its completeness test is evidence-graph coverage and parity: stable owners/IDs, attributable current sources, contradiction disposition, evidence ceilings, intervention state, implementation metrics/proofs, unresolved external gates, restricted/security/publication review and verified provider receipts. Build-out continues after the paper snapshot.
+
 ## Drive and Git continuity
 
 - **Google Drive:** keep the same living file ID and replace/edit the contents in place after the current edit is reconciled and QA-complete. Do not publish or link an intermediate edit as though it were complete.
