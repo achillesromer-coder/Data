@@ -75,8 +75,9 @@ The cross-discipline lane is execution-first. Each automation/domain pass perfor
 4. Assess dependency risk, localisation viability, whole-system TCO and current sovereignty maturity; record assumptions rather than fabricating precision.
 5. Choose the lowest-friction resilient intervention: DESIGN-OUT, STANDARDISE, SUBSTITUTE, STOCK, DUAL-SOURCE, RECOVER, ENABLE-SUPPLIER/OFFTAKE/SHARED-COMMONS, ALLIED-SOURCE or INTERNALISE.
 6. Execute every authorised non-external action in the existing owner; bind supplier/service/workforce/facility/test/maintenance/recovery routes where evidence exists.
-7. Verify Drive/Git/provider readback and write a durable receipt. Carry only the smallest unresolved external gate.
-8. Rotate coverage lenses until resource, production, services, operations, institution/governance, workforce, finance/insurance, legal/regulatory, logistics, digital/cyber, reliability, emergency/degraded/preservation/dormant/restart, recovery/circularity, knowledge/succession, ecology/interspecies and off-world/civilisation continuity all have explicit owner/evidence/gate state.
+7. Execute cross-surface changes as atomic, resumable transactions: **READ → RESOLVE → WRITE → READBACK → RECEIPT**. A timeout, reasoning interruption or tool failure before readback is **PARTIAL/RECOVER**, never COMPLETE. Preserve the last verified provider state and resume from the smallest unreceipted step; never replay a receipted mutation merely because a later step failed.
+8. Verify Drive/Git/provider readback and write a durable receipt. Carry only the smallest unresolved external gate.
+9. Rotate coverage lenses until resource, production, services, operations, institution/governance, workforce, finance/insurance, legal/regulatory, logistics, digital/cyber, reliability, emergency/degraded/preservation/dormant/restart, recovery/circularity, knowledge/succession, ecology/interspecies and off-world/civilisation continuity all have explicit owner/evidence/gate state.
 
 Shared dependencies should be aggregated into reusable capability cells or industrial commons instead of being solved independently by each project. A common gas, vacuum, metrology, machining, electronics, qualification, energy, digital or recovery capability should therefore be linked to every consuming project and evaluated once at the appropriate authority layer.
 
