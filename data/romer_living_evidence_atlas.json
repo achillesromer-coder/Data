@@ -76,12 +76,14 @@
       "object_id": "SYS-AUS-CAP",
       "name": "Australian Sovereign Capacity Resource Pack",
       "class": "SOURCE/DIGITAL",
-      "status": "ACTIVE / CROSS-DISCIPLINE CAPABILITY BUILD-OUT / WHITEPAPER DEFERRED",
+      "status": "ACTIVE / CROSS-DISCIPLINE CAPABILITY BUILD-OUT / AUTOMATION EXECUTION CONTRACT BOUND / WHITEPAPER DEFERRED",
       "value": "",
       "unit": "",
       "source": "60_Aus_Sovereign_Capacity",
       "ceiling": "Proposed evidence-governed operator/national/civilisation-node capability framework; no government approval, supplier/partner commitment, compliance, deployment, physical readiness or auditable sovereign-content percentage unless separately evidenced",
-      "gate": "TASK-104 / BUILD-054 domain-coverage + provenance + contradiction + evidence-ceiling review; institutional, supplier, regulatory and empirical evidence as applicable"
+      "gate": "TASK-104 / BUILD-054 / GST-049/051/059/062 domain-function coverage + provenance + contradiction + evidence-ceiling + implementation/metric + external-gate + security/publication review",
+      "method": "owner/source verify → BOM/BOP/BOC chain → cross-project fan-out → DRS/LVS/TCO + SC maturity → intervention disposition → execute in existing owner → provider readback/receipt → smallest external gate",
+      "coverage": "resource; production; service/O&M; operations; institution/governance; workforce; finance/insurance; legal/regulatory/IP/contracts; logistics; digital/cyber; metrology/QA/certification; reliability; emergency/degraded/preservation/dormant/restart; recovery/circularity; knowledge/succession; ecology/interspecies; import/geopolitical; scaling/demand; off-world/civilisation continuity"
     },
     {
       "id": "EV-011",
@@ -334,12 +336,12 @@
     "type1_sync": "SYNC-022",
     "type1_publish_continuity": "TASK-100 LIVING CONTINUITY BRIDGE ACTIVE",
     "git_doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c",
-    "sovereign_cross_discipline": "TASK-104 / BUILD-054 / GST-049/051/059 scope expansion — 2026-09-29"
+    "sovereign_cross_discipline": "TASK-104 / BUILD-054 / GST-049/051/059/062 execution contract expanded and Drive queue updated — 2026-09-29"
   },
   "receipt": {
     "id": "REC-LIVING-CORPUS-20260914-001",
     "state": "ACR3_ROW934_READBACK_COMPLETE / TYPE1_ART068_SYNC022_TASK100_READBACK_COMPLETE / GIT_DOCTRINE_COMMIT_BOUND / LIVING_INDEX_REFRESHED",
-    "note": "Stable Drive IDs and Git paths are edited forward. Archive/current/deterministic/publication authority boundaries are explicit. This index remains a publication/evidence bridge and does not replace technical owners. Sovereign cross-discipline capacity build-out is queued through TASK-104/BUILD-054; final whitepaper synthesis remains deferred until review-readiness proof."
+    "note": "Stable Drive IDs and Git paths are edited forward. Archive/current/deterministic/publication authority boundaries remain explicit. Sovereign cross-discipline capacity build-out now uses an execution-first automation contract through TASK-104/BUILD-054 and existing owners; the final whitepaper remains deferred until review-readiness proof and does not interrupt continuing build-out."
   },
   "full_atlas": "Römer Industries — Living Evidence Atlas.xlsx on Drive; this Git index is not a replacement technical authority."
 }
