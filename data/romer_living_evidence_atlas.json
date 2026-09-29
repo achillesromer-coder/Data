@@ -28,7 +28,7 @@
       "repository": "achillesromer-coder/Data",
       "json_path": "data/romer_living_evidence_atlas.json",
       "doctrine_path": "docs/living_corpus_operating_doctrine.md",
-      "doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c"
+      "doctrine_commit": "a1baf9e9b7315c3ebae6d4295fd25d6f72541197"
     },
     "type1_review": {
       "pr46_head": "c78b0746902906106bfe3707eb5d45513886797f",
@@ -82,7 +82,7 @@
       "source": "60_Aus_Sovereign_Capacity",
       "ceiling": "Proposed evidence-governed operator/national/civilisation-node capability framework; no government approval, supplier/partner commitment, compliance, deployment, physical readiness or auditable sovereign-content percentage unless separately evidenced",
       "gate": "TASK-104 / BUILD-054 / GST-049/051/059/062 domain-function coverage + provenance + contradiction + evidence-ceiling + implementation/metric + external-gate + security/publication review",
-      "method": "owner/source verify → BOM/BOP/BOC chain → cross-project fan-out → DRS/LVS/TCO + SC maturity → intervention disposition → execute in existing owner → provider readback/receipt → smallest external gate",
+      "method": "owner/source verify → BOM/BOP/BOC chain → cross-project fan-out → DRS/LVS/TCO + SC maturity → intervention disposition → READ → RESOLVE → WRITE → READBACK → RECEIPT → smallest external gate; interruption before readback = PARTIAL/RECOVER",
       "coverage": "resource; production; service/O&M; operations; institution/governance; workforce; finance/insurance; legal/regulatory/IP/contracts; logistics; digital/cyber; metrology/QA/certification; reliability; emergency/degraded/preservation/dormant/restart; recovery/circularity; knowledge/succession; ecology/interspecies; import/geopolitical; scaling/demand; off-world/civilisation continuity"
     },
     {
@@ -335,13 +335,13 @@
     "type1_artifact": "ART-068",
     "type1_sync": "SYNC-022",
     "type1_publish_continuity": "TASK-100 LIVING CONTINUITY BRIDGE ACTIVE",
-    "git_doctrine_commit": "989d534725f6873e5ad770841d4c1bd590ffbf9c",
-    "sovereign_cross_discipline": "TASK-104 / BUILD-054 / GST-049/051/059/062 execution contract expanded and Drive queue updated — 2026-09-29"
+    "git_doctrine_commit": "a1baf9e9b7315c3ebae6d4295fd25d6f72541197",
+    "sovereign_cross_discipline": "TASK-104 v1.1 / BUILD-054 v0.4 / 60_Aus_Sovereign_Capacity v0.8; atomic receipt contract read back on Drive; five-stage Neo→R1→R2→R3→Achilles chain restored — 2026-09-29"
   },
   "receipt": {
     "id": "REC-LIVING-CORPUS-20260914-001",
-    "state": "ACR3_ROW934_READBACK_COMPLETE / TYPE1_ART068_SYNC022_TASK100_READBACK_COMPLETE / GIT_DOCTRINE_COMMIT_BOUND / LIVING_INDEX_REFRESHED",
-    "note": "Stable Drive IDs and Git paths are edited forward. Archive/current/deterministic/publication authority boundaries remain explicit. Sovereign cross-discipline capacity build-out now uses an execution-first automation contract through TASK-104/BUILD-054 and existing owners; the final whitepaper remains deferred until review-readiness proof and does not interrupt continuing build-out."
+    "state": "ACR3_ROW1043_BOUND / TYPE1_TASK104_V1.1_BUILD054_V0.4_ASC_V0.8_READBACK_COMPLETE / FIVE_STAGE_AUTOMATION_CHAIN_ACTIVE / GIT_DOCTRINE_ATOMIC_RECEIPT_BOUND",
+    "note": "Stable Drive IDs and Git paths are edited forward. Sovereign cross-discipline build-out remains execution-first and whitepaper-deferred. Durable completion now requires READ→RESOLVE→WRITE→READBACK→RECEIPT; interruption before provider readback is PARTIAL/RECOVER, never complete."
   },
   "full_atlas": "Römer Industries — Living Evidence Atlas.xlsx on Drive; this Git index is not a replacement technical authority."
 }
