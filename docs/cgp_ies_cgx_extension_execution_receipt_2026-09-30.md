@@ -1,88 +1,123 @@
 # CGP-IES → Cognigrex/.CGX functional implementation receipt — 2026-09-30
 
-**Role of this file:** execution/provenance mirror only. It is **not** a new semantic master and must not supersede the living owners.
+**Role of this file:** execution/provenance mirror only. It is **not** a semantic master and does not supersede the living owners.
 
 ## Current owners and boundaries
 
-- Shared extension target: `Cognigrex.cgx:/extensions/cgp-ies` (parent-carrier hydration pending).
+- Shared extension target: `Cognigrex.cgx:/extensions/cgp-ies`.
 - Executable source / generator / validator / runtime-preflight owner: `achillesromer-coder/LightSpeed`.
+- Review branch: `cgp-ies-functional-handoff-20260930`.
+- Draft PR: LightSpeed #57 — `CGP-IES: source-driven custodial extension and guarded parent handoff`.
 - Finite lifecycle/equilibrium living owner: Google Drive `Type 1 Romer Cognigrex`, sheet `163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1`.
 - Existing lifecycle execution mirror: `Data/docs/equilibrium_lifecycle_execution_mirror.md`.
 - ACR3: historical transition/provenance only; this receipt does not reopen ACR3 or create a new handoff authority.
+- Parent Recovery authority remains exact S91/v1.61; it has **not** been overwritten or promoted by this work.
 
-## Implemented source and runtime path
-
-LightSpeed commits:
-
-- `63e54c975f659d8146d7ac260d3eb8143d5e8c11` — shared CGP-IES extension registry, policy pack, fixtures, resolver, child-generator binding, template validation.
-- `c5ce265b20eb38eb6ff4a075c0633112f6259aa6` — consequential-action custodial preflight executable.
-- `d13c098d963ff67714c97f1147402836ddc8434f` — workflow registry binding.
-- `37b18fc04bf4a23581f11df4c39eb55a11b35337` — work-mode binding.
-- `46a40690a8d81c4925e1a8e00cbccc4fea89a1df` — CGX core toolkit capability binding.
-- `f05abab606d87388a2059ee17cf657eca5847bda` — GitHub validation workflow.
-- `08efc390dd3fa8de3b2f3140d035b8fa24a8a3b0` — current-CGX chat-close handoff.
-- `686012036be45f3950dc11a6fcebfaa2b6a3c460` — proposed owner-confirmation values.
-
-GitHub Actions run `36680108939`: **SUCCESS**.
-
-## Functional architecture
-
-One parent source is referenced by child carriers rather than duplicated:
+## Source-driven extension architecture
 
 ```text
 Cognigrex.cgx:/extensions/cgp-ies
-    ├── Romer.cgx      -> extensions/bindings.json
-    ├── Eco.cgx        -> extensions/bindings.json
-    └── EMASSC.cgx     -> extensions/bindings.json
-          └── LS.cgx   -> extensions/bindings.json
+    ├── registry / toggle + escalation
+    ├── policy
+    ├── terminology
+    ├── domain-adapters
+    ├── decision-receipt schema
+    ├── fixtures
+    └── owner-confirmation register
+          │
+          ├── Romer.cgx  -> extensions/bindings.json (REFERENCE)
+          ├── Eco.cgx    -> extensions/bindings.json (REFERENCE)
+          └── EMASSC.cgx -> extensions/bindings.json (REFERENCE)
+                └── LS.cgx -> extensions/bindings.json (REFERENCE)
 ```
 
-The child binding carries the source pointer, default mode, allowed modes and fail behaviour; it does not copy the policy body or transfer authority.
+Children do not carry a duplicate policy body. Bindings contain source pointers, modes, fail behaviour and component references only.
 
-Extension modes:
+## Functional expansion completed on review branch
 
-```text
-OFF < OBSERVE < ADVISE < GATE < ENFORCE_SAFETY
-```
+Added:
 
-`ENFORCE_SAFETY` is restricted to declared hard safety, authority, replication, containment, stop and life/ecology-preservation controls. It is not general moral or semantic sovereignty.
+- `cgp_ies_terminology_map.json` — neutral inter-special terminology + epistemic states.
+- `cgp_ies_domain_adapter_registry.json` — Romer/Eco/EMASSC/LightSpeed applicability.
+- `cgp_ies_decision_receipt_schema.json` — affected parties, agency, representation, ceiling, dissent, inheritance and protective-perpetuity receipt.
+- `cgp_ies_parent_extension_manifest.json` — exact-S91 guarded parent install contract.
+- `scripts/build_cgp_ies_parent_candidate.py` — exact-S91 descendant builder that cannot overwrite Recovery and emits PRE_CANONICAL candidate only.
 
-## Consequential-action behaviour
+Refactored:
 
-The resolver evaluates domain, execution depth, cascade class and task tags. Current proposed defaults:
+- `resolve_cgx_extensions.py` now hydrates applicable checks and hard predicates from parent-owned source files.
+- `cgx_custodial_preflight.py` no longer duplicates the eight hard predicates in Python.
+- `build_cgx_domain_children.py` emits reference-only terminology/adapter/receipt/policy pointers and an inheritance rule preventing a nested child from weakening required GATE/ENFORCE_SAFETY.
+- validators now enforce the source components and exact S91 parent-seed boundary.
 
-- Römer: ADVISE
-- Eco-Grex: ADVISE
-- EMASSC: OBSERVE
-- LightSpeed: OBSERVE
+Fixtures expanded from 6 to **18**, including communications loss, civilization loss, successor restart, incoming/outgoing contact, planetary defence, inter-special communication, habitat translocation, artificial moral-patient uncertainty, pristine worlds, hazard closure and Raphael conceptual-boundary cases.
 
-Execute/build/publish work at cascade C2+ escalates to at least GATE. High-consequence custodial tags also escalate. Replication-control / hard-stop / containment / life-support / hazard-control execution may escalate to the narrow ENFORCE_SAFETY mode.
+## Toggle modes
 
-At GATE or above, missing source verification, missing authority confirmation or an unresolved hard admissibility predicate returns **HOLD**.
+`OFF < OBSERVE < ADVISE < GATE < ENFORCE_SAFETY`
 
-## Verified fixture coverage
+`ENFORCE_SAFETY` remains narrow: pre-declared replication/stop/containment/life-support/hazard controls only. It is not general moral sovereignty.
 
-Six current fixture scenarios cover:
+## Verification
 
-1. Römer C3 resource extraction / autonomous fleet → GATE.
-2. Eco field observation C1 → ADVISE.
-3. Eco ecosystem intervention / life impact C2 → GATE.
-4. EMASSC hypothesis simulation C1 → OBSERVE.
-5. LightSpeed replication-control C3 → ENFORCE_SAFETY.
-6. LightSpeed runtime read C0 → OBSERVE.
+- Branch CI run `36695178269`: **SUCCESS**.
+- Pull-request CI run `36695215117`: **SUCCESS**.
+- Verified steps include:
+  - CGX domain template validation;
+  - CGP-IES 18-scenario fixture validation;
+  - guarded parent-candidate builder compile;
+  - assurance fixtures;
+  - consequence-preflight chain;
+  - InterSol assurance route;
+  - low-consequence runtime preflight;
+  - unclassified C2 execution fail-closed behaviour.
 
-## Open gates
+## Owner / governance review boundary
 
-This receipt does **not** claim:
+`cgp_ies_owner_confirmation_values.json` now exposes **OC-001..OC-020**. Added discussion values include:
 
-- that the S91/v1.61 parent Recovery carrier has been mutated;
-- that `Cognigrex.cgx:/extensions/cgp-ies` is yet present in a promoted carrier;
-- that Romer/Eco/EMASSC/LS child carriers have been regenerated with the new binding;
-- that the policy is canonical rather than pre-canonical;
-- that any standards alignment constitutes certification.
+- protective perpetuity baseline and candidate protective functions;
+- contact default;
+- artificial moral-patient uncertainty;
+- founder/architect authority;
+- neutral inter-special terminology;
+- multidimensional agency / explicit representation;
+- successor restart;
+- adaptive translation;
+- child extension inheritance.
 
-The exact next gate is: owner review of `cgp_ies_owner_confirmation_values.json`, then a new parent descendant mutation + verifier + packed reopen/hash readback, followed by child regeneration and runtime binding verification.
+None is canonical merely because functional code exists.
+
+## Parent / child promotion sequence
+
+1. Review and explicitly confirm/amend OC-001..OC-020.
+2. Materialize exact S91 Recovery bytes:
+   - State `S91`, release `v1.61`
+   - SHA-256 `1138da5af4e1c66eb60120dd050e2037fc8d7799a9ccebb01ad48089b234785f`
+3. Run the guarded parent candidate builder to create a NEW descendant.
+4. Independently verify canonical verifier + DBR continuity + packed reopen/hash + extension content/source integrity.
+5. Explicitly decide whether the exact candidate becomes the next Recovery authority.
+6. Only after promotion, regenerate `Romer.cgx`, `Eco.cgx`, `EMASSC.cgx`, `LS.cgx`.
+7. Verify child `extensions/bindings.json` remains reference-only and cannot weaken required consequence escalation.
+8. Bind live Task_ID/Run_ID/DBR receipts and begin object-level parameterisation.
+
+## Current object-level implementation frontier
+
+The architecture phase is sufficiently mature that the next highest-value work is real-object binding, not more generic doctrine:
+
+- stable `Object_ID`;
+- affected-party / representation state;
+- evidence-state / source;
+- effective ceilings;
+- MVSL;
+- cascade class;
+- replication budget;
+- stop/passivation path;
+- restart authority;
+- inheritance package;
+- protective-vs-productive perpetuity state;
+- residual hazards / closure path.
 
 ## No-parallel-master rule
 
-This file is a receipt. It should be retired to ordinary provenance once the parent carrier and DBR record contain the durable promoted state.
+This file is a receipt. Once parent carrier + DBR + child carriers contain verified promoted state, this receipt becomes ordinary provenance. Lifecycle semantics remain in their owning canon; code remains executable implementation; ACR3 remains historical provenance.
