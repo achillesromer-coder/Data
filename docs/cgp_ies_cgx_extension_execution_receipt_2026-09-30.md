@@ -1,88 +1,142 @@
 # CGP-IES → Cognigrex/.CGX functional implementation receipt — 2026-09-30
 
-**Role of this file:** execution/provenance mirror only. It is **not** a new semantic master and must not supersede the living owners.
+**Role of this file:** execution/provenance mirror only. It is **not** a semantic master and does not supersede the living owners.
 
 ## Current owners and boundaries
 
-- Shared extension target: `Cognigrex.cgx:/extensions/cgp-ies` (parent-carrier hydration pending).
+- Shared extension target: `Cognigrex.cgx:/extensions/cgp-ies`.
 - Executable source / generator / validator / runtime-preflight owner: `achillesromer-coder/LightSpeed`.
+- LightSpeed source promotion: PR #57 merged to `main` as `f7678324db11131502172585cca1a147a5671ba9`.
 - Finite lifecycle/equilibrium living owner: Google Drive `Type 1 Romer Cognigrex`, sheet `163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1`.
-- Existing lifecycle execution mirror: `Data/docs/equilibrium_lifecycle_execution_mirror.md`.
-- ACR3: historical transition/provenance only; this receipt does not reopen ACR3 or create a new handoff authority.
+- Achilles control pointer: `AIC-0020` in `Achilles P.A — Canonical Workbook v1.0`.
+- ACR3 remains historical transition/provenance only.
+- Parent Recovery authority remains exact S91/v1.61; it has **not** been overwritten or promoted by source-code merge.
 
-## Implemented source and runtime path
+## Accepted baseline / visibility state
 
-LightSpeed commits:
+Owner review accepted **OC-001..OC-024** as extensible v0.1 baselines.
 
-- `63e54c975f659d8146d7ac260d3eb8143d5e8c11` — shared CGP-IES extension registry, policy pack, fixtures, resolver, child-generator binding, template validation.
-- `c5ce265b20eb38eb6ff4a075c0633112f6259aa6` — consequential-action custodial preflight executable.
-- `d13c098d963ff67714c97f1147402836ddc8434f` — workflow registry binding.
-- `37b18fc04bf4a23581f11df4c39eb55a11b35337` — work-mode binding.
-- `46a40690a8d81c4925e1a8e00cbccc4fea89a1df` — CGX core toolkit capability binding.
-- `f05abab606d87388a2059ee17cf657eca5847bda` — GitHub validation workflow.
-- `08efc390dd3fa8de3b2f3140d035b8fa24a8a3b0` — current-CGX chat-close handoff.
-- `686012036be45f3950dc11a6fcebfaa2b6a3c460` — proposed owner-confirmation values.
+Sensitive authority semantics are deliberately split by release class:
 
-GitHub Actions run `36680108939`: **SUCCESS**.
+- detailed pre-launch root-authority semantics: **Internal/Restricted** in the owning governance canon;
+- public Git/source: public-safe authority-phase reference + enforcement invariants only;
+- release class and evidence state are orthogonal;
+- Internal/Restricted/Secret material cannot be projected directly to public surfaces;
+- internal Raphael models, hypotheses, equations and unresolved tables remain internal unless separately authored, reviewed and approved as a Public projection.
 
-## Functional architecture
+## Internal canonical governance additions
 
-One parent source is referenced by child carriers rather than duplicated:
+The living `163_EQUILIBRIUM_LIFECYCLE_GOV_v0_1` canon now contains:
+
+- `EQG-066` — pre-launch/build-finalisation root governance authority;
+- `EQG-067` — build → launch → decentralised-governance authority-phase transition;
+- `EQG-068` — internal/public release boundary including Raphael;
+- `EQG-069` — risk-adverse veto, pause and rollback;
+- `EQG-070` — empirical decentralised-Cognigrex launch readiness;
+- `EQG-071` — bounded self-continued Frontier solve / empirical execution.
+
+Existing founder-absence, bias/pluralism, anti-capture and credential-succession records were reconciled with the new phase-specific rules rather than deleted.
+
+## Source-driven extension architecture
 
 ```text
 Cognigrex.cgx:/extensions/cgp-ies
-    ├── Romer.cgx      -> extensions/bindings.json
-    ├── Eco.cgx        -> extensions/bindings.json
-    └── EMASSC.cgx     -> extensions/bindings.json
-          └── LS.cgx   -> extensions/bindings.json
+    ├── registry / toggle + escalation
+    ├── policy
+    ├── terminology
+    ├── domain-adapters
+    ├── decision-receipt schema
+    ├── authority-phase public-safe reference
+    ├── release-visibility policy
+    ├── fixtures
+    └── accepted owner-baseline register
+          │
+          ├── Romer.cgx  -> extensions/bindings.json (REFERENCE)
+          ├── Eco.cgx    -> extensions/bindings.json (REFERENCE)
+          └── EMASSC.cgx -> extensions/bindings.json (REFERENCE)
+                └── LS.cgx -> extensions/bindings.json (REFERENCE)
 ```
 
-The child binding carries the source pointer, default mode, allowed modes and fail behaviour; it does not copy the policy body or transfer authority.
+Children do not carry duplicate policy bodies.
 
-Extension modes:
+## Functional controls promoted to LightSpeed main
 
-```text
-OFF < OBSERVE < ADVISE < GATE < ENFORCE_SAFETY
-```
+- source-driven hard predicates rather than duplicated policy constants;
+- Romer/Eco/EMASSC/LightSpeed domain adapters;
+- structured affected-party / agency / representation / lifecycle receipts;
+- pre-launch root-authority approval gate for consequential actions;
+- authority-phase contract verification;
+- public publication fail-closed release gate;
+- reference-only child inheritance;
+- protected internal/public Raphael boundary;
+- bounded self-continued Frontier solve contract;
+- exact-S91 guarded parent-descendant builder that cannot overwrite Recovery.
 
-`ENFORCE_SAFETY` is restricted to declared hard safety, authority, replication, containment, stop and life/ecology-preservation controls. It is not general moral or semantic sovereignty.
+Toggle modes remain:
 
-## Consequential-action behaviour
+`OFF < OBSERVE < ADVISE < GATE < ENFORCE_SAFETY`.
 
-The resolver evaluates domain, execution depth, cascade class and task tags. Current proposed defaults:
+## Regression / verification
 
-- Römer: ADVISE
-- Eco-Grex: ADVISE
-- EMASSC: OBSERVE
-- LightSpeed: OBSERVE
+Latest merged source head was tested before merge.
 
-Execute/build/publish work at cascade C2+ escalates to at least GATE. High-consequence custodial tags also escalate. Replication-control / hard-stop / containment / life-support / hazard-control execution may escalate to the narrow ENFORCE_SAFETY mode.
+- push CI `36703077354`: **SUCCESS**
+- pull-request CI `36703084579`: **SUCCESS**
+- LightSpeed merge commit: `f7678324db11131502172585cca1a147a5671ba9`
 
-At GATE or above, missing source verification, missing authority confirmation or an unresolved hard admissibility predicate returns **HOLD**.
+Verified paths include:
 
-## Verified fixture coverage
+- CGX template validation;
+- **22** CGP-IES scenarios;
+- authority/release source contract validation;
+- consequence/preflight chain;
+- approved Public projection path;
+- Restricted/internal Raphael → public projection fail-closed path;
+- assurance fixtures;
+- InterSol assurance route;
+- runtime low-consequence preflight;
+- unclassified C2 execution fail-closed;
+- guarded parent-candidate builder compile.
 
-Six current fixture scenarios cover:
+## Parent / child promotion sequence now authorised
 
-1. Römer C3 resource extraction / autonomous fleet → GATE.
-2. Eco field observation C1 → ADVISE.
-3. Eco ecosystem intervention / life impact C2 → GATE.
-4. EMASSC hypothesis simulation C1 → OBSERVE.
-5. LightSpeed replication-control C3 → ENFORCE_SAFETY.
-6. LightSpeed runtime read C0 → OBSERVE.
+1. Materialize exact S91 Recovery bytes:
+   - State `S91`, release `v1.61`
+   - SHA-256 `1138da5af4e1c66eb60120dd050e2037fc8d7799a9ccebb01ad48089b234785f`.
+2. Run the guarded parent-candidate builder to create a **new** PRE_CANONICAL descendant.
+3. Independently verify canonical verifier + DBR continuity + packed reopen/hash + extension-source integrity.
+4. Founder/root-governance review promotes or rejects that exact candidate.
+5. Only after parent promotion, regenerate `Romer.cgx`, `Eco.cgx`, `EMASSC.cgx`, `LS.cgx`.
+6. Verify every child remains REFERENCE-only and cannot weaken required GATE / ENFORCE_SAFETY escalation.
+7. Run launch-readiness proofs: identity, leases, revocation, recovery, multi-node/device evidence where claim-relevant, discovery/sync and degraded modes.
+8. Begin object-level finite-lifecycle parameterisation and empirical Frontier solve under Task_ID/Run_ID/DBR lineage.
 
-## Open gates
+## Current object-level implementation frontier
 
-This receipt does **not** claim:
+Priority pilots:
 
-- that the S91/v1.61 parent Recovery carrier has been mutated;
-- that `Cognigrex.cgx:/extensions/cgp-ies` is yet present in a promoted carrier;
-- that Romer/Eco/EMASSC/LS child carriers have been regenerated with the new binding;
-- that the policy is canonical rather than pre-canonical;
-- that any standards alignment constitutes certification.
+1. Mark III / Mark V lifecycle + material/repair/passivation/inheritance envelope.
+2. Asteroid resource unit extraction ceiling + robotic population + hibernation/cascade envelope.
+3. Eco-Grex intervention affected-party/ecology/welfare/representation envelope.
+4. InterSol life-support/abandonment/restart/succession envelope.
+5. Cognigrex self-model: compute, agent population, archive/degeneration, succession and shutdown.
 
-The exact next gate is: owner review of `cgp_ies_owner_confirmation_values.json`, then a new parent descendant mutation + verifier + packed reopen/hash readback, followed by child regeneration and runtime binding verification.
+Common required fields include:
+
+- stable `Object_ID`;
+- evidence and release state;
+- affected-party / representation state;
+- effective ceiling / cascade class;
+- MVSL;
+- replication budget;
+- mission/execution lease;
+- stop/passivation/restart;
+- material/hazard passport;
+- reuse/recomposition/recycle path;
+- residual hazards;
+- inheritance package;
+- last verification and next empirical evidence.
 
 ## No-parallel-master rule
 
-This file is a receipt. It should be retired to ordinary provenance once the parent carrier and DBR record contain the durable promoted state.
+This file is a receipt. Lifecycle semantics remain in their owning Type-1 canon; executable implementation remains in LightSpeed; the CGX parent/children become runtime carriers only after verified promotion; ACR3 remains historical provenance.
