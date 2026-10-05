@@ -57,17 +57,17 @@
   "formal_state_uncertainty_1s": {
     "jd_tdb": 2462240.406944444,
     "calendar": "A.D. 2029-Apr-13 21:46:00.0000",
-    "x_au": -0.0001282586786929452,
-    "y_au": 0.0002156361660556755,
-    "z_au": 4.01607346531791e-05,
-    "vx_au_per_day": 0.003657147361670555,
-    "vy_au_per_day": 0.001966666055799344,
-    "vz_au_per_day": 0.001065269453994555,
+    "x_au": -0.0001282586785250059,
+    "y_au": 0.0002156361660544426,
+    "z_au": 4.01607346624804e-05,
+    "vx_au_per_day": 0.003657147362236832,
+    "vy_au_per_day": 0.001966666055333567,
+    "vz_au_per_day": 0.001065269454009507,
     "x_sigma_au_1s": 4.30582183e-09,
     "y_sigma_au_1s": 6.33200439e-09,
     "z_sigma_au_1s": 2.44326471e-09,
     "vx_sigma_au_per_day_1s": 3.11580384e-08,
-    "vy_sigma_au_per_day_1s": 7.52222788e-09,
+    "vy_sigma_au_per_day_1s": 7.5222279e-09,
     "vz_sigma_au_per_day_1s": 1.00009351e-08
   },
   "sbdb_close_approach_crosscheck": {
@@ -94,13 +94,13 @@
     "sampled_range_delta_km_vs_sbdb": -0.020346111225208203,
     "interpretation": "SBDB direct close-approach product is authoritative for nominal TCA, 3-sigma distance/time bounds and 1-sigma B-plane ellipse. Horizons table-3 refinement is retained as an independent state/zero-RR cross-check."
   },
-  "table3_vs_2x_position_delta_au": 1.617258515434701e-11,
-  "table3_vs_2x_velocity_delta_au_per_day": 7.3757015442348e-11,
+  "table3_vs_2x_position_delta_au": 1.6051619033189452e-11,
+  "table3_vs_2x_velocity_delta_au_per_day": 7.308512847392766e-11,
   "source_hashes": {
-    "coarse_1h": "f5113934a98f7c0a563a15fa2150832022585584344507daf01ae9289628b09a",
-    "refine_5m": "3f80b26f7f09b582ad2c2dbf57f70b888187ff573bb857af2d9d47c1cda62912",
-    "refine_30s": "778b9a6762244cdc86b93263d491534e19fa9aca103c7f335985bb2b3d492af9",
-    "uncertainty_2x": "f8b33b736bdb5242fb2f879d3d01ee65c94d92603e9534b1733c717836c38c95"
+    "coarse_1h": "654fff3af5587e2655dd454bb9dfe397af97b1fbbc95cdce4723dd21b9fd282a",
+    "refine_5m": "9f5a080b1c48ff62e4a24183a0e655ba5f65ee696bafcc9f350abd3a86c96b2a",
+    "refine_30s": "8dea1c12da4bc738b530d44e639698acb20f3bfb709b1f98992e2c663437497f",
+    "uncertainty_2x": "48d8cb01a2ddafe1c68af478f9689b608286c2adfd7a9bbd713c32e4c86df02d"
   },
   "claim_boundary": "This is a nominal no-intervention source baseline and formal component-uncertainty cross-check. It is not an impact probability, B-plane/keyhole analysis, intervention recommendation, capture state, or safety certification."
 }
