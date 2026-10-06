@@ -1,0 +1,185 @@
+{
+  "artifact_id": "FHS-MATRIX-001",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "title": "Feed Heat Particle Substrate Dilution Matrix",
+  "authority": "candidate feed/process library and control scaffold; exact material batch/process qualification required",
+  "dilution": {
+    "definition": "lambda = melted_substrate_mass / (feed_mass + melted_substrate_mass)",
+    "local_composition": "x_local = (1-lambda)*x_feed + lambda*x_substrate",
+    "feed_backsolve": "x_feed_required = (x_target - lambda*x_substrate)/(1-lambda)",
+    "feasibility": "all required feed fractions >= 0 and synthesizable from qualified stock feeds",
+    "control_rule": "carry dilution as estimate/interval with uncertainty; never universal constant"
+  },
+  "particle_state_classes": {
+    "P-WIRE": [
+      "batch chemistry",
+      "diameter/tolerance",
+      "surface condition",
+      "feed speed",
+      "mass flow",
+      "storage/contamination"
+    ],
+    "P-POWDER": [
+      "traceability",
+      "sampling",
+      "PSD",
+      "chemistry",
+      "density",
+      "morphology",
+      "flowability",
+      "contamination",
+      "storage/reuse"
+    ],
+    "P-INK": [
+      "solids loading/composition",
+      "carrier/binder",
+      "rheology",
+      "particle/agglomerate state",
+      "cure/sinter",
+      "shrinkage",
+      "outgassing"
+    ],
+    "P-FILAMENT_PELLET": [
+      "lot",
+      "filler/fibre",
+      "moisture",
+      "dimensions/distribution",
+      "thermal history",
+      "emissions/outgassing"
+    ],
+    "P-INSERT": [
+      "identity/revision",
+      "dimensions",
+      "surface prep",
+      "future thermal budget",
+      "environment limits",
+      "service/test path"
+    ]
+  },
+  "heat_classes": {
+    "HT-0": "cold/no-fusion placement and calibration",
+    "HT-L": "low-temperature functional deposition/cure; exact material budget",
+    "HT-P": "polymer/composite process; exact formulation/window",
+    "HT-C": "ceramic/glass process; exact cure/sinter route",
+    "HT-M": "metal fusion; substrate dilution/HAZ/melt-pool state critical",
+    "HT-POST": "separate post-process such as stress relief/heat treatment/HIP/sinter"
+  },
+  "substrate_classes": {
+    "S0": "same family",
+    "S1": "related/evidence-backed pair",
+    "S2": "research FGM/dissimilar fusion pair",
+    "S3": "barrier/separate-process transition",
+    "S4": "insert/no intentional fusion mixing",
+    "SX": "hold/incompatible/infeasible/unsupported"
+  },
+  "candidate_library": [
+    {
+      "id": "LIB-00",
+      "name": "Benign control feeds",
+      "role": "cold metering/spatial placement",
+      "form": "bead/granule/paste selected for feeder",
+      "heat": "HT-0",
+      "state": "TEST CONTROL",
+      "authority": "exact safely handled material chosen per apparatus"
+    },
+    {
+      "id": "LIB-10",
+      "name": "UNS S31603 / 316L reference structural family",
+      "role": "single-material AM/process-control benchmark",
+      "form": "qualified wire/powder",
+      "heat": "HT-M",
+      "state": "REFERENCE FAMILY / NOT MARK III SELECTION",
+      "reference_composition_wt_pct": {
+        "Cr": "16-18",
+        "Ni": "10-14",
+        "Mo": "2-3",
+        "C": "<=0.03",
+        "Fe": "balance; other elements controlled"
+      },
+      "batch_rule": "exact CoA/assay controls"
+    },
+    {
+      "id": "LIB-11",
+      "name": "UNS N06625 / Alloy 625 reference Ni family",
+      "role": "single-material comparator then dissimilar-transition research",
+      "form": "qualified wire/powder",
+      "heat": "HT-M",
+      "state": "REFERENCE FAMILY / NOT MARK III SELECTION",
+      "reference_family": "Ni-Cr-Mo-Nb; exact CoA/assay controls"
+    },
+    {
+      "id": "LIB-12",
+      "name": "316L ↔ 625 challenge pair",
+      "role": "validate dilution/phase-aware FGM controller",
+      "form": "dual wire/powder or controlled coupons",
+      "heat": "HT-M",
+      "substrate_class": "S2",
+      "state": "RESEARCH CHALLENGE / NOT PRODUCTION RECOMMENDATION",
+      "risk": "intermediate graded compositions can form detrimental phases; direct-vs-gradient must be tested"
+    },
+    {
+      "id": "LIB-20",
+      "name": "Conductive functional family",
+      "role": "bus/trace/antenna/heater/sensor",
+      "form": "Cu/Ag-class ink or qualified specialist metal/plating route",
+      "heat": "HT-L or qualified specialist route",
+      "substrate_class": "S3/S4 default",
+      "state": "FUNCTIONAL CANDIDATE"
+    },
+    {
+      "id": "LIB-21",
+      "name": "Dielectric / ceramic family",
+      "role": "electrical/thermal isolation or functional ceramic substrate",
+      "form": "ceramic/glass/silica-class ink/slurry/insert",
+      "heat": "HT-C/HT-L exact process",
+      "substrate_class": "S3/S4 default",
+      "state": "FUNCTIONAL CANDIDATE"
+    },
+    {
+      "id": "LIB-22",
+      "name": "Resistive / sensor family",
+      "role": "heater/RTD/strain/capacitive/optical",
+      "form": "functional ink/film/fibre/insert",
+      "heat": "HT-L",
+      "substrate_class": "S3/S4",
+      "state": "FUNCTIONAL CANDIDATE"
+    },
+    {
+      "id": "LIB-30",
+      "name": "High-temperature polymer/composite family",
+      "role": "service/insulation/compliance/substrate",
+      "form": "PEEK/PEKK/PAEK/PEI-class exact formulation",
+      "heat": "HT-P",
+      "substrate_class": "S3/S4",
+      "state": "CANDIDATE / OUTGASSING+THERMAL GATED"
+    },
+    {
+      "id": "LIB-31",
+      "name": "Smart-material family",
+      "role": "intrinsic adaptive/4D-M region",
+      "form": "SMP/SMA/other exact validated system",
+      "heat": "material specific",
+      "substrate_class": "S3/S4 default",
+      "state": "R&D CANDIDATE"
+    },
+    {
+      "id": "LIB-40",
+      "name": "Seal/barrier/getter family",
+      "role": "hermetic/environmental closure and vacuum maintenance",
+      "form": "coating/weld/braze/insert",
+      "heat": "process specific",
+      "substrate_class": "S3/S4",
+      "state": "CLOSURE FUNCTION / SEPARATE QUALIFICATION"
+    }
+  ],
+  "source_anchors": [
+    "ISO/ASTM52907 metallic powder characterization",
+    "ASTM F3509-25 comparative powder characterization quality guidance",
+    "ASTM F3187-16(2023) DED guide",
+    "ASTM F3184-16(2023) S31603 PBF material specification",
+    "ATI 316L chemistry reference",
+    "2026 review of 316L/Alloy625 WAAM FGM",
+    "NASA ASTM E595 outgassing database and recent high-performance thermoplastic AM work"
+  ]
+}
