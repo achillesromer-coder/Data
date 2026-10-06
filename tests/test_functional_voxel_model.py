@@ -9,6 +9,8 @@ from tools.functional_voxel_model import (
     insert_thermal_budget_ok,
     line_energy_j_per_mm,
     slice_composition,
+    diluted_composition,
+    required_feed_composition_for_target,
 )
 
 
@@ -38,6 +40,31 @@ class FunctionalVoxelModelTests(unittest.TestCase):
         out = slice_composition([r1, r2], {"s": 3, "c": 1})
         self.assertTrue(math.isclose(out["Fe"], 0.75))
         self.assertTrue(math.isclose(out["Cu"], 0.25))
+
+    def test_substrate_dilution_composition(self):
+        out = diluted_composition({"Ni": 1.0}, {"Fe": 1.0}, 0.2)
+        self.assertTrue(math.isclose(out["Ni"], 0.8))
+        self.assertTrue(math.isclose(out["Fe"], 0.2))
+
+    def test_backsolve_feed_for_target_under_dilution(self):
+        feed = required_feed_composition_for_target(
+            {"Ni": 0.7, "Fe": 0.3},
+            {"Fe": 1.0},
+            0.2,
+        )
+        self.assertTrue(math.isclose(feed["Ni"], 0.875))
+        self.assertTrue(math.isclose(feed["Fe"], 0.125))
+        local = diluted_composition(feed, {"Fe": 1.0}, 0.2)
+        self.assertTrue(math.isclose(local["Ni"], 0.7))
+        self.assertTrue(math.isclose(local["Fe"], 0.3))
+
+    def test_infeasible_target_under_dilution_is_rejected(self):
+        with self.assertRaises(ValueError):
+            required_feed_composition_for_target(
+                {"Ni": 0.9, "Fe": 0.1},
+                {"Fe": 1.0},
+                0.2,
+            )
 
 
 if __name__ == "__main__":
