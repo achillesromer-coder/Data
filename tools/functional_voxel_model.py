@@ -115,3 +115,56 @@ def slice_composition(regions: Iterable[FunctionalRegion], volumes_mm3: Mapping[
     if total_v <= 0:
         raise ValueError("slice volume must be positive")
     return {k: val / total_v for k, val in sorted(weighted.items())}
+
+
+def diluted_composition(
+    feed_composition: Mapping[str, float],
+    substrate_composition: Mapping[str, float],
+    substrate_fraction: float,
+) -> Dict[str, float]:
+    """Local mass composition after mixing feed with a melted substrate fraction.
+
+    substrate_fraction is lambda = m_substrate_melted / (m_feed + m_substrate_melted).
+    This is composition bookkeeping only; lambda must come from a process model or
+    measurement and is not a universal DED/weld constant.
+    """
+    lam = float(substrate_fraction)
+    if not 0.0 <= lam < 1.0:
+        raise ValueError("substrate_fraction must be in [0, 1)")
+    feed = normalize(feed_composition)
+    sub = normalize(substrate_composition)
+    keys = set(feed) | set(sub)
+    return {
+        k: (1.0 - lam) * feed.get(k, 0.0) + lam * sub.get(k, 0.0)
+        for k in sorted(keys)
+    }
+
+
+def required_feed_composition_for_target(
+    target_composition: Mapping[str, float],
+    substrate_composition: Mapping[str, float],
+    substrate_fraction: float,
+    *,
+    tol: float = 1e-12,
+) -> Dict[str, float]:
+    """Back-solve feed composition required to reach a target after dilution.
+
+    Raises ValueError if the target is infeasible at the specified substrate
+    dilution because one or more required feed fractions would be negative.
+    """
+    lam = float(substrate_fraction)
+    if not 0.0 <= lam < 1.0:
+        raise ValueError("substrate_fraction must be in [0, 1)")
+    target = normalize(target_composition)
+    sub = normalize(substrate_composition)
+    keys = set(target) | set(sub)
+    raw: Dict[str, float] = {}
+    for k in sorted(keys):
+        value = (target.get(k, 0.0) - lam * sub.get(k, 0.0)) / (1.0 - lam)
+        if value < -tol:
+            raise ValueError(
+                f"target composition is infeasible at substrate_fraction={lam}: "
+                f"required feed fraction for {k} is negative"
+            )
+        raw[k] = 0.0 if abs(value) <= tol else value
+    return normalize(raw)
