@@ -1,0 +1,101 @@
+{
+  "artifact_id": "PMX-CELL-001",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "title": "Adaptive 3–5 Agent Post-Mix Manufacturing Cell",
+  "state": "architecture scaffold",
+  "central_node": {
+    "role": "common datum + rotary/tilt positioner + utilities + build identity",
+    "recommended_axes": "1-2 positioner axes",
+    "note": "may later align with a serviceable vehicle spine, but is initially manufacturing datum only"
+  },
+  "motion_rule": "6-axis robots recommended; 4 DOF is minimum for constrained tasks but insufficient for arbitrary nozzle orientation around closed complex geometry",
+  "agents": [
+    {
+      "id": "R1",
+      "role": "structural deposition",
+      "tools": [
+        "WAAM",
+        "DED",
+        "large-scale extrusion"
+      ],
+      "thermal_class": "HIGH"
+    },
+    {
+      "id": "R2",
+      "role": "graded/multi-feed deposition",
+      "tools": [
+        "multiplexed powder/wire/extrusion"
+      ],
+      "thermal_class": "HIGH/MEDIUM"
+    },
+    {
+      "id": "R3",
+      "role": "electronics/dielectric/ceramic direct write",
+      "tools": [
+        "DIW",
+        "aerosol/ink",
+        "coating"
+      ],
+      "thermal_class": "LOW/MEDIUM"
+    },
+    {
+      "id": "R4",
+      "role": "insert/subtractive/closure",
+      "tools": [
+        "pick-place",
+        "micro-mill",
+        "drill",
+        "port/closure prep"
+      ],
+      "thermal_class": "MIXED"
+    },
+    {
+      "id": "R5",
+      "role": "inspection/repair/coating",
+      "tools": [
+        "vision",
+        "profilometry",
+        "thermography",
+        "NDE",
+        "local repair"
+      ],
+      "thermal_class": "LOW/MIXED"
+    }
+  ],
+  "environment_layers": [
+    "macro safety/fume/thermal enclosure",
+    "local inert process shroud",
+    "local preheat/cooling zone",
+    "separate vacuum/low-pressure process only where needed",
+    "experimental field-bias zone only under instrumented R&D protocol"
+  ],
+  "feedback": [
+    "robot pose",
+    "force torque",
+    "feed rate",
+    "power/current",
+    "melt-pool or cure-zone state",
+    "bead geometry",
+    "layer surface profile",
+    "thermal field",
+    "electrical continuity",
+    "atmosphere",
+    "cavity pressure/leak state",
+    "dimensional scan",
+    "NDE",
+    "chemistry/material tests"
+  ],
+  "control_hierarchy": [
+    "Cognigrex build intent",
+    "functional voxel compiler",
+    "recipe solver",
+    "thermal/process scheduler",
+    "multi-robot task allocator",
+    "collision/motion planner",
+    "deterministic local controller",
+    "sensor/state estimator",
+    "bounded correction/pause/repair"
+  ],
+  "safety_rule": "LLM/semantic orchestration never directly owns real-time robot, laser/arc, high-current, pressure or thermal safety interlocks"
+}
