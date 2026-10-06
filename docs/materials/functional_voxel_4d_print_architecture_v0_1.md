@@ -20,9 +20,9 @@ The requested manufacturing system is best represented as a hierarchy:
 
 A voxel/region is not defined only by composition. Use:
 
-[
-V(x,y,z,t)={\mathbf c,\ PSD,\phi,\rho,T,H,\sigma,\epsilon,k,\mu,F,E,\text{interfaces},\text{embedded IDs},\text{evidence}}
-]
+\[
+V(x,y,z,t)=\{\mathbf c,\ PSD,\phi,\rho,T,H,\sigma,\epsilon,k,\mu,F,E,\text{interfaces},\text{embedded IDs},\text{evidence}\}
+\]
 
 where:
 - \(\mathbf c\) = composition vector,
@@ -34,15 +34,15 @@ where:
 
 The process command is:
 
-[
-u={\dot m_1...\dot m_n,P,v,T_{pre},T_{interpass},g,p,\mathbf q,\text{cooling},\text{field},\text{dwell}}
-]
+\[
+u=\{\dot m_1...\dot m_n,P,v,T_{pre},T_{interpass},g,p,\mathbf q,\text{cooling},\text{field},\text{dwell}\}
+\]
 
 and local material state becomes:
 
-[
-V_{k+1}=mathcal F(V_k,u_k,\text{environment},\text{substrate},\text{history})
-]
+\[
+V_{k+1}=\mathcal F(V_k,u_k,\text{environment},\text{substrate},\text{history})
+\]
 
 The post-mix equation remains the pre-process composition controller. It does not replace \(\mathcal F\).
 
@@ -100,9 +100,9 @@ For powder/ink/wire feeds, the design space must retain at least:
 
 The experiment is therefore a response surface:
 
-[
+\[
 Y = f(\mathbf c,PSD,P/v,T_{pre},T_{interpass},g,p,\text{geometry},\text{history})
-]
+\]
 
 where \(Y\) includes chemistry, porosity, adhesion, conductivity, permeability, magnetic properties, dimensional error and mechanical properties as relevant.
 
@@ -110,9 +110,9 @@ where \(Y\) includes chemistry, porosity, adhesion, conductivity, permeability, 
 
 A nominal layer \(L_k\) is a collection of deposited volumes, not a mathematically flat sheet:
 
-[
-L_k = igcup_j B_{kj}
-]
+\[
+L_k = \bigcup_j B_{kj}
+\]
 
 Each bead/region \(B_{kj}\) has finite width, height, local composition, thermal gradient, interfaces and optional embedded objects.
 
@@ -140,9 +140,9 @@ This is the correct abstraction for a “2D print” whose internal material sta
 
 Stack or non-planarly deposit functional slices while carrying state forward:
 
-[
-S_{k+1}=mathcal G(S_k,L_k,\text{thermal history},\text{residual stress},\text{inspection})
-]
+\[
+S_{k+1}=\mathcal G(S_k,L_k,\text{thermal history},\text{residual stress},\text{inspection})
+\]
 
 ### 5.2 4D-M — intrinsic material response
 
@@ -385,27 +385,27 @@ NIST has demonstrated feedback control using melt-pool measurement and layer-thi
 
 ## 14. Control hierarchy
 
-[
-	ext{CGX build intent}
-ightarrow
-	ext{functional voxel compiler}
-ightarrow
-	ext{recipe solver}
-ightarrow
-	ext{thermal/process scheduler}
-ightarrow
-	ext{multi-robot task allocator}
-ightarrow
-	ext{collision/motion planner}
-ightarrow
-	ext{deterministic local controllers}
-ightarrow
-	ext{sensors}
-ightarrow
-	ext{state estimator}
-ightarrow
-	ext{bounded correction / pause / repair}
-]
+\[
+\text{CGX build intent}
+\rightarrow
+\text{functional voxel compiler}
+\rightarrow
+\text{recipe solver}
+\rightarrow
+\text{thermal/process scheduler}
+\rightarrow
+\text{multi-robot task allocator}
+\rightarrow
+\text{collision/motion planner}
+\rightarrow
+\text{deterministic local controllers}
+\rightarrow
+\text{sensors}
+\rightarrow
+\text{state estimator}
+\rightarrow
+\text{bounded correction / pause / repair}
+\]
 
 Each correction must preserve:
 - hard safety envelope;
