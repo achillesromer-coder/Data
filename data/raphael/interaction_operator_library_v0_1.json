@@ -1,0 +1,479 @@
+{
+  "library_id": "RAP-INT-001",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "title": "Raphael / Standard Multiphysics Interaction Operator Library",
+  "evidence_policy": {
+    "STANDARD": "established equation family; exact constitutive data/boundary conditions still required",
+    "HYBRID_STANDARD": "coupled standard operators; coupling/convergence validation required",
+    "EMPIRICAL_SURROGATE": "bounded model trained/verified against evidence",
+    "RAPHAEL_HYPOTHESIS": "project-defined comparison model only; no physical-control authority",
+    "LEGACY_PLACEHOLDER": "historical visualization/screening only"
+  },
+  "interaction_expansion": {
+    "expression": "F = sum_i F_i + sum_i<j dF_ij + sum_i<j<k dF_ijk + ...",
+    "purpose": "individual -> pair -> triplet -> higher-order non-additive representation",
+    "rule": "higher-order term is required when pairwise additivity does not reproduce the accepted reference within tolerance"
+  },
+  "probability_landscape": {
+    "equilibrium_weight": "P(xi|E) proportional to exp(-G(xi;E)/(k_B*T))",
+    "electrochemical_potential": "mu_tilde_i = mu0_i + R*T*ln(a_i) + z_i*F*phi + optional stress/surface terms",
+    "caution": "equilibrium Boltzmann form is not applied blindly to driven non-equilibrium macroscale processes"
+  },
+  "standard_operators": [
+    {
+      "id": "OP-001",
+      "name": "mass_continuity",
+      "domains": [
+        "fluid",
+        "multiphase"
+      ],
+      "equation": "d(rho)/dt + div(rho*u) = S_m",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-002",
+      "name": "momentum_navier_stokes",
+      "domains": [
+        "fluid"
+      ],
+      "equation": "rho*(du/dt+u.grad(u)) = -grad(p)+div(tau)+rho*g+f_body",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-003",
+      "name": "species_transport",
+      "domains": [
+        "fluid",
+        "chemistry"
+      ],
+      "equation": "dc_i/dt+div(c_i*u)=-div(J_i)+R_i",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-004",
+      "name": "nernst_planck_flux",
+      "domains": [
+        "electrochemistry",
+        "charged_species"
+      ],
+      "equation": "J_i=-D_i grad(c_i)-z_i*u_i*F*c_i grad(phi)+c_i*u",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-005",
+      "name": "energy_transport",
+      "domains": [
+        "thermal",
+        "fluid",
+        "reaction"
+      ],
+      "equation": "rho*cp*DT/Dt=div(k grad(T))+sum(Q)",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-006",
+      "name": "electrostatic_poisson",
+      "domains": [
+        "electrostatics"
+      ],
+      "equation": "-div(epsilon grad(phi))=rho_e",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-007",
+      "name": "maxwell",
+      "domains": [
+        "electromagnetism"
+      ],
+      "equation": "div(D)=rho_f; div(B)=0; curl(E)=-dB/dt; curl(H)=J_f+dD/dt",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-008",
+      "name": "lorentz_force",
+      "domains": [
+        "electromagnetism",
+        "particle",
+        "fluid"
+      ],
+      "equation": "f=q(E+v cross B) or rho_e E + J cross B",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-009",
+      "name": "structural_balance",
+      "domains": [
+        "solid_mechanics"
+      ],
+      "equation": "div(sigma)+b=rho*u_ddot",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-010",
+      "name": "reaction_network",
+      "domains": [
+        "chemistry"
+      ],
+      "equation": "dc/dt=N*r(c,T,p,phi,...)",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-011",
+      "name": "phase_field",
+      "domains": [
+        "materials",
+        "solidification"
+      ],
+      "equation": "dc/dt=div(M grad(deltaF/delta c)) for conserved order parameter",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-012",
+      "name": "capillary_surface",
+      "domains": [
+        "surface",
+        "multiphase"
+      ],
+      "equation": "delta_p=gamma*kappa",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-013",
+      "name": "beer_lambert",
+      "domains": [
+        "optics"
+      ],
+      "equation": "I=I0 exp(-alpha x)",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-014",
+      "name": "semiconductor_emission_stack",
+      "domains": [
+        "semiconductor",
+        "optics"
+      ],
+      "equation": "Poisson + carrier drift-diffusion + recombination + band model",
+      "state": "STANDARD"
+    },
+    {
+      "id": "OP-015",
+      "name": "gas_microdischarge_stack",
+      "domains": [
+        "plasma",
+        "gas",
+        "electrostatics",
+        "optics"
+      ],
+      "equation": "Poisson + charged species + gas-specific ionisation/excitation + wall charge",
+      "state": "STANDARD_MODEL_FAMILY"
+    },
+    {
+      "id": "OP-016",
+      "name": "electrochemical_cell_stack",
+      "domains": [
+        "electrochemistry",
+        "thermal"
+      ],
+      "equation": "charge/species transport + interface kinetics + thermal",
+      "state": "STANDARD_MODEL_FAMILY"
+    },
+    {
+      "id": "OP-017",
+      "name": "capacitor_limit",
+      "domains": [
+        "electrostatics"
+      ],
+      "equation": "C=epsilon*A/d for parallel plate idealization",
+      "state": "STANDARD"
+    }
+  ],
+  "raphael_operators": [
+    {
+      "id": "RAP-PHI-001",
+      "name": "Raphael_dynamic_system_function",
+      "equation": "Phi_R=int_V[f+g_QG+Psi_4D+Psi_5D+Phi_adaptive]dV",
+      "state": "RAPHAEL_HYPOTHESIS",
+      "source": "Raphael canonical spreadsheet / internal source"
+    },
+    {
+      "id": "RAP-GQG-001",
+      "name": "Raphael_gQG",
+      "equation": "g_QG=(hbar/m)(laplacian(Psi)-R*Psi/6)",
+      "state": "RAPHAEL_HYPOTHESIS",
+      "source": "Raphael canonical spreadsheet / internal source"
+    },
+    {
+      "id": "RAP-LEGACY-001",
+      "name": "Legacy_strong_weak_placeholder",
+      "equation": "historical simplified p/n/e force expressions",
+      "state": "LEGACY_PLACEHOLDER",
+      "source": "LightSpeed raphael_equations.py"
+    },
+    {
+      "id": "RAP-LEGACY-002",
+      "name": "Legacy_phenomenological_curvature_visualisation",
+      "equation": "historical exponential/sinusoidal visualization fields",
+      "state": "LEGACY_PLACEHOLDER",
+      "source": "LightSpeed raphael_equations.py"
+    }
+  ],
+  "common_pair_kernels": [
+    {
+      "pair": [
+        "material",
+        "material"
+      ],
+      "operators": [
+        "OP-005",
+        "OP-009",
+        "OP-011",
+        "OP-012"
+      ],
+      "questions": [
+        "diffusion",
+        "phase compatibility",
+        "CTE",
+        "adhesion",
+        "wetting"
+      ]
+    },
+    {
+      "pair": [
+        "solute",
+        "solvent"
+      ],
+      "operators": [
+        "OP-003",
+        "OP-010"
+      ],
+      "questions": [
+        "activity",
+        "solubility",
+        "diffusion",
+        "reaction"
+      ]
+    },
+    {
+      "pair": [
+        "charge",
+        "electric_field"
+      ],
+      "operators": [
+        "OP-006",
+        "OP-008"
+      ],
+      "questions": [
+        "force",
+        "potential",
+        "charge density"
+      ]
+    },
+    {
+      "pair": [
+        "current",
+        "magnetic_field"
+      ],
+      "operators": [
+        "OP-007",
+        "OP-008"
+      ],
+      "questions": [
+        "JxB",
+        "induction",
+        "loss"
+      ]
+    },
+    {
+      "pair": [
+        "particle",
+        "fluid"
+      ],
+      "operators": [
+        "OP-001",
+        "OP-002",
+        "OP-003"
+      ],
+      "questions": [
+        "drag",
+        "settling",
+        "transport"
+      ]
+    },
+    {
+      "pair": [
+        "surface",
+        "liquid"
+      ],
+      "operators": [
+        "OP-002",
+        "OP-012"
+      ],
+      "questions": [
+        "wetting",
+        "capillary pressure",
+        "Marangoni if present"
+      ]
+    },
+    {
+      "pair": [
+        "gas",
+        "electrode"
+      ],
+      "operators": [
+        "OP-006",
+        "OP-015"
+      ],
+      "questions": [
+        "breakdown/discharge",
+        "wall charge",
+        "heating"
+      ]
+    },
+    {
+      "pair": [
+        "photon",
+        "semiconductor"
+      ],
+      "operators": [
+        "OP-013",
+        "OP-014"
+      ],
+      "questions": [
+        "absorption",
+        "recombination",
+        "emission"
+      ]
+    },
+    {
+      "pair": [
+        "fluid",
+        "structure"
+      ],
+      "operators": [
+        "OP-002",
+        "OP-009"
+      ],
+      "questions": [
+        "pressure/shear",
+        "deformation",
+        "two-way coupling"
+      ]
+    },
+    {
+      "pair": [
+        "thermal_field",
+        "material"
+      ],
+      "operators": [
+        "OP-005",
+        "OP-009",
+        "OP-011"
+      ],
+      "questions": [
+        "phase",
+        "stress",
+        "property change"
+      ]
+    }
+  ],
+  "common_hyperedges": [
+    {
+      "participants": [
+        "electrode",
+        "electrolyte",
+        "ion"
+      ],
+      "operators": [
+        "OP-004",
+        "OP-006",
+        "OP-010",
+        "OP-016"
+      ],
+      "name": "electrochemical_transport"
+    },
+    {
+      "participants": [
+        "alloy_A",
+        "alloy_B",
+        "thermal_field"
+      ],
+      "operators": [
+        "OP-005",
+        "OP-011"
+      ],
+      "name": "graded_solidification"
+    },
+    {
+      "participants": [
+        "gas",
+        "electrode",
+        "dielectric"
+      ],
+      "operators": [
+        "OP-006",
+        "OP-015"
+      ],
+      "name": "dielectric_barrier_microdischarge"
+    },
+    {
+      "participants": [
+        "particle",
+        "fluid",
+        "EM_field"
+      ],
+      "operators": [
+        "OP-002",
+        "OP-003",
+        "OP-007",
+        "OP-008"
+      ],
+      "name": "EM_particle_transport"
+    },
+    {
+      "participants": [
+        "fluid",
+        "species",
+        "reaction"
+      ],
+      "operators": [
+        "OP-001",
+        "OP-002",
+        "OP-003",
+        "OP-010"
+      ],
+      "name": "reactive_transport"
+    },
+    {
+      "participants": [
+        "melt",
+        "surface",
+        "thermal_field",
+        "species"
+      ],
+      "operators": [
+        "OP-002",
+        "OP-003",
+        "OP-005",
+        "OP-011",
+        "OP-012"
+      ],
+      "name": "AM_melt_pool_multiphysics"
+    },
+    {
+      "participants": [
+        "semiconductor",
+        "dopant",
+        "electric_field",
+        "thermal_field"
+      ],
+      "operators": [
+        "OP-005",
+        "OP-006",
+        "OP-014"
+      ],
+      "name": "semiconductor_device"
+    }
+  ]
+}
