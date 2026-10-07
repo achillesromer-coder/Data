@@ -92,7 +92,7 @@
   },
   "report_receipt": {
     "path": "data/jpl/mdesign/latest/report.json",
-    "sha256": "1a9128b770efeef4987ac7841ef969fa9cdde1a8e655e08741a3883e93948d94"
+    "sha256": "2ee3b5b7425176d3fba5605bd58a39e4eeb920aa08fc795756545d01075a9bcc"
   },
   "schema": "romer.jpl.mdesign.priority-mode-q.v0.1"
 }

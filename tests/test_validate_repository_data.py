@@ -31,6 +31,16 @@ class RepositoryDataValidationTests(unittest.TestCase):
 
             self.assertEqual(validator.declared_sha256(path), expected)
 
+    def test_mdesign_report_receipt_matches_declared_json_hash(self) -> None:
+        manifest_path = REPOSITORY_ROOT / "data" / "jpl" / "mdesign" / "latest" / "manifest.json"
+        report_path = REPOSITORY_ROOT / "data" / "jpl" / "mdesign" / "latest" / "report.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(
+            manifest["report_receipt"]["sha256"],
+            validator.declared_sha256(report_path),
+        )
+
     def test_current_repository_contract_passes(self) -> None:
         stats, errors = validator.validate_repository()
 
