@@ -76,7 +76,7 @@ def request_mode_q(name: str) -> tuple[dict[str, Any], str, str]:
             if payload.get("error") or payload.get("message") and not payload.get("selectedMissions"):
                 raise ValueError(str(payload.get("error") or payload.get("message")))
             text = canonical_json(payload)
-            return payload, text, hashlib.sha256(text.encode("utf-8")).hexdigest()
+            return payload, text, declared_json_sha256(payload)
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError, json.JSONDecodeError) as exc:
             last_error = exc
             if attempt < MAX_RETRIES:
@@ -215,7 +215,7 @@ def main() -> int:
 
     report.sort(key=lambda rec: [name for name, _ in OBJECTS].index(rec["requested_name"]))
     report_text = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=False) + "\n"
-    report_sha = hashlib.sha256(report_text.encode("utf-8")).hexdigest()
+    report_sha = declared_json_sha256(report)
     write(REPORT_JSON, report_text)
 
     manifest = {
