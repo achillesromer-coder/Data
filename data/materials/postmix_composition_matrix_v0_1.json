@@ -1,0 +1,148 @@
+{
+  "artifact_id": "PMX-MAT-001",
+  "title": "Post-Mix Composition Matrix / Variable Feedstock Synthesis",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "authority": "engineering scaffold; linear mass-balance only; no promotion of RFS/EMFF or flight/material qualification",
+  "equations": {
+    "total_mass_flow": "Mdot = sum_i(mdot_i)",
+    "linear_feed_composition": "x_feed = sum_i(mdot_i * c_i) / sum_i(mdot_i)",
+    "constrained_recipe": "min ||C f - x_target*Mdot||_W^2 subject to f>=0, 1^T f=Mdot and process/resource/stewardship constraints",
+    "process_output": "y = f(x_feed, thermal_history, atmosphere, melt_pool, cooling_rate, field_history, substrate_dilution, geometry)"
+  },
+  "postmix_reference": {
+    "common_example_ratio": "5 carrier : 1 concentrate",
+    "single_concentrate_fraction": 0.16666666666666666,
+    "two_full_concentrates_fixed_carrier_fraction": 0.2857142857142857,
+    "carrier_required_for_two_full_concentrates_to_preserve_fraction": 10,
+    "fixed_carrier_equal_split_concentrates": [
+      0.5,
+      0.5
+    ],
+    "rule": "simultaneous concentrates require coordinated carrier or concentrate flow; do not assume ratio is preserved"
+  },
+  "pipeline": [
+    "characterise",
+    "fragment_classify",
+    "beneficiate",
+    "extract_refine",
+    "assay_qualify",
+    "recipe_blend",
+    "manufacture",
+    "verify",
+    "deploy",
+    "recover_recycle"
+  ],
+  "candidate_modules": {
+    "RFS": {
+      "state": "R&D_CANDIDATE",
+      "role": "frequency-dependent liberation/sorting/selectivity",
+      "promotion_gate": "measured selectivity, throughput, power, particle-size dependence, contamination and repeatability"
+    },
+    "EMFF": {
+      "state": "R&D_CANDIDATE",
+      "role": "field-dependent collection/routing/containment",
+      "promotion_gate": "measured force/trajectory/selectivity, throughput, power, field geometry, shielding and failure modes"
+    }
+  },
+  "manufacturing_routes": [
+    {
+      "feed_class": "compatible metallic powder/wire",
+      "route": "multi-feed DED",
+      "gate": "phase compatibility/cracking/vaporisation/oxidation"
+    },
+    {
+      "feed_class": "refractory addition",
+      "route": "DED/powder metallurgy/pre-alloy",
+      "gate": "melt temperature and brittle phase control"
+    },
+    {
+      "feed_class": "ceramic/silica-rich",
+      "route": "separate deposition/composite/coating",
+      "gate": "thermal mismatch/interface"
+    },
+    {
+      "feed_class": "PV active material",
+      "route": "dedicated semiconductor/thin-film process",
+      "gate": "electronic quality"
+    },
+    {
+      "feed_class": "surface coating",
+      "route": "electroplating/PVD/CVD/cold spray or validated equivalent",
+      "gate": "adhesion/porosity/environment"
+    }
+  ],
+  "graph_edge_fields": [
+    "mass_flow",
+    "composition_vector",
+    "energy",
+    "uncertainty",
+    "yield_loss",
+    "duration",
+    "contamination_risk",
+    "provenance",
+    "evidence_state",
+    "owner_gate"
+  ],
+  "stewardship_hard_constraints": [
+    "separation_of_authority",
+    "interoperability",
+    "no_forced_single_vendor_dependency",
+    "distributed_safe_operation",
+    "resource_stewardship_budget",
+    "interspecial_egalitarian_gate",
+    "planetary_protection",
+    "benefit_sharing",
+    "auditability",
+    "right_to_exit_or_fork",
+    "no_unsupported_sovereignty",
+    "independent_override"
+  ],
+  "validation_ladder": [
+    "L0_arithmetic",
+    "L1_simulation",
+    "L2_bench_feeding",
+    "L3_material_coupons",
+    "L4_characterisation",
+    "L5_environmental",
+    "L6_ISRU_analogue",
+    "L7_mission_qualified"
+  ],
+  "source_anchors": [
+    {
+      "id": "SRC-111",
+      "name": "Wunder-Bar post-mix manual",
+      "claim": "metered carrier/concentrate flow and common 5:1 example"
+    },
+    {
+      "id": "SRC-112",
+      "name": "Feenstra et al. 2021 multi-material DED review",
+      "doi": "10.1016/j.cossms.2021.100924"
+    },
+    {
+      "id": "SRC-113",
+      "name": "Shang et al. 2026 DED composition engineering review",
+      "doi": "10.1016/j.addma.2026.105240"
+    },
+    {
+      "id": "SRC-114",
+      "name": "NASA ISRU overview",
+      "claim": "ISRU + additive manufacturing / in-situ feedstock"
+    },
+    {
+      "id": "SRC-115",
+      "name": "NASA TechPort 158644",
+      "claim": "magnetic separation + electrostatic sieving beneficiation"
+    },
+    {
+      "id": "SRC-116",
+      "name": "NASA NTRS 20250010678",
+      "claim": "ISRU advanced manufacturing / regolith AM"
+    },
+    {
+      "id": "SRC-117",
+      "name": "NASA Lunar Surface Technology",
+      "claim": "molten regolith electrolysis / oxygen and metal streams"
+    }
+  ]
+}

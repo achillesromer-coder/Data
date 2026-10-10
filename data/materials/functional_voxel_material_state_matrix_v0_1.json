@@ -1,0 +1,237 @@
+{
+  "artifact_id": "FVX-MATRIX-001",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "authority": "digital design-space scaffold; no material/process qualification",
+  "state_vector_fields": [
+    "composition_vector",
+    "particle_psd",
+    "morphology",
+    "phase_descriptor",
+    "density",
+    "temperature",
+    "thermal_history",
+    "stress_state",
+    "electrical_state",
+    "thermal_state",
+    "magnetic_state",
+    "function_class",
+    "embedment_class",
+    "interfaces",
+    "cavity_state",
+    "evidence_state"
+  ],
+  "process_command_fields": [
+    "feed_rates",
+    "power_or_heat_input",
+    "travel_speed",
+    "preheat",
+    "interpass_temperature",
+    "atmosphere",
+    "pressure",
+    "tool_orientation",
+    "cooling",
+    "field_bias",
+    "dwell",
+    "inspection_action"
+  ],
+  "feed_families": [
+    {
+      "id": "F-STRUCT",
+      "function": "structural load path",
+      "classes": [
+        "qualified metal/alloy family"
+      ],
+      "default_route": "DED/WAAM/PBF/extrusion by scale",
+      "gate": "alloy+process qualification"
+    },
+    {
+      "id": "F-COND",
+      "function": "power/data conductor",
+      "classes": [
+        "Cu/Ag ink",
+        "Cu-rich compatible metal feed",
+        "plating seed"
+      ],
+      "default_route": "direct-write/plating/specialised metal AM",
+      "gate": "ampacity+adhesion+thermal cycle"
+    },
+    {
+      "id": "F-RETURN",
+      "function": "power return/reference",
+      "classes": [
+        "conductive plane/bus"
+      ],
+      "default_route": "separate conductor layer",
+      "gate": "fault/isolation analysis"
+    },
+    {
+      "id": "F-DIEL",
+      "function": "electrical isolation",
+      "classes": [
+        "ceramic",
+        "glass/silica",
+        "ceramic-filled polymer",
+        "high-temperature polymer"
+      ],
+      "default_route": "DIW/coating/insert",
+      "gate": "breakdown+thermal compatibility"
+    },
+    {
+      "id": "F-EMI",
+      "function": "EMI shielding/field shaping",
+      "classes": [
+        "conductive shell/mesh",
+        "magnetic/absorptive material"
+      ],
+      "default_route": "print/insert/coating",
+      "gate": "shielding+field interaction"
+    },
+    {
+      "id": "F-THERM-C",
+      "function": "thermal spreading",
+      "classes": [
+        "Cu/Al",
+        "graphitic/carbon",
+        "AlN-class ceramic"
+      ],
+      "default_route": "insert/coating/DIW/structural route",
+      "gate": "CTE+interface+conductivity"
+    },
+    {
+      "id": "F-THERM-I",
+      "function": "thermal isolation",
+      "classes": [
+        "ceramic/polymer/aerogel-class"
+      ],
+      "default_route": "insert/separate deposition",
+      "gate": "outgassing+compression+temperature"
+    },
+    {
+      "id": "F-RESIST",
+      "function": "heater/resistive sensor",
+      "classes": [
+        "NiCr-class",
+        "carbon-loaded ink/polymer"
+      ],
+      "default_route": "direct write/thin layer",
+      "gate": "resistance stability"
+    },
+    {
+      "id": "F-MAG",
+      "function": "magnetic path/function",
+      "classes": [
+        "Fe/Ni/Co-class",
+        "bonded hard-magnet feed"
+      ],
+      "default_route": "specialised AM/insert",
+      "gate": "post-process magnetic properties"
+    },
+    {
+      "id": "F-SENSE",
+      "function": "sensing",
+      "classes": [
+        "RTD",
+        "strain",
+        "capacitive",
+        "optical channel"
+      ],
+      "default_route": "direct-write/insert",
+      "gate": "calibration+drift"
+    },
+    {
+      "id": "F-SMART",
+      "function": "intrinsic 4D response",
+      "classes": [
+        "SMP",
+        "SMA",
+        "other validated smart material"
+      ],
+      "default_route": "isolated insert/compatible print",
+      "gate": "trigger envelope+cycle life"
+    },
+    {
+      "id": "F-COMPLY",
+      "function": "strain isolation/damping",
+      "classes": [
+        "elastomer/viscoelastic",
+        "compliant lattice"
+      ],
+      "default_route": "polymer print/insert/geometry",
+      "gate": "environment+fatigue"
+    },
+    {
+      "id": "F-SEAL",
+      "function": "hermetic/environmental barrier",
+      "classes": [
+        "seal coat",
+        "weld/braze closure",
+        "barrier layer"
+      ],
+      "default_route": "secondary closure/coating",
+      "gate": "leak/permeability"
+    },
+    {
+      "id": "F-GETTER",
+      "function": "vacuum maintenance",
+      "classes": [
+        "qualified getter"
+      ],
+      "default_route": "insert",
+      "gate": "activation+contamination"
+    }
+  ],
+  "compatibility_codes": {
+    "A": "same-process candidate after thermo/process proof",
+    "B": "graded-transition candidate",
+    "C": "separate barrier or process required",
+    "D": "insert/pick-place only",
+    "X": "currently incompatible/unqualified"
+  },
+  "functional_slice": {
+    "rule": "nominal 2D layer is union of finite 3D bead/region volumes",
+    "possible_regions": [
+      "structure",
+      "lattice",
+      "dielectric_liner",
+      "conductor",
+      "return_plane",
+      "emi_layer",
+      "thermal_path",
+      "sensor",
+      "void_wall",
+      "component_pocket",
+      "closure_land",
+      "smart_material",
+      "graded_transition"
+    ]
+  },
+  "adaptive_classes": {
+    "4D-M": "intrinsic material response to validated stimulus",
+    "4D-CPS": "sensor/control/actuator mediated state change"
+  },
+  "embedment_classes": {
+    "E0": "serviceable conventional module",
+    "E1": "conformal printed trace/function",
+    "E2": "encapsulated passive/robust sensor",
+    "E3": "sealed inserted functional component with access/test path",
+    "E4": "monolithic functional material/geometry"
+  },
+  "cavity_modes": {
+    "GAS": "pressurised or partial-pressure cell; pneumatic/acoustic damping candidate",
+    "LOW_PRESSURE": "reduced gas damping/convection; transitional isolation regime",
+    "VACUUM": "thermal/drag isolation; not a general damping medium"
+  },
+  "validation_ladder": [
+    "FV-L0",
+    "FV-L1",
+    "FV-L2",
+    "FV-L3",
+    "FV-L4",
+    "FV-L5",
+    "FV-L6",
+    "FV-L7",
+    "FV-L8",
+    "FV-L9"
+  ]
+}

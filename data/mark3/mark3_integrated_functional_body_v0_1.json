@@ -1,0 +1,153 @@
+{
+  "artifact_id": "M3-FIB-001",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "title": "Mark III Integrated Functional Body / Solid-State Compartmentalisation",
+  "authority": "architecture proposal bound to current Mark III lineage; exact geometry/material/tolerance/load/certification remain open",
+  "inherited_knowns": {
+    "appendage_count": 3,
+    "internal_solenoids_per_segment": 3,
+    "dynamic_control": "electric motor + Kevlar rope on spool",
+    "spool_lock_intent": true,
+    "gas_compressed_joint_intent": true,
+    "gas_chamber_EMI_damping_concept": true,
+    "multi_unit_interlock": "Mark III to Mark III cooperative coupling",
+    "exact_interlock_geometry": "OPEN_PRE_PRODUCTION"
+  },
+  "design_principle": "structure carries passive/distributed functions; life-limited/high-complexity devices remain serviceable islands until deeper embedment is proven",
+  "zones": [
+    {
+      "id": "M3-Z01",
+      "name": "Structural backbone",
+      "functions": [
+        "shell",
+        "spine",
+        "hard points",
+        "three-appendage load transfer"
+      ],
+      "embedment": "E4 geometry/material where qualified"
+    },
+    {
+      "id": "M3-Z02",
+      "name": "Power/data trunk",
+      "functions": [
+        "power bus",
+        "return/reference",
+        "data/fibre channels"
+      ],
+      "embedment": "E1-E3"
+    },
+    {
+      "id": "M3-Z03",
+      "name": "Field-control support",
+      "functions": [
+        "solenoid support",
+        "thermal path",
+        "magnetic/EMI management"
+      ],
+      "embedment": "serviceable winding default"
+    },
+    {
+      "id": "M3-Z04",
+      "name": "Sensor skin",
+      "functions": [
+        "strain",
+        "thermal",
+        "field",
+        "damage sensing"
+      ],
+      "embedment": "E1-E2"
+    },
+    {
+      "id": "M3-Z05",
+      "name": "Gas-damped joint cells",
+      "functions": [
+        "pneumatic compliance",
+        "damping candidate",
+        "pressure-tunable response"
+      ],
+      "embedment": "sealed cell + service port"
+    },
+    {
+      "id": "M3-Z06",
+      "name": "Vacuum/low-pressure isolation",
+      "functions": [
+        "thermal isolation",
+        "low-drag reference",
+        "process isolation"
+      ],
+      "embedment": "sealed/evacuated cell",
+      "note": "not primary gas damping"
+    },
+    {
+      "id": "M3-Z07",
+      "name": "Energy-absorption lattice",
+      "functions": [
+        "crush",
+        "compliance",
+        "impact routing"
+      ],
+      "embedment": "E4 geometry"
+    },
+    {
+      "id": "M3-Z08",
+      "name": "Thermal highways",
+      "functions": [
+        "heat spread",
+        "radiator connection",
+        "hot-spot bypass"
+      ],
+      "embedment": "material/insert hybrid"
+    },
+    {
+      "id": "M3-Z09",
+      "name": "EMI / field-return layers",
+      "functions": [
+        "shield",
+        "reference",
+        "field containment"
+      ],
+      "embedment": "E1-E4 process dependent"
+    },
+    {
+      "id": "M3-Z10",
+      "name": "Service islands",
+      "functions": [
+        "CPU",
+        "valves",
+        "connectors",
+        "replaceable power devices"
+      ],
+      "embedment": "E0/E3"
+    },
+    {
+      "id": "M3-Z11",
+      "name": "Interlock hard points",
+      "functions": [
+        "Mark III cooperative interlock"
+      ],
+      "embedment": "production geometry held"
+    },
+    {
+      "id": "M3-Z12",
+      "name": "Manufacturing/service channels",
+      "functions": [
+        "powder removal",
+        "fill/evacuation",
+        "inspection",
+        "repair",
+        "wiring/fibre pull"
+      ],
+      "embedment": "designed access"
+    }
+  ],
+  "hard_rules": [
+    "preserve three-appendage authority",
+    "do not derive exact geometry from render",
+    "vacuum is not relied on for gas damping",
+    "pressure cells require independent pressure-boundary/leak qualification",
+    "high-current windings and life-limited electronics default serviceable",
+    "printed electrical return/reference is distinct from EMI shield and magnetic return",
+    "all material transitions require compatibility classification and evidence"
+  ]
+}
