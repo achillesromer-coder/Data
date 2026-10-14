@@ -22,8 +22,8 @@
       "table": "2x"
     }
   ],
-  "captured_at": "2026-10-13T11:53:02+00:00",
-  "event_sha256": "d4532d5b5f5af7f51188871b1c5a91a502e38600d37ba854a074d335549124ad",
+  "captured_at": "2026-10-14T09:34:29+00:00",
+  "event_sha256": "181c338dbc4c9917e38c82d3d08d93975a55cd6e606fbd4ef0b0250bb4bdc57e",
   "guardrails": [
     "No intervention is applied.",
     "Range minima are source-sampled/refined nominal geometry, not impact probabilities.",
@@ -35,19 +35,19 @@
   "source_receipts": [
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/coarse_1h.json",
-      "sha256": "84833f100376b5f7ecf3898cd4596bebaad23f5bc9cb65d7f9b9e130c078f7c0"
+      "sha256": "b61b662698fc9969b14dcf6d05e2b35a47e4b55898af75c324cc10a3451c7b6d"
     },
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/refine_5m.json",
-      "sha256": "c89ee8039a1dd05d9cd8929d0e58cae991f8128f6f91a938300b5b0fcc3589f4"
+      "sha256": "2aca2d1a55263287cfe264bdac82b315ff20eae4b3e5403c459483ee3885f98d"
     },
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/refine_30s.json",
-      "sha256": "45822438034becbd51b9b086415cf3a2c8a3c81924d9168179fb4968b61c772c"
+      "sha256": "2ae66fc4a8845f6d68697f459f4d2e8b39f38b0d30c14ca144e0d61ce6f3f363"
     },
     {
       "raw_path": "data/jpl/horizons/events/apophis-2029/uncertainty_2x.json",
-      "sha256": "8f13f1fe7ab946e86511b02af8fc67bdd680d6d3fd0c6e05840087748f1b7fdf"
+      "sha256": "bc59de45a7a78938d113615ba069e6b223dd1e81a14afda07ebf1b2e02796f5a"
     },
     {
       "raw_path": "data/jpl/sbdb/latest/apophis.json",
