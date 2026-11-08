@@ -10,16 +10,16 @@
   ],
   "objects": {
     "anteros": {
-      "captured_at": "2026-11-07T11:08:07+00:00",
+      "captured_at": "2026-11-08T11:20:46+00:00",
       "designation": "1943",
       "formal_uncertainty_sigma": 1,
       "header_probe": [
         "JDTDB             Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,             X_s,             Y_s,             Z_s,            VX_s,            VY_s,            VZ_s,"
       ],
       "linked_nominal_payload_sha256": [
-        "6cdb91f369cc10fdc4edceb03821730c9b17e4b5ad54d42097adc86358cd5043",
-        "6cdb91f369cc10fdc4edceb03821730c9b17e4b5ad54d42097adc86358cd5043",
-        "6cdb91f369cc10fdc4edceb03821730c9b17e4b5ad54d42097adc86358cd5043"
+        "ba7ae102d33802780d9e965dfd9170e0e8e2a134eaa71a3f81b4505e4a43343a",
+        "ba7ae102d33802780d9e965dfd9170e0e8e2a134eaa71a3f81b4505e4a43343a",
+        "ba7ae102d33802780d9e965dfd9170e0e8e2a134eaa71a3f81b4505e4a43343a"
       ],
       "linked_windows": [
         "August 2028",
@@ -34,22 +34,22 @@
       ],
       "requested_name": "Anteros",
       "row_count": 3,
-      "sha256": "5f4c3759bddfd8ffd633eba74ce5cf0c13d8065fae9c0d00aec4e057c91f31b3",
+      "sha256": "6cae419c543913d50c2b49711138d8c54b2fe0d9af9f3111904d011952626a45",
       "source_vector_table": "2x",
       "status": "captured_raw_uncertainty",
       "uncertainty_coordinate_system": "XYZ"
     },
     "apollo": {
-      "captured_at": "2026-11-07T11:08:10+00:00",
+      "captured_at": "2026-11-08T11:20:48+00:00",
       "designation": "1862",
       "formal_uncertainty_sigma": 1,
       "header_probe": [
         "JDTDB             Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,             X_s,             Y_s,             Z_s,            VX_s,            VY_s,            VZ_s,"
       ],
       "linked_nominal_payload_sha256": [
-        "f2a593372f9ea1c11000fc55b99b914c074ef3b8d574fac88a56688e03da5227",
-        "f2a593372f9ea1c11000fc55b99b914c074ef3b8d574fac88a56688e03da5227",
-        "f2a593372f9ea1c11000fc55b99b914c074ef3b8d574fac88a56688e03da5227"
+        "f8b09823a21509f2894c52e6c676c2e9adec43b83c740677f1504799b0a0f485",
+        "f8b09823a21509f2894c52e6c676c2e9adec43b83c740677f1504799b0a0f485",
+        "f8b09823a21509f2894c52e6c676c2e9adec43b83c740677f1504799b0a0f485"
       ],
       "linked_windows": [
         "August 2028",
@@ -64,22 +64,22 @@
       ],
       "requested_name": "Apollo",
       "row_count": 3,
-      "sha256": "c89f06b6c68e2c37330d6404106882bbe93031a876a60f7a2d7699b750170dc8",
+      "sha256": "fa9e4bfe7bf5758d9e5d824b5ef73b9b1db2183da703613c8254fbd9d1a7d486",
       "source_vector_table": "2x",
       "status": "captured_raw_uncertainty",
       "uncertainty_coordinate_system": "XYZ"
     },
     "apophis": {
-      "captured_at": "2026-11-07T11:08:01+00:00",
+      "captured_at": "2026-11-08T11:20:39+00:00",
       "designation": "99942",
       "formal_uncertainty_sigma": 1,
       "header_probe": [
         "JDTDB             Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,             X_s,             Y_s,             Z_s,            VX_s,            VY_s,            VZ_s,"
       ],
       "linked_nominal_payload_sha256": [
-        "da907d01b12d3dbe203639b220ced763b3aa3d120143e5d41e71df7cac53f4ed",
-        "da907d01b12d3dbe203639b220ced763b3aa3d120143e5d41e71df7cac53f4ed",
-        "da907d01b12d3dbe203639b220ced763b3aa3d120143e5d41e71df7cac53f4ed"
+        "5681374ab0068bcaa210104681a61f34adf3662e63902571dc54d5c2d9eda71e",
+        "5681374ab0068bcaa210104681a61f34adf3662e63902571dc54d5c2d9eda71e",
+        "5681374ab0068bcaa210104681a61f34adf3662e63902571dc54d5c2d9eda71e"
       ],
       "linked_windows": [
         "August 2028",
@@ -94,22 +94,22 @@
       ],
       "requested_name": "Apophis",
       "row_count": 3,
-      "sha256": "affb004d1fb49eb5cdccfcecf761dc04f2c1023ef67f20f71b01cce6768c7ad1",
+      "sha256": "6ab1b1c850756d77517a353885df5944fd84c7e125f012cd38f9c1af7542b55e",
       "source_vector_table": "2x",
       "status": "captured_raw_uncertainty",
       "uncertainty_coordinate_system": "XYZ"
     },
     "castalia": {
-      "captured_at": "2026-11-07T11:08:03+00:00",
+      "captured_at": "2026-11-08T11:20:41+00:00",
       "designation": "4769",
       "formal_uncertainty_sigma": 1,
       "header_probe": [
         "JDTDB             Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,             X_s,             Y_s,             Z_s,            VX_s,            VY_s,            VZ_s,"
       ],
       "linked_nominal_payload_sha256": [
-        "42ffff1c5d68815b7a0706f0841d5db1050dda14d1e1064c9a7b30ce357e2c75",
-        "42ffff1c5d68815b7a0706f0841d5db1050dda14d1e1064c9a7b30ce357e2c75",
-        "42ffff1c5d68815b7a0706f0841d5db1050dda14d1e1064c9a7b30ce357e2c75"
+        "1f6595a71b410f174a02cba9b45cbcdf61859f6568800e81853a95ac465f8593",
+        "1f6595a71b410f174a02cba9b45cbcdf61859f6568800e81853a95ac465f8593",
+        "1f6595a71b410f174a02cba9b45cbcdf61859f6568800e81853a95ac465f8593"
       ],
       "linked_windows": [
         "August 2028",
@@ -124,22 +124,22 @@
       ],
       "requested_name": "Castalia",
       "row_count": 3,
-      "sha256": "ea17f93d5cfc610d4deb4563e875312653b4d81ae5161b50482cdae485874c8f",
+      "sha256": "61cb7c9ad8ce94c2becde80904a7c520c01be8778eae45211e3ce29b1946d0c9",
       "source_vector_table": "2x",
       "status": "captured_raw_uncertainty",
       "uncertainty_coordinate_system": "XYZ"
     },
     "eros": {
-      "captured_at": "2026-11-07T11:08:12+00:00",
+      "captured_at": "2026-11-08T11:20:50+00:00",
       "designation": "433",
       "formal_uncertainty_sigma": 1,
       "header_probe": [
         "JDTDB             Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,             X_s,             Y_s,             Z_s,            VX_s,            VY_s,            VZ_s,"
       ],
       "linked_nominal_payload_sha256": [
-        "a0ddaf238ee9bb85a23a8ed99426274445100ebb06b06192fa806cd03affcd89",
-        "a0ddaf238ee9bb85a23a8ed99426274445100ebb06b06192fa806cd03affcd89",
-        "a0ddaf238ee9bb85a23a8ed99426274445100ebb06b06192fa806cd03affcd89"
+        "833bffacae25e617089442bcfe080c3acc1f225848ffeda32779468d5c86f7be",
+        "833bffacae25e617089442bcfe080c3acc1f225848ffeda32779468d5c86f7be",
+        "833bffacae25e617089442bcfe080c3acc1f225848ffeda32779468d5c86f7be"
       ],
       "linked_windows": [
         "August 2028",
@@ -154,22 +154,22 @@
       ],
       "requested_name": "Eros",
       "row_count": 3,
-      "sha256": "c74bcd846d29590bd84789c37d1492ce6054e5f2e5679928820d2cfe48db9018",
+      "sha256": "2ba829c4be3902849dc9f0da2b923b5ff5c559f965bc874c88b441da4b4febea",
       "source_vector_table": "2x",
       "status": "captured_raw_uncertainty",
       "uncertainty_coordinate_system": "XYZ"
     },
     "toutatis": {
-      "captured_at": "2026-11-07T11:08:05+00:00",
+      "captured_at": "2026-11-08T11:20:44+00:00",
       "designation": "4179",
       "formal_uncertainty_sigma": 1,
       "header_probe": [
         "JDTDB             Calendar Date (TDB),                      X,                      Y,                      Z,                     VX,                     VY,                     VZ,             X_s,             Y_s,             Z_s,            VX_s,            VY_s,            VZ_s,"
       ],
       "linked_nominal_payload_sha256": [
-        "23f8c097ef180530a1d1219f9e64013a7a965874591aaf63dad073fc48d4c4ab",
-        "23f8c097ef180530a1d1219f9e64013a7a965874591aaf63dad073fc48d4c4ab",
-        "23f8c097ef180530a1d1219f9e64013a7a965874591aaf63dad073fc48d4c4ab"
+        "424efb50831e45f38cb0752a5c44f37dc9ad4eb2e7827ccb27d713a2b4966f24",
+        "424efb50831e45f38cb0752a5c44f37dc9ad4eb2e7827ccb27d713a2b4966f24",
+        "424efb50831e45f38cb0752a5c44f37dc9ad4eb2e7827ccb27d713a2b4966f24"
       ],
       "linked_windows": [
         "August 2028",
@@ -184,7 +184,7 @@
       ],
       "requested_name": "Toutatis",
       "row_count": 3,
-      "sha256": "47970ada6cac92472042314ab21fc7c17bdf392b464686dbe0d5e29e0acba359",
+      "sha256": "e1096effcb211a0d0757f01f8f566115b74915f240b085bd6790ee05791026ff",
       "source_vector_table": "2x",
       "status": "captured_raw_uncertainty",
       "uncertainty_coordinate_system": "XYZ"
