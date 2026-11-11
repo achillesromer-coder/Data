@@ -57,18 +57,18 @@
   "formal_state_uncertainty_1s": {
     "jd_tdb": 2462240.406944444,
     "calendar": "A.D. 2029-Apr-13 21:46:00.0000",
-    "x_au": -0.0001282586785250059,
-    "y_au": 0.0002156361660544426,
-    "z_au": 4.01607346624804e-05,
-    "vx_au_per_day": 0.003657147362236832,
-    "vy_au_per_day": 0.001966666055333567,
-    "vz_au_per_day": 0.001065269454009507,
-    "x_sigma_au_1s": 4.30582183e-09,
+    "x_au": -0.0001282586803840917,
+    "y_au": 0.0002156361650587509,
+    "z_au": 4.01607341214069e-05,
+    "vx_au_per_day": 0.003657147358707132,
+    "vy_au_per_day": 0.001966666061268,
+    "vz_au_per_day": 0.001065269455115017,
+    "x_sigma_au_1s": 4.30582181e-09,
     "y_sigma_au_1s": 6.33200439e-09,
-    "z_sigma_au_1s": 2.44326471e-09,
-    "vx_sigma_au_per_day_1s": 3.11580384e-08,
-    "vy_sigma_au_per_day_1s": 7.5222279e-09,
-    "vz_sigma_au_per_day_1s": 1.00009351e-08
+    "z_sigma_au_1s": 2.44326472e-09,
+    "vx_sigma_au_per_day_1s": 3.11580382e-08,
+    "vy_sigma_au_per_day_1s": 7.52222765e-09,
+    "vz_sigma_au_per_day_1s": 1.0000935e-08
   },
   "sbdb_close_approach_crosscheck": {
     "body": "Earth",
@@ -94,13 +94,13 @@
     "sampled_range_delta_km_vs_sbdb": -0.020346111225208203,
     "interpretation": "SBDB direct close-approach product is authoritative for nominal TCA, 3-sigma distance/time bounds and 1-sigma B-plane ellipse. Horizons table-3 refinement is retained as an independent state/zero-RR cross-check."
   },
-  "table3_vs_2x_position_delta_au": 1.6051619033189452e-11,
-  "table3_vs_2x_velocity_delta_au_per_day": 7.308512847392766e-11,
+  "table3_vs_2x_position_delta_au": 1.68349672456328e-11,
+  "table3_vs_2x_velocity_delta_au_per_day": 7.835765004770262e-11,
   "source_hashes": {
-    "coarse_1h": "2fa91e6419676bb15a35eea6ba36d198fa5e6aa24af2f23793d52b9b99c0437a",
-    "refine_5m": "8c542eb278a75c2aee9d2fe2a72a1c699f53b8a7d35f966f8bccaaa8e27bfea7",
-    "refine_30s": "b576bdace80df83589df126dbfa9eb86ca47561022f6c1e3392ae0cf07a5cdb7",
-    "uncertainty_2x": "a7878e067186d814b52cf6635082f1ef25758ba0dc6906f61673baf203c17be0"
+    "coarse_1h": "217a5fb2d7d167547e217995d6dd1cf2e4f347a25eeddb1cc0e6b35d8cdef14b",
+    "refine_5m": "4ffb21ff5d542559fcb8c392855f476ad213120a096675780d0babbfd71c35da",
+    "refine_30s": "39b94843023633a5e420e3469ab4ed4223f262025fce82b82c4b5447e43fb198",
+    "uncertainty_2x": "08f408a63d54644cacb8b8f94fbff48f51538285526597026ed5f8f2a54f4542"
   },
   "claim_boundary": "This is a nominal no-intervention source baseline and formal component-uncertainty cross-check. It is not an impact probability, B-plane/keyhole analysis, intervention recommendation, capture state, or safety certification."
 }

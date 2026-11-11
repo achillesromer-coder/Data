@@ -1,6 +1,6 @@
 {
   "adaptive_policy": "Mode-Q first. Run Mode-M only for bodies with stale/mismatched md_orbit_id, no current-window options, or a later mission-design question requiring a fresh launch/TOF grid.",
-  "captured_at": "2026-11-09T12:58:51+00:00",
+  "captured_at": "2026-11-11T11:56:17+00:00",
   "claim_boundary": "Mission-design source capture and screening only; no final target ranking or mission feasibility claim.",
   "endpoint": "https://ssd-api.jpl.nasa.gov/mdesign.api",
   "errors": [],
@@ -8,14 +8,14 @@
     "anteros": {
       "current_window_count_2027_2032": 24,
       "designation": "1943",
-      "md_orbit_id": "1037",
+      "md_orbit_id": "1039",
       "mission_count": 80,
       "mode_m_recompute_gate": "NOT_REQUIRED_FOR_INITIAL_SCREEN",
-      "orbit_id": "1037",
+      "orbit_id": "1039",
       "orbit_match": true,
       "raw_path": "data/jpl/mdesign/latest/anteros.json",
       "requested_name": "Anteros",
-      "sha256": "c1a908d997a0c85929bf91b37e4ab937d6059e3f7286b9a0d93032fbc01ffbfa",
+      "sha256": "feacc9a1e69758c73b5fa53f03210425502584869f5f8c110326a27a9ff96111",
       "signature_version": "1.1",
       "status": "captured"
     },
@@ -92,7 +92,7 @@
   },
   "report_receipt": {
     "path": "data/jpl/mdesign/latest/report.json",
-    "sha256": "cadbe604771bd87030f1fa9484275b71d654a1b5bf8e31fe7cee446d765a6430"
+    "sha256": "52e1cb4c06ec8d8e5f475c1cb20c7c00f3bd46e9d653aedbf74c69b3c7963960"
   },
   "schema": "romer.jpl.mdesign.priority-mode-q.v0.1"
 }
