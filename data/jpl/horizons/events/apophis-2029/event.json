@@ -97,10 +97,10 @@
   "table3_vs_2x_position_delta_au": 1.68349672456328e-11,
   "table3_vs_2x_velocity_delta_au_per_day": 7.835765004770262e-11,
   "source_hashes": {
-    "coarse_1h": "54ce78a8280c6300fc9cb26926f7d38d7dce9e37dde8b73d76b3ffba4e471ca2",
-    "refine_5m": "a81089c385201823ef89626bed829bedb52c42acd9ebb50cbcf5f9c670618241",
-    "refine_30s": "17bc37d9d2dbe22eee63973d131e41c3eeafdd10b4d311086de8742e925a306b",
-    "uncertainty_2x": "96f418dbb8dd5582b0c2389586f0fde2a5393e33f2b70c52f060e11ed1835008"
+    "coarse_1h": "57873d0f0183c560735fb03a69d7fbf679c496029f4650f254913be818ee3d7a",
+    "refine_5m": "7dca7dd674e00fd12feb0ed310aab91f96935161125769e69369a58460a7145c",
+    "refine_30s": "c7c09d3c06947c85c8dd16e42b6ead12a5f7ac63aeeec431f602e6e6864451a4",
+    "uncertainty_2x": "82607b9a1f6416f2f946f414c05a2e8f7950ec9a502695cbe660bc0beee1f704"
   },
   "claim_boundary": "This is a nominal no-intervention source baseline and formal component-uncertainty cross-check. It is not an impact probability, B-plane/keyhole analysis, intervention recommendation, capture state, or safety certification."
 }
