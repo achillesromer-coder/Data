@@ -25,16 +25,16 @@
       "status": "captured"
     },
     "cerberus": {
-      "captured_at": "2026-11-18T13:09:53+00:00",
+      "captured_at": "2026-11-21T12:45:39+00:00",
       "covariance_available": true,
       "covariance_dimension": 7,
-      "covariance_epoch_jd": "2458660.5",
+      "covariance_epoch_jd": "2458662.5",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/cerberus.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Cerberus",
-      "sha256": "a2801b056c75232f025cf9548fa73a2474c883b6b809388f1255289734c284c2",
+      "sha256": "54762fa05b069505fd4e275a1dd9e41f83c4244486c35bfe89eaa1d993580b6c",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Cerberus&phys-par=1&ca-data=1&ca-time=both&ca-tunc=both&ca-unc=1&cov=mat&full-prec=1",
       "status": "captured"
@@ -100,16 +100,16 @@
       "status": "captured"
     },
     "lugh": {
-      "captured_at": "2026-11-20T13:03:56+00:00",
+      "captured_at": "2026-11-21T12:45:44+00:00",
       "covariance_available": true,
       "covariance_dimension": 6,
-      "covariance_epoch_jd": "2460510.5",
+      "covariance_epoch_jd": "2460514.5",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/lugh.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Lugh",
-      "sha256": "6b1a04e7cd7f7a4db4e9f3800cf2adc78121468d6ce3cc532c66db9b5760fe55",
+      "sha256": "c9dfca3204bb512f5e56725635f07d6f7267823798cc7b99abfc523522e0646d",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Lugh&phys-par=1&ca-data=1&ca-time=both&ca-tunc=both&ca-unc=1&cov=mat&full-prec=1",
       "status": "captured"
@@ -130,16 +130,16 @@
       "status": "captured"
     },
     "mithra": {
-      "captured_at": "2026-11-16T12:53:03+00:00",
+      "captured_at": "2026-11-21T12:45:45+00:00",
       "covariance_available": true,
       "covariance_dimension": 6,
-      "covariance_epoch_jd": "2458526.5",
+      "covariance_epoch_jd": "2458529.5",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/mithra.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Mithra",
-      "sha256": "32708bf4c5387c053b48300c3d79fa4f4f32e41b54d54df2129928648e5194a9",
+      "sha256": "4805f37edc70694e88278763871e2657fd0af9e1016e6275c63ee04c553fea4c",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Mithra&phys-par=1&ca-data=1&ca-time=both&ca-tunc=both&ca-unc=1&cov=mat&full-prec=1",
       "status": "captured"
