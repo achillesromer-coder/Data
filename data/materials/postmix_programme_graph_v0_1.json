@@ -1,0 +1,394 @@
+{
+  "artifact_id": "PMX-GRAPH-001",
+  "title": "Post-Mix Programme Interaction Graph",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "authority": "programme integration graph; no physical-readiness or resource-rights promotion",
+  "invariants": [
+    "mass and by-product flows remain conserved/accounted",
+    "assay uncertainty propagates into recipe feasibility",
+    "mass-balance output is not a material-property qualification",
+    "RFS/EMFF remain optional R&D nodes until empirical promotion gates pass",
+    "safety/ecology/interspecies/planetary-protection/resource-rights constraints are hard gates",
+    "distributed nodes retain safe local operation and third-party interoperability"
+  ],
+  "nodes": [
+    {
+      "id": "N-RESOURCE",
+      "name": "Resource body / recovered scrap",
+      "class": "resource",
+      "state": "SOURCE_DEPENDENT"
+    },
+    {
+      "id": "N-CHAR",
+      "name": "Characterisation + particle classification",
+      "class": "metrology",
+      "state": "REQUIRED"
+    },
+    {
+      "id": "N-BENCH",
+      "name": "Conventional beneficiation baseline",
+      "class": "process",
+      "state": "ESTABLISHED_ANALOGUE"
+    },
+    {
+      "id": "N-RFS",
+      "name": "RFS candidate beneficiation",
+      "class": "experimental_process",
+      "state": "R&D_CANDIDATE"
+    },
+    {
+      "id": "N-EMFF",
+      "name": "EMFF candidate sorting/routing",
+      "class": "experimental_process",
+      "state": "R&D_CANDIDATE"
+    },
+    {
+      "id": "N-REFINE",
+      "name": "Extraction / refining",
+      "class": "process",
+      "state": "RESOURCE_SPECIFIC"
+    },
+    {
+      "id": "N-BINS",
+      "name": "Qualified stock bins / material passports",
+      "class": "inventory",
+      "state": "IMPLEMENTATION_DESIGN"
+    },
+    {
+      "id": "N-RECIPE",
+      "name": "Post-Mix composition / recipe engine",
+      "class": "control",
+      "state": "L0_TESTED_L1_OPEN"
+    },
+    {
+      "id": "N-AM",
+      "name": "Manufacturing cells",
+      "class": "manufacturing",
+      "state": "PROCESS_SPECIFIC"
+    },
+    {
+      "id": "N-SOLAR",
+      "name": "Solar Hull layers / coupons",
+      "class": "product_family",
+      "state": "MATERIALS_UNQUALIFIED"
+    },
+    {
+      "id": "N-MARK",
+      "name": "Mark-series repair / replacement / mining hardware",
+      "class": "product_family",
+      "state": "PROGRAMME_DEPENDENT"
+    },
+    {
+      "id": "N-LUKE",
+      "name": "Luke / material-return interfaces",
+      "class": "product_family",
+      "state": "R&D_PROGRAMME_DEPENDENT"
+    },
+    {
+      "id": "N-INTERSOL",
+      "name": "InterSol / station infrastructure",
+      "class": "infrastructure",
+      "state": "PROGRAMME_DEPENDENT"
+    },
+    {
+      "id": "N-FREEFLOW",
+      "name": "Free Flow / energy subsystem",
+      "class": "energy",
+      "state": "PROGRAMME_DEPENDENT"
+    },
+    {
+      "id": "N-COGNIGREX",
+      "name": "Cognigrex / LightSpeed control and evidence graph",
+      "class": "digital_control",
+      "state": "IMPLEMENTATION_SCAFFOLD"
+    },
+    {
+      "id": "N-ECOX",
+      "name": "Eco-X / ecological and circularity constraints",
+      "class": "stewardship",
+      "state": "HARD_CONSTRAINT_INPUT"
+    },
+    {
+      "id": "N-QA",
+      "name": "Independent QA / NDE / acceptance",
+      "class": "assurance",
+      "state": "REQUIRED"
+    },
+    {
+      "id": "N-RECYCLE",
+      "name": "Recovery / recycle / remanufacture",
+      "class": "circularity",
+      "state": "REQUIRED_OBJECTIVE"
+    },
+    {
+      "id": "N-THIRDPARTY",
+      "name": "Qualified third-party/shared industrial capacity",
+      "class": "federation",
+      "state": "REQUIRED_INTEROPERABILITY_PATH"
+    }
+  ],
+  "edges": [
+    {
+      "id": "E-01",
+      "from": "N-RESOURCE",
+      "to": "N-CHAR",
+      "transfer": "sample/batch + provenance",
+      "gate": "sampling/rights/stewardship"
+    },
+    {
+      "id": "E-02",
+      "from": "N-CHAR",
+      "to": "N-BENCH",
+      "transfer": "bounded feed class",
+      "gate": "assay + PSD + uncertainty"
+    },
+    {
+      "id": "E-03",
+      "from": "N-CHAR",
+      "to": "N-RFS",
+      "transfer": "bounded test feed",
+      "gate": "experimental protocol"
+    },
+    {
+      "id": "E-04",
+      "from": "N-CHAR",
+      "to": "N-EMFF",
+      "transfer": "bounded responsive feed",
+      "gate": "experimental protocol"
+    },
+    {
+      "id": "E-05",
+      "from": "N-BENCH",
+      "to": "N-REFINE",
+      "transfer": "beneficiated concentrate",
+      "gate": "grade/recovery/energy receipt"
+    },
+    {
+      "id": "E-06",
+      "from": "N-RFS",
+      "to": "N-REFINE",
+      "transfer": "candidate enriched fraction",
+      "gate": "only if empirical RFS gate passes"
+    },
+    {
+      "id": "E-07",
+      "from": "N-EMFF",
+      "to": "N-REFINE",
+      "transfer": "candidate routed fraction",
+      "gate": "only if empirical EMFF gate passes"
+    },
+    {
+      "id": "E-08",
+      "from": "N-REFINE",
+      "to": "N-BINS",
+      "transfer": "refined stock + by-products",
+      "gate": "assay/contamination/material passport"
+    },
+    {
+      "id": "E-09",
+      "from": "N-BINS",
+      "to": "N-RECIPE",
+      "transfer": "composition vectors + calibrated availability",
+      "gate": "accepted batch state"
+    },
+    {
+      "id": "E-10",
+      "from": "N-RECIPE",
+      "to": "N-AM",
+      "transfer": "feeder command + target composition + uncertainty",
+      "gate": "recipe feasibility + process compatibility"
+    },
+    {
+      "id": "E-11",
+      "from": "N-AM",
+      "to": "N-QA",
+      "transfer": "coupon/part + process history",
+      "gate": "process-specific acceptance"
+    },
+    {
+      "id": "E-12",
+      "from": "N-QA",
+      "to": "N-SOLAR",
+      "transfer": "accepted material/layer evidence",
+      "gate": "Solar Hull qualification"
+    },
+    {
+      "id": "E-13",
+      "from": "N-QA",
+      "to": "N-MARK",
+      "transfer": "accepted part",
+      "gate": "part-class mission qualification"
+    },
+    {
+      "id": "E-14",
+      "from": "N-QA",
+      "to": "N-LUKE",
+      "transfer": "accepted part/material",
+      "gate": "interface/capture-system qualification"
+    },
+    {
+      "id": "E-15",
+      "from": "N-QA",
+      "to": "N-INTERSOL",
+      "transfer": "accepted infrastructure part",
+      "gate": "facility design/engineering acceptance"
+    },
+    {
+      "id": "E-16",
+      "from": "N-QA",
+      "to": "N-FREEFLOW",
+      "transfer": "accepted compatible material/component",
+      "gate": "electrical/thermal/safety qualification"
+    },
+    {
+      "id": "E-17",
+      "from": "N-SOLAR",
+      "to": "N-RECYCLE",
+      "transfer": "retired/rejected material",
+      "gate": "service-history + re-assay"
+    },
+    {
+      "id": "E-18",
+      "from": "N-MARK",
+      "to": "N-RECYCLE",
+      "transfer": "scrap/retired hardware",
+      "gate": "decontaminate/sort/re-assay"
+    },
+    {
+      "id": "E-19",
+      "from": "N-LUKE",
+      "to": "N-RECYCLE",
+      "transfer": "scrap/retired hardware",
+      "gate": "decontaminate/sort/re-assay"
+    },
+    {
+      "id": "E-20",
+      "from": "N-INTERSOL",
+      "to": "N-RECYCLE",
+      "transfer": "maintenance/demolition streams",
+      "gate": "classification/recovery plan"
+    },
+    {
+      "id": "E-21",
+      "from": "N-RECYCLE",
+      "to": "N-CHAR",
+      "transfer": "secondary feedstock",
+      "gate": "full re-characterisation"
+    },
+    {
+      "id": "E-22",
+      "from": "N-COGNIGREX",
+      "to": "N-RECIPE",
+      "transfer": "evidence-bounded recipe candidates",
+      "gate": "human/owner gates for high consequence"
+    },
+    {
+      "id": "E-23",
+      "from": "N-COGNIGREX",
+      "to": "N-CHAR",
+      "transfer": "measurement plan / missing-evidence request",
+      "gate": "no synthetic evidence"
+    },
+    {
+      "id": "E-24",
+      "from": "N-ECOX",
+      "to": "N-RESOURCE",
+      "transfer": "preserve/no-touch/ecological constraints",
+      "gate": "hard constraint"
+    },
+    {
+      "id": "E-25",
+      "from": "N-ECOX",
+      "to": "N-RECYCLE",
+      "transfer": "circularity/externality constraints",
+      "gate": "hard constraint"
+    },
+    {
+      "id": "E-26",
+      "from": "N-THIRDPARTY",
+      "to": "N-AM",
+      "transfer": "qualified external/shared process capacity",
+      "gate": "interface + QA + commercial/legal"
+    },
+    {
+      "id": "E-27",
+      "from": "N-AM",
+      "to": "N-THIRDPARTY",
+      "transfer": "open material passport/process interchange",
+      "gate": "no forced lock-in"
+    },
+    {
+      "id": "E-28",
+      "from": "N-FREEFLOW",
+      "to": "N-AM",
+      "transfer": "energy availability envelope",
+      "gate": "electrical/thermal evidence"
+    },
+    {
+      "id": "E-29",
+      "from": "N-FREEFLOW",
+      "to": "N-RFS",
+      "transfer": "energy availability envelope",
+      "gate": "electrical/thermal evidence"
+    },
+    {
+      "id": "E-30",
+      "from": "N-FREEFLOW",
+      "to": "N-EMFF",
+      "transfer": "energy availability envelope",
+      "gate": "electrical/thermal/EMI evidence"
+    }
+  ],
+  "enterprise_objectives": {
+    "minimize": [
+      "imported_mass",
+      "energy_per_useful_output",
+      "waste",
+      "irreversible_extraction",
+      "risk",
+      "control_concentration"
+    ],
+    "maximize": [
+      "availability",
+      "repairability",
+      "recyclability",
+      "interoperability",
+      "local_safe_autonomy",
+      "shared_benefit"
+    ],
+    "non_tradeable": [
+      "safety",
+      "ecological_and_interspecies_protection",
+      "planetary_protection",
+      "rights_and_authority",
+      "evidence_integrity"
+    ]
+  },
+  "canonical_bindings": {
+    "drive_workbook": "1refNFmebTcmPVojCuZsyILJEWaKz-sVzYLfZtqMl8k8",
+    "drive_sheet": "20_PostMix_Material_Matrix_v0_1",
+    "innovations": [
+      "INV-018",
+      "INV-019",
+      "INV-020"
+    ],
+    "sources": [
+      "SRC-111",
+      "SRC-112",
+      "SRC-113",
+      "SRC-114",
+      "SRC-115",
+      "SRC-116",
+      "SRC-117"
+    ],
+    "build": "BUILD-055",
+    "artifact": "ART-069",
+    "rfsem": [
+      "RFSEM-A10-001",
+      "RFSEM-A10-002",
+      "RFSEM-A10-NEXT"
+    ],
+    "github_pr": 11
+  }
+}

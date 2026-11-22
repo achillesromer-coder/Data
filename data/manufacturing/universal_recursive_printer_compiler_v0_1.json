@@ -1,0 +1,209 @@
+{
+  "artifact_id": "UTP-COMPILER-001",
+  "version": "0.1",
+  "date": "2026-10-06",
+  "title": "Recursive Universal Tech Printer Compiler",
+  "claim_boundary": "orchestration/capability architecture; not a claim one machine can fabricate all devices",
+  "compile_chain": [
+    "target_functional_graph",
+    "required_interaction_operators",
+    "candidate_material_process_routes",
+    "environment_capability_filter",
+    "toolhead_agent_schedule",
+    "thermal_chemical_field_keepout",
+    "test_before_burial",
+    "seal_or_expose_interface",
+    "signed_module_state"
+  ],
+  "environment_fields": [
+    "temperature_K",
+    "pressure_Pa",
+    "gravity_acceleration",
+    "gas_composition",
+    "relative_humidity",
+    "oxygen_state",
+    "water_state",
+    "solvent_vapour",
+    "electric_field",
+    "magnetic_field",
+    "radiation_laser_uv",
+    "acoustic_state",
+    "cleanliness_contamination",
+    "vibration"
+  ],
+  "environment_modes": [
+    {
+      "id": "ENV-OPEN",
+      "name": "open/ambient",
+      "rule": "permits operations whose REQUIRED envelope is satisfied; does not globally disable fabrication"
+    },
+    {
+      "id": "ENV-INERT",
+      "name": "local inert shroud",
+      "rule": "local low-O2 shielding for qualified processes"
+    },
+    {
+      "id": "ENV-REACTIVE",
+      "name": "reactive gas microchamber",
+      "rule": "gas-specific chemistry/device process only"
+    },
+    {
+      "id": "ENV-LOWP",
+      "name": "low-pressure/vacuum cap",
+      "rule": "process/isolation route; exact rarefaction regime checked"
+    },
+    {
+      "id": "ENV-SOLVENT",
+      "name": "solvent/humidity microhood",
+      "rule": "controlled evaporation/rheology/cure"
+    },
+    {
+      "id": "ENV-FIELD",
+      "name": "electric/magnetic field cage",
+      "rule": "field-assisted process under instrumented safety limits"
+    },
+    {
+      "id": "ENV-OPTICAL",
+      "name": "laser/UV local enclosure",
+      "rule": "sinter/cure/ablation under deterministic interlocks"
+    },
+    {
+      "id": "ENV-CLEAN",
+      "name": "clean insertion enclosure",
+      "rule": "sensitive electronics/optics/chemistry insertion"
+    }
+  ],
+  "recursive_module_contract": [
+    "module_id",
+    "geometry_ref",
+    "material_passports",
+    "exposed_mechanical_interfaces",
+    "power_interfaces",
+    "data_interfaces",
+    "fluid_gas_interfaces",
+    "thermal_interfaces",
+    "service_interfaces",
+    "embedded_software_version",
+    "sensor_health_state",
+    "remaining_thermal_budget",
+    "remaining_chemical_environment_budget",
+    "evidence_receipts",
+    "blocked_claims"
+  ],
+  "controller_layers": {
+    "L0": "deterministic safety interlocks and safe state",
+    "L1": "embedded local real-time sensing and actuation",
+    "L2": "Cognigrex supervisory planning, optimisation, model selection and bounded remote command"
+  },
+  "scale_router": [
+    {
+      "id": "S0",
+      "scale": "electronic/atomic",
+      "solvers": [
+        "electronic structure",
+        "band/device model",
+        "atomistic"
+      ],
+      "handoff": "free energies/material descriptors"
+    },
+    {
+      "id": "S1",
+      "scale": "molecular/reaction",
+      "solvers": [
+        "reaction network",
+        "species transport",
+        "electrochemistry"
+      ],
+      "handoff": "kinetics/activity/diffusivity"
+    },
+    {
+      "id": "S2",
+      "scale": "mesoscale",
+      "solvers": [
+        "phase field",
+        "grain/phase models"
+      ],
+      "handoff": "microstructure/effective properties"
+    },
+    {
+      "id": "S3",
+      "scale": "process",
+      "solvers": [
+        "CFD",
+        "heat",
+        "free surface",
+        "species",
+        "EM"
+      ],
+      "handoff": "thermal/process history"
+    },
+    {
+      "id": "S4",
+      "scale": "component",
+      "solvers": [
+        "FEA",
+        "EM",
+        "thermal",
+        "cavity",
+        "circuit"
+      ],
+      "handoff": "component state/limits"
+    },
+    {
+      "id": "S5",
+      "scale": "system",
+      "solvers": [
+        "task graph",
+        "robot planning",
+        "health management"
+      ],
+      "handoff": "module/system state"
+    }
+  ],
+  "example_routes": {
+    "true_blue_LED": {
+      "state": "SPECIALIST_HOLD",
+      "route": [
+        "semiconductor substrate",
+        "GaN/InGaN heterostructure",
+        "p/n control",
+        "contacts",
+        "passivation",
+        "optical extraction"
+      ],
+      "operators": [
+        "OP-005",
+        "OP-006",
+        "OP-014"
+      ],
+      "note": "not equivalent to sealed gas microcell"
+    },
+    "gas_microcell_pixel": {
+      "state": "RESEARCH_ARCHITECTURE",
+      "route": [
+        "printed electrodes",
+        "dielectric/barrier",
+        "microcavity",
+        "gas fill",
+        "seal",
+        "phosphor/optical layer",
+        "addressing"
+      ],
+      "operators": [
+        "OP-005",
+        "OP-006",
+        "OP-015"
+      ],
+      "note": "plasma/microdischarge display family, not solid-state LED"
+    },
+    "capacitor": {
+      "state": "MULTI_ROUTE",
+      "routes": [
+        "solid dielectric capacitor",
+        "vacuum capacitor",
+        "electrochemical/supercapacitor"
+      ],
+      "note": "vacuum is not a generic electrochemical storage medium"
+    }
+  }
+}
