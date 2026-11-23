@@ -1,6 +1,6 @@
 {
   "adaptive_policy": "Mode-Q first. Run Mode-M only for bodies with stale/mismatched md_orbit_id, no current-window options, or a later mission-design question requiring a fresh launch/TOF grid.",
-  "captured_at": "2026-11-22T12:40:14+00:00",
+  "captured_at": "2026-11-23T14:48:57+00:00",
   "claim_boundary": "Mission-design source capture and screening only; no final target ranking or mission feasibility claim.",
   "endpoint": "https://ssd-api.jpl.nasa.gov/mdesign.api",
   "errors": [],
@@ -92,7 +92,7 @@
   },
   "report_receipt": {
     "path": "data/jpl/mdesign/latest/report.json",
-    "sha256": "66d98e5651dbdb5047a15a70679311d49a5498e2f1e8e7960627069c8a4c32e0"
+    "sha256": "9a90f7f5c4360571489ad0bee55bd6cb234f1a629b8172b01a6f10ffc9e30a17"
   },
   "schema": "romer.jpl.mdesign.priority-mode-q.v0.1"
 }
