@@ -25,16 +25,16 @@
       "status": "captured"
     },
     "cerberus": {
-      "captured_at": "2026-11-24T14:57:22+00:00",
+      "captured_at": "2026-11-27T13:57:50+00:00",
       "covariance_available": true,
       "covariance_dimension": 7,
-      "covariance_epoch_jd": "2458670.5",
+      "covariance_epoch_jd": "2458672.5",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/cerberus.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Cerberus",
-      "sha256": "2f645d258cc3d627a5f129acdb39d5bdb30799929cbe234c5c7d208960731b83",
+      "sha256": "7aac5a2a49735173c65004b7e9098540d06e3bbf9dcc6a39f0f5f1f0574461dd",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Cerberus&phys-par=1&ca-data=1&ca-time=both&ca-tunc=both&ca-unc=1&cov=mat&full-prec=1",
       "status": "captured"
@@ -100,16 +100,16 @@
       "status": "captured"
     },
     "lugh": {
-      "captured_at": "2026-11-26T13:59:17+00:00",
+      "captured_at": "2026-11-27T13:57:55+00:00",
       "covariance_available": true,
       "covariance_dimension": 6,
-      "covariance_epoch_jd": "2460532.5",
+      "covariance_epoch_jd": "2460534.5",
       "last_refresh_error": null,
       "orbit_invariant_status": "PASS",
       "raw_path": "data/jpl/neighbours/sbdb/latest/lugh.json",
       "refresh_status": "CAPTURED_CURRENT",
       "requested_name": "Lugh",
-      "sha256": "53e96a7dc92e3cf6ec1028a396d8206be1444623522ef78632e2031fc8830df9",
+      "sha256": "f2e7684ef5ca1b3de7b5d95485b0d24f5813587f335595a8092956a1683eb565",
       "signature_version": "1.3",
       "source_url": "https://ssd-api.jpl.nasa.gov/sbdb.api?sstr=Lugh&phys-par=1&ca-data=1&ca-time=both&ca-tunc=both&ca-unc=1&cov=mat&full-prec=1",
       "status": "captured"
